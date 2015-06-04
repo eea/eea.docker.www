@@ -1,0 +1,5 @@
+apache:
+  image: eeacms/httpd:centos7
+  user: 1000
+  ports:
+    - "80:80"
