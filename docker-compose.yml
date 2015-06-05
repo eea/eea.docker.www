@@ -1,5 +1,9 @@
 apache:
-  image: eeacms/httpd:centos7
+  build: apache
   user: 1000
   ports:
     - "80:80"
+
+varnish:
+  build: varnish
+  user: 1000
