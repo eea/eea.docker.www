@@ -1,9 +1,20 @@
 apache:
   build: apache
-  user: 1000
   ports:
     - "80:80"
+  volumes_from:
+    - data
+  links:
+    - varnish
 
 varnish:
   build: varnish
-  user: 1000
+
+data:
+  build: data
+  volumes:
+    - /var/local/www-logs/eea
+    - /var/www-static-resources:/var/www-static-resources
+    - /var/eea-buildout-plone4/etc/apache/vh-www-common.inc:/etc/httpd/conf.d//vh-www-common.inc
+    - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d//vh-www-staging.conf
+    - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/default.vcl
