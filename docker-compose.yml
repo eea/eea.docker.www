@@ -9,6 +9,10 @@ apache:
 
 varnish:
   build: varnish
+  volumes-from:
+    - data
+  volumes:
+    - varnish/etc/hosts:/etc/hosts
 
 data:
   build: data
