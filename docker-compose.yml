@@ -1,4 +1,5 @@
 apache:
+  restart: always
   build: apache
   ports:
     - "80:80"
@@ -8,6 +9,7 @@ apache:
     - varnish
 
 varnish:
+  restart: always
   build: varnish
   volumes_from:
     - data
@@ -15,6 +17,7 @@ varnish:
     - varnish/etc/hosts:/etc/hosts
 
 memcached:
+  restart: always
   build: memcached
   ports:
     - "11211:11211"
