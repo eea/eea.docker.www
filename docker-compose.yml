@@ -14,6 +14,14 @@ varnish:
   volumes:
     - varnish/etc/hosts:/etc/hosts
 
+memcached:
+  build: memcached
+  ports:
+    - "11211:11211"
+  environment:
+    - MEMCACHED_MEMORY=2048
+    - MEMCACHED_PORT=11211
+
 data:
   build: data
   volumes:
