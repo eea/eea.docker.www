@@ -1,4 +1,4 @@
-## Docker orchestration for EEA main portal 
+## Docker orchestration for EEA main portal
 
 Docker orchestration for EEA main portal services
 
@@ -13,8 +13,9 @@ Docker orchestration for EEA main portal services
 ### Usage
 
     $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.jenkins
-    $ docker-compose up
+    $ cd eea.docker.www
+    $ docker-compose up -d
+    $ docker-compose logs
 
 
 ### Upgrade

@@ -6,6 +6,6 @@
 
 Initial public release
 
-- Jenkins master
-- Jenkins slaves (ubuntu, debian, centos)
-- Postfix SMTP only mail server
+- Apache
+- Varnish
+- Memcached
