@@ -10,11 +10,9 @@ apache:
 
 varnish:
   restart: always
-  build: varnish
+  image: eeacms/varnish:3
   volumes_from:
     - data
-  volumes:
-    - varnish/etc/hosts:/etc/hosts
 
 memcached:
   restart: always
@@ -31,6 +29,6 @@ data:
     - /var/local/www-logs/eea
     - /var/www-static-resources:/var/www-static-resources
     - /var/eea-buildout-plone4:/var/eea-buildout-plone4
-    - /var/eea-buildout-plone4/etc/apache/vh-www-common.inc:/etc/httpd/conf.d//vh-www-common.inc
+    - /var/eea-buildout-plone4/etc/apache/vh-www-common.inc:/etc/httpd/conf.d/vh-www-common.inc
     - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d/vh-www-staging.conf
-    - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/default.vcl
+    - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
