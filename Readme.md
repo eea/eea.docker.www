@@ -20,8 +20,11 @@ Docker orchestration for EEA main portal services
 
 ### Upgrade
 
+    $ sudo docker-compose stop
+    $ sudo docker-compose rm -v
     $ sudo docker-compose pull
-    $ sudo docker-compose restart
+    $ sudo docker-compose up -d
+    $ sudo docker-compose logs
 
 
 ## Copyright and license
