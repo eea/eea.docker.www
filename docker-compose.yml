@@ -1,6 +1,6 @@
 apache:
   restart: always
-  build: apache
+  image: eeacms/apache:2.4
   ports:
     - "80:80"
   volumes_from:
