@@ -1,22 +1,22 @@
 apache:
-  restart: always
   image: eeacms/apache:2.4
+  restart: always
   ports:
-    - "80:80"
+  - "80:80"
   volumes_from:
-    - data
+  - data
   links:
-    - varnish
+  - varnish
 
 varnish:
-  restart: always
   image: eeacms/varnish:3
+  restart: always
   volumes_from:
-    - data
+  - data
 
 memcached:
-  restart: always
   image: eeacms/memcached
+  restart: always
   ports:
     - "11211:11211"
   environment:
@@ -24,25 +24,34 @@ memcached:
     - MEMCACHED_PORT=11211
 
 zeoserver:
-  restart: always
   image: eeacms/zeoserver
+  restart: always
   ports:
-    - "8902:8100"
+  - "8902:8100"
   volumes_from:
-    - data
+  - data
   environment:
-    - INDEX=http://eggrepo.apps.eea.europa.eu/pypi/
-    - FIND_LINKS=http://eggrepo.apps.eea.europa.eu/simple http://dist.plone.org/thirdparty/ http://pypi.python.org/pypi
-    - BUILDOUT_EGGS=zc.async ZopeUndo
+  - INDEX=
+      http://eggrepo.apps.eea.europa.eu/pypi/
+  - FIND_LINKS=
+      http://eggrepo.apps.eea.europa.eu/simple
+      http://dist.plone.org/thirdparty/
+      http://pypi.python.org/pypi
+  - BUILDOUT_ZEO_CONF_ADDITIONAL=
+      <filestorage 2> \n
+        path /opt/zeoserver/var/filestorage/async.fs \n
+      </filestorage>
+  - BUILDOUT_EGGS=
+      zc.async
+      ZopeUndo
 
 data:
   build: data
   volumes:
-    - /var/local/www-logs/eea
-    - /var/www-static-resources:/var/www-static-resources
-    - /var/eea-buildout-plone4:/var/eea-buildout-plone4
-    - /var/eea-buildout-plone4/etc/apache/vh-www-common.inc:/etc/httpd/conf.d/vh-www-common.inc
-    - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d/vh-www-staging.conf
-    - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
-    - /var/zodbfilestorage/plone4:/opt/zeoserver/var/filestorage
-    - /var/sharedblobstorage/blobs:/opt/zeoserver/var/blobstorage
+  - /var/local/www-logs/eea
+  - /var/www-static-resources:/var/www-static-resources
+  - /var/eea-buildout-plone4:/var/eea-buildout-plone4
+  - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d/vh-www-staging.conf
+  - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
+  - /var/zodbfilestorage/plone4:/opt/zeoserver/var/filestorage
+  - /var/sharedblobstorage/blobs:/opt/zeoserver/var/blobstorage
