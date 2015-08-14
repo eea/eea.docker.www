@@ -23,28 +23,6 @@ memcached:
     - MEMCACHED_MEMORY=2048
     - MEMCACHED_PORT=11211
 
-zeoserver:
-  image: eeacms/zeoserver
-  restart: always
-  ports:
-  - "8902:8100"
-  volumes_from:
-  - data
-  environment:
-  - INDEX=
-      http://eggrepo.apps.eea.europa.eu/pypi/
-  - FIND_LINKS=
-      http://eggrepo.apps.eea.europa.eu/simple
-      http://dist.plone.org/thirdparty/
-      http://pypi.python.org/pypi
-  - BUILDOUT_ZEO_CONF_ADDITIONAL=
-      <filestorage 2> \n
-        path /opt/zeoserver/var/filestorage/async.fs \n
-      </filestorage>
-  - BUILDOUT_EGGS=
-      zc.async
-      ZopeUndo
-
 data:
   build: data
   volumes:
@@ -53,5 +31,3 @@ data:
   - /var/eea-buildout-plone4:/var/eea-buildout-plone4
   - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d/vh-www-staging.conf
   - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
-  - /var/zodbfilestorage/plone4:/opt/zeoserver/var/filestorage
-  - /var/sharedblobstorage/blobs:/opt/zeoserver/var/blobstorage
