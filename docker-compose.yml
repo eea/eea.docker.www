@@ -24,10 +24,11 @@ memcached:
     - MEMCACHED_PORT=11211
 
 data:
-  build: data
+  image: busybox
   volumes:
   - /var/local/www-logs/eea
   - /var/www-static-resources:/var/www-static-resources
   - /var/eea-buildout-plone4:/var/eea-buildout-plone4
   - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d/vh-www-staging.conf
   - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
+  command: chown -R 1000:1000 /var/local/www-logs/eea
