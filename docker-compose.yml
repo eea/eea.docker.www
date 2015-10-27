@@ -31,7 +31,7 @@ plone:
   - postfix
 
 async:
-  image: /eeacms/plone-eea-www
+  image: eeacms/plone-eea-www
   links:
   - memcached
   - postgres
