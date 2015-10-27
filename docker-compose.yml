@@ -23,6 +23,39 @@ memcached:
     - MEMCACHED_MEMORY=2048
     - MEMCACHED_PORT=11211
 
+plone:
+  image: eeacms/plone-eea-www
+  links:
+  - memcached
+  - postgres
+  - postfix
+
+async:
+  image: /eeacms/plone-eea-www
+  links:
+  - memcached
+  - postgres
+  - postfix
+  environment:
+  - PLONE_APP_ASYNC=multi_db_worker
+  - BUILDOUT_REBUILD=true
+
+postgres:
+  image: eeacms/postgres
+  volumes_from:
+  - data
+  environment:
+  - POSTGRES_DBNAME=datafs zasync
+  - POSTGRES_DBUSER=zope
+  - POSTGRES_DBPASS=zope
+  - POSTGRES_USER=postgres
+  - POSTGRES_PASSWORD=postgres
+
+postfix:
+  image: eeacms/postfix
+  environment:
+  - MTP_HOST=eea.europa.eu
+
 data:
   image: busybox
   volumes:
@@ -31,4 +64,6 @@ data:
   - /var/eea-buildout-plone4:/var/eea-buildout-plone4
   - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/etc/httpd/conf.d/vh-www-staging.conf
   - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
-  command: chown -R 1000:1000 /var/local/www-logs/eea
+  - /var/lib/postgresql/data
+#  command: chown -R 1000:1000 /var/local/www-logs/eea
+  command: chown -R 999:999 /var/lib/postgresql/data
