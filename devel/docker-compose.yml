@@ -1,0 +1,93 @@
+haproxy:
+  ports:
+  - 80:5000
+  image: eeacms/haproxy
+  links:
+  - plone
+  environment:
+    BACKENDS_PORT: '8080'
+    SERVICE_NAMES: 'plone'
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+
+memcached:
+  environment:
+    MEMCACHED_MEMORY: '2048'
+  image: eeacms/memcached
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+
+relcached:
+  environment:
+    MEMCACHED_MEMORY: '2048'
+  image: eeacms/memcached
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+
+postfix:
+  environment:
+    MTP_HOST: eea.europa.eu
+  image: eeacms/postfix
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+
+plone:
+  image: eeacms/plone-eea-www:devel
+  links:
+  - memcached
+  - relcached
+  - postfix
+  - postgres
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+  volumes_from:
+  - plone_data
+
+plone_data:
+  command: ["cat"]
+  image: busybox
+  volumes:
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/blobs:/data/blobs
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/downloads:/data/downloads
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/www-static-resources:/data/www-static-resources
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/eea.controlpanel:/data/eea.controlpanel
+  volume_driver: nfs
+
+async:
+  image: eeacms/plone-eea-www:devel-async
+  links:
+  - memcached
+  - relcached
+  - postfix
+  - postgres
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+  volumes_from:
+  - async_data
+
+async_data:
+  command: ["cat"]
+  image: busybox
+  volumes:
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/blobs:/data/blobs
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/downloads:/data/downloads
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/www-static-resources:/data/www-static-resources
+  - 10.142.71.23/mnt/vdb1/sharedblobstorage/eea.controlpanel:/data/eea.controlpanel
+  volume_driver: nfs
+
+postgres:
+  image: eeacms/postgres
+  environment:
+    POSTGRES_DBNAME: datafs zasync
+    POSTGRES_DBPASS: zope
+    POSTGRES_DBUSER: zope
+  volumes:
+  - /etc/localtime:/etc/localtime:ro
+  volumes_from:
+  - postgres_data
+
+postgres_data:
+  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+  image: busybox
+  volumes:
+  - /var/lib/postgresql/data
