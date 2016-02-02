@@ -1,0 +1,8 @@
+apache:
+  image: remove
+
+varnish:
+  image: remove
+
+memcached:
+  image: remove

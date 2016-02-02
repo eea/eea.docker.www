@@ -1,0 +1,17 @@
+haproxy:
+  image: remove
+
+memcached:
+  image: remove
+
+relcached:
+  image: remove
+
+plone:
+  image: remove
+
+async:
+  image: remove
+
+postgres:
+  image: remove
