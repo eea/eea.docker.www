@@ -25,6 +25,14 @@ relcached:
   volumes:
   - /etc/localtime:/etc/localtime:ro
 
+source_code:
+  image: eeacms/plone-eea-www-devel
+  entrypoint: ['/opt/zope/bin/buildout']
+  command: ['-c', 'source.cfg']
+  volumes:
+  - ./src/source.cfg:/opt/zope/source.cfg:ro
+  - ./src:/opt/zope/src:z
+
 plone:
   image: eeacms/plone-eea-www-devel
   links:
@@ -32,6 +40,7 @@ plone:
   - relcached
   - postgres
   volumes:
+  - ./src:/opt/zope/src
   - /etc/localtime:/etc/localtime:ro
   - /var/blobstorage/blobs:/data/blobs
   - /var/blobstorage/downloads:/data/downloads
@@ -45,6 +54,7 @@ async:
   - relcached
   - postgres
   volumes:
+  - ./src:/opt/zope/src
   - /etc/localtime:/etc/localtime:ro
   - /var/blobstorage/blobs:/data/blobs
   - /var/blobstorage/downloads:/data/downloads

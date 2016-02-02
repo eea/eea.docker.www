@@ -1,3 +1,4 @@
 *.pyc
 .secret
 *.gz
+devel/src
