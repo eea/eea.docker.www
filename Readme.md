@@ -1,31 +1,54 @@
-## Docker orchestration for EEA main portal
+# Docker orchestration for EEA main portal
 
 Docker orchestration for EEA main portal services
 
 
-### Installation
+## Installation
 
 1. Install [Docker](https://www.docker.com/).
 
 2. Install [Docker Compose](https://docs.docker.com/compose/).
 
+## Usage
 
-### Usage
-
+    $ cd /var/local/deploy
     $ git clone https://github.com/eea/eea.docker.www.git
     $ cd eea.docker.www
+
+### Staging
+
+    $ cd staging
     $ docker-compose up -d
     $ docker-compose logs
 
+### Development
 
-### Upgrade
+    $ cd devel
+    $ docker-compose up -d
+    $ docker-compose logs
 
-    $ sudo docker-compose stop
-    $ sudo docker-compose rm -v
-    $ sudo docker-compose pull
-    $ sudo docker-compose up -d
-    $ sudo docker-compose logs
+## Upgrade
 
+    $ cd /var/local/deploy/eea.docker.www
+    $ git pull
+
+### Staging
+
+    $ cd staging
+    $ docker-compose pull
+    $ docker-compose stop
+    $ docker-compose rm -v
+    $ docker-compose up -d
+    $ docker-compose logs
+
+### Development
+
+    $ cd devel
+    $ docker-compose pull
+    $ docker-compose stop
+    $ docker-compose rm -v haproxy memcached relcached plone async postgres
+    $ docker-compose up -d --no-recreate
+    $ docker-compose logs
 
 ## Copyright and license
 
@@ -37,7 +60,6 @@ you can redistribute it and/or modify it under the terms of the GNU
 General Public License as published by the Free Software Foundation;
 either version 2 of the License, or (at your option) any later
 version.
-
 
 ## Funding
 

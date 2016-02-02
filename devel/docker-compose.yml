@@ -1,31 +1,31 @@
 haproxy:
+  image: eeacms/haproxy
   ports:
   - 80:5000
-  image: eeacms/haproxy
   links:
   - plone
   environment:
-    BACKENDS_PORT: '8080'
-    SERVICE_NAMES: 'plone'
+  - BACKENDS_PORT=8080
+  - SERVICE_NAMES=plone
   volumes:
   - /etc/localtime:/etc/localtime:ro
 
 memcached:
-  environment:
-    MEMCACHED_MEMORY: '2048'
   image: eeacms/memcached
+  environment:
+  - MEMCACHED_MEMORY=2048
   volumes:
   - /etc/localtime:/etc/localtime:ro
 
 relcached:
-  environment:
-    MEMCACHED_MEMORY: '2048'
   image: eeacms/memcached
+  environment:
+  - MEMCACHED_MEMORY=2048
   volumes:
   - /etc/localtime:/etc/localtime:ro
 
 plone:
-  image: eeacms/plone-eea-www:devel
+  image: eeacms/plone-eea-www-devel
   links:
   - memcached
   - relcached
@@ -38,7 +38,7 @@ plone:
   - DEBUG=on
 
 async:
-  image: eeacms/plone-eea-www:devel-async
+  image: eeacms/plone-eea-www-devel-async
   links:
   - memcached
   - relcached
@@ -51,7 +51,7 @@ async:
   - DEBUG=on
 
 postgres:
-  image: eeacms/postgres
+  image: eeacms/postgres:9.4
   environment:
     POSTGRES_DBNAME: datafs zasync
     POSTGRES_DBPASS: zope
