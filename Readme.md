@@ -11,42 +11,57 @@ Docker orchestration for EEA main portal services
 
 ## Usage
 
+    $ sudo bash
+    $ useradd -u 500 zope-www
+    $ usermod -a -G docker zope-www
+    $ ln -s /usr/local/bin/docker-compose /bin/docker-compose
+    $ su zope-www
+
     $ cd /var/local/deploy
     $ git clone https://github.com/eea/eea.docker.www.git
     $ cd eea.docker.www
 
 ### Staging
 
+    $ cd /var/local/deploy/eea.docker.www/staging
+
+* Start
+
     $ cd staging
     $ docker-compose up -d
     $ docker-compose logs
 
 ### Development
 
+    $ cd /var/local/deploy/eea.docker.www/devel
+
+* Get source code
+
+    $ docker-compose up source_code
+
+* Setup database
+
     $ cd devel
-    $ docker-compose up -d
-    $ docker-compose logs
+    $ docker-compose stop
+    $ docker-compose rm -v
+    $ docker-compose up -d postgres
+
+    $ cp /var/zodb/pg_dump/datafs.gz /var/local/deploy/eea.docker.www/devel/backup/
+    $ docker exec -it devel_postgres_1 bash
+      $ gunzip -c /postgresql.backup/datafs.gz | psql -U zope datafs
+      $ exit
+
+* Start application
+
+    $ cd devel
+    $ docker-compose up -d --no-recreate
 
 ## Upgrade
 
-    $ cd /var/local/deploy/eea.docker.www
-    $ git pull
-
-### Staging
-
-    $ cd staging
-    $ docker-compose pull
-    $ docker-compose stop
-    $ docker-compose rm -v
-    $ docker-compose up -d
-    $ docker-compose logs
-
-### Development
-
     $ cd devel
     $ docker-compose pull
     $ docker-compose stop
-    $ docker-compose rm -v haproxy memcached relcached plone async postgres
+    $ docker-compose -f docker-remove.yml rm -v
     $ docker-compose up -d --no-recreate
     $ docker-compose logs
 
