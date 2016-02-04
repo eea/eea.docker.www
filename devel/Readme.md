@@ -34,15 +34,17 @@ See everything is up-and-running
 
 ## Access
 
-Replace XXX.XXX.XXX.XXX with your machine public IP
+Replace `XXX.XXX.XXX.XXX` with your machine's public IP.
+Optionally add a ngnix entry on swarm-master. See `alin-devel` for an example.
+
 
 ### Site
 
-  http://XXX.XXX.XXX.XXX
+    http://XXX.XXX.XXX.XXX
 
 ### HAProxy Statistics
 
-  http://XXX.XXX.XXX.XXX:1936
+    http://XXX.XXX.XXX.XXX:1936
 
 
 ## Upgrade
