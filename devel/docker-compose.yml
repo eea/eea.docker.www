@@ -34,7 +34,9 @@ source_code:
   - ./src:/opt/zope/src:z
 
 plone:
-  image: eeacms/plone-eea-www-devel
+  image: eeacms/plone-eea-www-devel:5.9
+  ports:
+  - "4444:4444"
   links:
   - memcached
   - relcached
@@ -48,7 +50,9 @@ plone:
   - DEBUG=on
 
 async:
-  image: eeacms/plone-eea-www-devel-async
+  image: eeacms/plone-eea-www-devel-async:5.9
+  ports:
+  - "4444:4444"
   links:
   - memcached
   - relcached

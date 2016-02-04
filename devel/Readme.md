@@ -72,3 +72,32 @@ Optionally add a ngnix entry on swarm-master. See `alin-devel` for an example.
     $ docker exec -it devel_postgres_1 bash
       $ gunzip -c /postgresql.backup/datafs.gz | psql -U zope datafs
       $ exit
+
+## Debug
+
+As you can not directly add `pdb` anymore within your code, you'll have to use `rpdb`.
+
+Add rpdb breakpoint:
+
+    import rpdb; rpdb.set_trace("0.0.0.0")
+
+Restart Plone container:
+
+    $ docker-compose restart plone
+    $ docker-compose logs plone
+
+You'll get something like this within logs when the breakpoint is reached:
+
+    plone_1 | pdb is running on 0.0.0.0:4444
+
+Find your host ip:
+
+    $ ip addr | grep "inet 10" | gawk '{print $2}' | sed "s/\/24//g"
+
+This will return something like:
+
+    10.1.2.3
+
+And now start debugging (replace `10.1.2.3` with your ip address):
+
+    nc 10.1.2.3 4444
