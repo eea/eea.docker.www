@@ -44,7 +44,7 @@ plone:
   volumes:
   - ./src:/plone/instance/src
   - /etc/localtime:/etc/localtime:ro
-  - /var/blobstorage/blobs:/data/blobs
+  - /var/blobstorage/blobs:/data/blobstorage
   - /var/blobstorage/downloads:/data/downloads
   environment:
   - ZOPE_MODE=rel_client
@@ -59,7 +59,7 @@ async:
   volumes:
   - ./src:/plone/instance/src
   - /etc/localtime:/etc/localtime:ro
-  - /var/blobstorage/blobs:/data/blobs
+  - /var/blobstorage/blobs:/data/blobstorage
   - /var/blobstorage/downloads:/data/downloads
   environment:
   - ZOPE_MODE=rel_async
