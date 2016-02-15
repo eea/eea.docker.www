@@ -52,8 +52,6 @@ plone:
 
 async:
   image: eeacms/www:devel
-  ports:
-  - "4444:4444"
   links:
   - memcached
   - relcached
