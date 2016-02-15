@@ -26,15 +26,15 @@ relcached:
   - /etc/localtime:/etc/localtime:ro
 
 source_code:
-  image: eeacms/plone-eea-www-devel
-  entrypoint: ['/opt/zope/bin/buildout']
+  image: eeacms/www:devel
+  entrypoint: ['buildout']
   command: ['-c', 'source.cfg']
   volumes:
-  - ./src/source.cfg:/opt/zope/source.cfg:ro
-  - ./src:/opt/zope/src:z
+  - ./src/source.cfg:/plone/instance/source.cfg:ro
+  - ./src:/plone/instance/src:z
 
 plone:
-  image: eeacms/plone-eea-www-devel:5.9
+  image: eeacms/www:devel
   ports:
   - "4444:4444"
   links:
@@ -42,15 +42,16 @@ plone:
   - relcached
   - postgres
   volumes:
-  - ./src:/opt/zope/src
+  - ./src:/plone/instance/src
   - /etc/localtime:/etc/localtime:ro
   - /var/blobstorage/blobs:/data/blobs
   - /var/blobstorage/downloads:/data/downloads
   environment:
-  - DEBUG=on
+  - ZOPE_MODE=rel_client
+  command: ['fg']
 
 async:
-  image: eeacms/plone-eea-www-devel-async:5.9
+  image: eeacms/www:devel
   ports:
   - "4444:4444"
   links:
@@ -58,12 +59,13 @@ async:
   - relcached
   - postgres
   volumes:
-  - ./src:/opt/zope/src
+  - ./src:/plone/instance/src
   - /etc/localtime:/etc/localtime:ro
   - /var/blobstorage/blobs:/data/blobs
   - /var/blobstorage/downloads:/data/downloads
   environment:
-  - DEBUG=on
+  - ZOPE_MODE=rel_async
+  command: ['fg']
 
 postgres:
   image: eeacms/postgres:9.4
