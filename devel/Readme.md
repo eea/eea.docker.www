@@ -101,3 +101,47 @@ This will return something like:
 And now start debugging (replace `10.1.2.3` with your ip address):
 
     nc 10.1.2.3 4444
+
+## Test
+
+You can run tests with:
+
+    $ docker run --rm eeacms/www:devel bin/test eea.pdf
+
+Or if you're setting a jenkins job:
+
+    $ docker run --rm eeacms/www:devel bin/xmltestreport -v -vv -s eea.pdf
+
+## Code analysis
+
+In order to ensure that your code has no errors and it follow the best practices
+and style guides of that specific programming language we prepared the following
+`linter` Docker images.
+
+### Python
+
+[eeacms/pylint](https://github.com/eea/eea.docker.pylint)
+[eeacms/pyflakes](https://github.com/eea/eea.docker.pyflakes)
+[eeacms/flake8](https://github.com/eea/eea.docker.flake8)
+[eeacms/pep8](https://github.com/eea/eea.docker.pep8)
+
+### ZPT
+
+[eeacms/zptlint](https://github.com/eea/eea.docker.zptlint)
+
+### JavaScript
+
+[eeacms/jslint](https://github.com/eea/eea.docker.jslint)
+[eeacms/jshint](https://github.com/eea/eea.docker.jshint)
+
+### CSS
+
+[eeacms/csslint](https://github.com/eea/eea.docker.csslint)
+
+### i18n translations
+
+[eeacms/i18ndude](https://github.com/eea/eea.docker.i18ndude)
+
+Note that we already automatically run this tools
+via Jenkins CI at [ci.eionet.europa.eu](http://ci.eionet.europa.eu/) and if
+something is wrong within your code, everybody will be noticed via email.
