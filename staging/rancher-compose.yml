@@ -1,0 +1,27 @@
+memcached:
+  scale: 1
+  health_check:
+    port: 11211
+    interval: 2000
+    unhealthy_threshold: 3
+    strategy: recreate
+    healthy_threshold: 2
+    response_timeout: 2000
+varnish:
+  scale: 1
+  health_check:
+    port: 80
+    interval: 2000
+    unhealthy_threshold: 3
+    strategy: recreate
+    healthy_threshold: 2
+    response_timeout: 2000
+apache:
+  scale: 1
+  health_check:
+    port: 80
+    interval: 2000
+    unhealthy_threshold: 3
+    strategy: recreate
+    healthy_threshold: 2
+    response_timeout: 2000

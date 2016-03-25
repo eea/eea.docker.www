@@ -1,32 +1,37 @@
-apache:
-  image: eeacms/apache:2.4s
-  restart: always
-  ports:
-  - "80:80"
-  volumes_from:
-  - data
-  links:
-  - varnish
-
-varnish:
-  image: eeacms/varnish:3
-  restart: always
-  volumes_from:
-  - data
-
 memcached:
-  image: eeacms/memcached
-  restart: always
   ports:
-    - "11211:11211"
+  - 11211:11211/tcp
   environment:
-    - MEMCACHED_MEMORY=2048
-    - MEMCACHED_PORT=11211
-
-data:
-  image: busybox
+    MEMCACHED_MEMORY: '2048'
+    MEMCACHED_PORT: '11211'
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: staging-frontend=yes
+  tty: true
+  image: eeacms/memcached
+  stdin_open: true
+varnish:
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: staging-frontend=yes
+  tty: true
+  image: eeacms/varnish:3
+  volumes:
+  - /var/eea-buildout-plone4:/var/eea-buildout-plone4
+  - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
+  stdin_open: true
+apache:
+  ports:
+  - 80:80/tcp
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: staging-frontend=yes
+  tty: true
+  image: eeacms/apache:2.4s
+  links:
+  - varnish:varnish
   volumes:
   - /var/www-static-resources:/var/www-static-resources
   - /var/eea-buildout-plone4:/var/eea-buildout-plone4
   - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/usr/local/apache2/conf/extra/vh-my-app.conf
-  - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
+  stdin_open: true
