@@ -5,13 +5,24 @@ memcached:
     interval: 2000
     unhealthy_threshold: 3
     strategy: recreate
+    response_timeout: 2000
+    healthy_threshold: 2
+haproxy:
+  scale: 1
+  load_balancer_config:
+    haproxy_config: {}
+  health_check:
+    port: 42
+    interval: 2000
+    unhealthy_threshold: 3
     healthy_threshold: 2
     response_timeout: 2000
 varnish:
   scale: 1
   health_check:
     port: 80
-    interval: 2000
+    interval: 30000
+    initializing_timeout: 60000
     unhealthy_threshold: 3
     strategy: recreate
     healthy_threshold: 2
@@ -20,7 +31,8 @@ apache:
   scale: 1
   health_check:
     port: 80
-    interval: 2000
+    interval: 30000
+    initializing_timeout: 60000
     unhealthy_threshold: 3
     strategy: recreate
     healthy_threshold: 2

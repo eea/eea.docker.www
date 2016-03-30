@@ -1,0 +1,11 @@
+relcached:
+  environment:
+    MEMCACHED_MEMORY: '2048'
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: frontend=yes
+  tty: true
+  image: eeacms/memcached
+  stdin_open: true
+postgres:
+  image: rancher/external-service

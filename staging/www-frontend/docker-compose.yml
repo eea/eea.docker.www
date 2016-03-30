@@ -1,37 +1,43 @@
 memcached:
-  ports:
-  - 11211:11211/tcp
   environment:
     MEMCACHED_MEMORY: '2048'
-    MEMCACHED_PORT: '11211'
   labels:
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: staging-frontend=yes
+    io.rancher.scheduler.affinity:host_label: frontend=yes
   tty: true
   image: eeacms/memcached
+  stdin_open: true
+haproxy:
+  ports:
+  - 5000:5000
+  external_links:
+  - www-backend/plone:plone
+  labels:
+    io.rancher.scheduler.affinity:host_label: frontend=yes
+    io.rancher.loadbalancer.target.www-backend/plone: '8080'
+  tty: true
+  image: rancher/load-balancer-service
   stdin_open: true
 varnish:
   labels:
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: staging-frontend=yes
+    io.rancher.scheduler.affinity:host_label: frontend=yes
   tty: true
-  image: eeacms/varnish:3
-  volumes:
-  - /var/eea-buildout-plone4:/var/eea-buildout-plone4
-  - /var/eea-buildout-plone4/etc/varnish/default-staging.vcl:/etc/varnish/conf.d/staging.vcl
+  image: eeacms/varnish-eea-www
+  links:
+  - haproxy:haproxy
   stdin_open: true
 apache:
   ports:
   - 80:80/tcp
   labels:
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: staging-frontend=yes
+    io.rancher.scheduler.affinity:host_label: frontend=yes
   tty: true
-  image: eeacms/apache:2.4s
+  image: eeacms/apache-eea-www
   links:
   - varnish:varnish
   volumes:
-  - /var/www-static-resources:/var/www-static-resources
-  - /var/eea-buildout-plone4:/var/eea-buildout-plone4
-  - /var/eea-buildout-plone4/etc/apache/vh-www-staging.conf:/usr/local/apache2/conf/extra/vh-my-app.conf
+  - www-static-resources:/var/www-static-resources
   stdin_open: true
+  volume_driver: convoy-nfs
