@@ -1,3 +1,12 @@
+memcached:
+  scale: 1
+  health_check:
+    port: 11211
+    interval: 2000
+    unhealthy_threshold: 3
+    strategy: recreate
+    response_timeout: 2000
+    healthy_threshold: 2
 relcached:
   scale: 1
   health_check:

@@ -1,5 +1,5 @@
 plone:
-  scale: 2
+  scale: 6
   health_check:
     port: 8080
     interval: 30000
@@ -8,7 +8,7 @@ plone:
     response_timeout: 3000
     healthy_threshold: 2
 async:
-  scale: 1
+  scale: 2
   health_check:
     port: 8080
     interval: 30000

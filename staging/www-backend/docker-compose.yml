@@ -2,15 +2,16 @@ plone:
   environment:
     ZOPE_MODE: rel_client
   external_links:
-  - 'www-db/postgres:'
-  - 'www-db/relcached:'
-  - 'www-frontend/memcached:'
+  - www-db/postgres:postgres
+  - www-db/relcached:relcached
+  - www-db/memcached:memcached
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
   image: eeacms/www
   volumes:
+  - filestorage:/data/filestorage
   - blobstorage:/data/blobstorage
   - downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
@@ -21,7 +22,7 @@ async:
   environment:
     ZOPE_MODE: rel_async
   external_links:
-  - www-frontend/memcached:memcached
+  - www-db/memcached:memcached
   - www-db/relcached:relcached
   - www-db/postgres:postgres
   labels:
@@ -30,6 +31,7 @@ async:
   tty: true
   image: eeacms/www
   volumes:
+  - filestorage:/data/filestorage
   - blobstorage:/data/blobstorage
   - downloads:/data/downloads
   - www-static-resources:/data/www-static-resources

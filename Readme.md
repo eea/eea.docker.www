@@ -9,6 +9,8 @@ Docker orchestration for EEA main portal services
 
 2. Install [Docker Compose](https://docs.docker.com/compose/).
 
+3. Install [Rancher Compose](http://www.rancher.com)
+
 ## Usage
 
 1. [Devel](https://github.com/eea/eea.docker.www/blob/master/devel/Readme.md)
