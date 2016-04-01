@@ -9,7 +9,6 @@ haproxy:
     healthy_threshold: 2
     response_timeout: 2000
 varnish:
-  scale: 1
   health_check:
     port: 80
     interval: 30000
@@ -19,7 +18,6 @@ varnish:
     healthy_threshold: 2
     response_timeout: 2000
 apache:
-  scale: 1
   health_check:
     port: 80
     interval: 30000

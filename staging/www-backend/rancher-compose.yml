@@ -1,17 +1,18 @@
 plone:
-  scale: 6
+  scale: 12
   health_check:
     port: 8080
-    interval: 30000
+    interval: 5000
+    initializing_timeout: 300000
     unhealthy_threshold: 3
-    strategy: none
+    strategy: recreate
     response_timeout: 3000
     healthy_threshold: 2
 async:
-  scale: 2
+  scale: 4
   health_check:
     port: 8080
-    interval: 30000
+    interval: 5000
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate

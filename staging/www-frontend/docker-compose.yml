@@ -11,6 +11,7 @@ haproxy:
   stdin_open: true
 varnish:
   labels:
+    io.rancher.scheduler.global: 'true'
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: frontend=yes
   tty: true
@@ -22,6 +23,7 @@ apache:
   ports:
   - 80:80/tcp
   labels:
+    io.rancher.scheduler.global: 'true'
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: frontend=yes
   tty: true
