@@ -1,5 +1,5 @@
 haproxy:
-  ports:
+  expose:
   - 5000:5000
   external_links:
   - www-backend/plone:plone
