@@ -42,9 +42,18 @@ On your laptop
 
 ## Upgrade
 
+On your laptop
+
+    $ git clone https://github.com/eea/eea.docker.www.git
+    $ cd eea.docker.www
+
 ### Upgrade Backend stack (plone instances, async workers)
 
-Update `KGS_VERSION` within `deploy/staging.env` then:
+Update `KGS_VERSION` within `deploy/staging.env`
+
+    $ vim deploy/staging.env
+
+Upgrade:
 
     $ cd deploy/www-backend
     $ rancher-compose -e ../staging.env up -d --upgrade --interval 60000 --batch-size 1
