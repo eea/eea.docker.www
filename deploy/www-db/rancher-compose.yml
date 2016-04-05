@@ -16,4 +16,4 @@ relcached:
     healthy_threshold: 2
 postgres:
   external_ips:
-  - 10.116.228.5
+  - ${POSTGRES_IP}

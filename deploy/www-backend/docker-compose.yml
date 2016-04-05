@@ -1,4 +1,5 @@
-plone:
+anon:
+  image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
   external_links:
@@ -9,7 +10,26 @@ plone:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
-  image: eeacms/www
+  volumes:
+  - filestorage:/data/filestorage
+  - blobstorage:/data/blobstorage
+  - downloads:/data/downloads
+  - www-static-resources:/data/www-static-resources
+  - eea.controlpanel:/data/eea.controlpanel
+  stdin_open: true
+  volume_driver: convoy-nfs
+auth:
+  image: eeacms/www:${KGS_VERSION}
+  environment:
+    ZOPE_MODE: rel_client
+  external_links:
+  - www-db/postgres:postgres
+  - www-db/relcached:relcached
+  - www-db/memcached:memcached
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: backend=yes
+  tty: true
   volumes:
   - filestorage:/data/filestorage
   - blobstorage:/data/blobstorage
@@ -19,6 +39,7 @@ plone:
   stdin_open: true
   volume_driver: convoy-nfs
 async:
+  image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_async
   external_links:
@@ -29,7 +50,6 @@ async:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
-  image: eeacms/www
   volumes:
   - filestorage:/data/filestorage
   - blobstorage:/data/blobstorage

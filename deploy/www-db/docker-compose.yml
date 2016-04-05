@@ -1,6 +1,6 @@
 memcached:
   environment:
-    MEMCACHED_MEMORY: '2048'
+    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.global: 'true'
@@ -10,7 +10,7 @@ memcached:
   stdin_open: true
 relcached:
   environment:
-    MEMCACHED_MEMORY: '2048'
+    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.global: 'true'

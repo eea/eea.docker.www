@@ -2,10 +2,12 @@ haproxy:
   expose:
   - 5000:5000
   external_links:
-  - www-backend/plone:plone
+  - www-backend/anon:anon
+  - www-backend/auth:auth
   labels:
     io.rancher.scheduler.affinity:host_label: frontend=yes
-    io.rancher.loadbalancer.target.www-backend/plone: '8080'
+    io.rancher.loadbalancer.target.www-backend/anon: '8080'
+    io.rancher.loadbalancer.target.www-backend/auth: '8080'
   tty: true
   image: rancher/load-balancer-service
   stdin_open: true
@@ -21,7 +23,7 @@ varnish:
   stdin_open: true
 apache:
   ports:
-  - 80:80/tcp
+  - ${FRONTEND_PORT_ON_HOST}:80/tcp
   labels:
     io.rancher.scheduler.global: 'true'
     io.rancher.container.pull_image: always
