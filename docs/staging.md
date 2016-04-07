@@ -7,8 +7,10 @@ Docker orchestration for EEA main portal services
 
 * [Rancher Compose](http://docs.rancher.com/rancher/rancher-compose/)
 * Add dedicated Rancher Environment called `Staging-WWW`
-* Register hosts within this Rancher Environment and label them with `db=yes`, `backend=yes`, `frontend=yes`
-* Add `blobs` and `www-static-resources` to a NFS Server visible by these hosts.
+* Min 3 hosts with label: `fileserver=yes`
+* Min 2 hosts with label: `db=yes`
+* Min 2 hosts with label: 'backend=yes'
+* Min 2 hosts with label: 'frontend=yes'
 * Update deployment settings to `deploy/staging.txt`
 
 
@@ -19,9 +21,14 @@ On your laptop
     $ git clone https://github.com/eea/eea.docker.www.git
     $ cd eea.docker.www
 
-### Setup NFS server (shared blobs and static resources)
+### Sart GlusterFS server (shared blobs and static resources)
 
-    $ cd deploy/convoy-nfs
+    $ cd deploy/glusterfs
+    $ rancher-compose -e ../staging.env up -d
+
+### Start Convoy GlusterFS driver
+
+    $ cd deploy/convoy-gluster
     $ rancher-compose -e ../staging.env up -d
 
 ### Start DB stack (postgres, memcached)

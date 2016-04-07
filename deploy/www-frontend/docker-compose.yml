@@ -35,4 +35,4 @@ apache:
   volumes:
   - www-static-resources:/var/www-static-resources
   stdin_open: true
-  volume_driver: convoy-nfs
+  volume_driver: convoy-gluster

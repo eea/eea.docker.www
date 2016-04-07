@@ -17,7 +17,7 @@ anon:
   - www-static-resources:/data/www-static-resources
   - eea.controlpanel:/data/eea.controlpanel
   stdin_open: true
-  volume_driver: convoy-nfs
+  volume_driver: convoy-gluster
 auth:
   image: eeacms/www:${KGS_VERSION}
   environment:
@@ -37,7 +37,7 @@ auth:
   - www-static-resources:/data/www-static-resources
   - eea.controlpanel:/data/eea.controlpanel
   stdin_open: true
-  volume_driver: convoy-nfs
+  volume_driver: convoy-gluster
 async:
   image: eeacms/www:${KGS_VERSION}
   environment:
@@ -57,4 +57,4 @@ async:
   - www-static-resources:/data/www-static-resources
   - eea.controlpanel:/data/eea.controlpanel
   stdin_open: true
-  volume_driver: convoy-nfs
+  volume_driver: convoy-gluster

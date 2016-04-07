@@ -1,4 +1,4 @@
-convoy-nfs:
+convoy-gluster:
   labels:
     io.rancher.container.create_agent: 'true'
     io.rancher.scheduler.global: 'true'
@@ -9,14 +9,15 @@ convoy-nfs:
     - /proc:/host/proc
     - /var/run:/host/var/run
     - /etc/docker/plugins:/etc/docker/plugins
-  image: rancher/convoy-agent:v0.7.0
-  command: volume-agent-nfs
+  external_links:
+    - glusterfs/glusterfs-server:glusterfs
+  image: rancher/convoy-agent:v0.3.0
+  command: volume-agent-glusterfs
 
-convoy-nfs-storagepool:
+convoy-gluster-storagepool:
   labels:
     io.rancher.container.create_agent: 'true'
-  image: rancher/convoy-agent:v0.7.0
   volumes:
     - /var/run:/host/var/run
+  image: rancher/convoy-agent:v0.3.0
   command: storagepool-agent
-
