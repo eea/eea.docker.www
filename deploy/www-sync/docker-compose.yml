@@ -1,0 +1,34 @@
+rsync-client:
+  environment:
+    CRON_TASK: ${CRON_TASK}
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: public=yes
+  tty: true
+  command:
+  - client
+  image: eeacms/rsync
+  volumes:
+  - blobstorage:/data/blobstorage
+  - www-static-resources:/data/www-static-resources
+  stdin_open: true
+  volume_driver: convoy-gluster
+rsync-server:
+  ports:
+  - 2222:22/tcp
+  environment:
+    SSH_AUTH_KEY: ${SSH_AUTH_KEY}
+  log_driver: ''
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: public=yes
+  tty: true
+  command:
+  - server
+  log_opt: {}
+  image: eeacms/rsync
+  volumes:
+  - blobstorage:/data/blobstorage
+  - www-static-resources:/data/www-static-resources
+  stdin_open: true
+  volume_driver: convoy-gluster
