@@ -23,7 +23,8 @@ On your laptop
     $ git clone https://github.com/eea/eea.docker.www.git
     $ cd eea.docker.www
 
-### Sart GlusterFS server (shared blobs and static resources)
+
+### Start GlusterFS server (shared blobs and static resources)
 
     $ cd deploy/glusterfs
     $ rancher-compose -e ../staging.env up -d
@@ -31,6 +32,11 @@ On your laptop
 ### Start Convoy GlusterFS driver
 
     $ cd deploy/convoy-gluster
+    $ rancher-compose -e ../staging.env up -d
+
+### Start SYNC stack (sync blobs and static resources from production/to testing)
+
+    $ cd deploy/www-sync
     $ rancher-compose -e ../staging.env up -d
 
 ### Start DB stack (postgres, memcached)
@@ -46,7 +52,7 @@ On your laptop
 ### Start Frontend stack (apache, varnish, haproxy)
 
     $ cd deploy/www-frontend
-    # rancher-compose -e ../staging.env up -d
+    $ rancher-compose -e ../staging.env up -d
 
 
 ## Upgrade
