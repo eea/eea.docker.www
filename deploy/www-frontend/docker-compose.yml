@@ -1,16 +1,16 @@
 haproxy:
-  expose:
-  - 5000:5000
   external_links:
   - www-backend/anon:anon
   - www-backend/auth:auth
   labels:
     io.rancher.scheduler.affinity:host_label: frontend=yes
-    io.rancher.loadbalancer.target.www-backend/anon: '8080'
-    io.rancher.loadbalancer.target.www-backend/auth: '8080'
   tty: true
-  image: rancher/load-balancer-service
+  image: eeacms/haproxy
   stdin_open: true
+  environment:
+  - BACKENDS=anon auth
+  - BACKENDS_PORT=8080
+  - DNS_ENABLED=true
 varnish:
   labels:
     io.rancher.scheduler.global: 'true'
