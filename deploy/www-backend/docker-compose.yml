@@ -18,6 +18,26 @@ anon:
   - eea.controlpanel:/data/eea.controlpanel
   stdin_open: true
   volume_driver: convoy-gluster
+download:
+  image: eeacms/www:${KGS_VERSION}
+  environment:
+    ZOPE_MODE: rel_client
+  external_links:
+  - www-db/postgres:postgres
+  - www-db/relcached:relcached
+  - www-db/memcached:memcached
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: backend=yes
+  tty: true
+  volumes:
+  - filestorage:/data/filestorage
+  - blobstorage:/data/blobstorage
+  - downloads:/data/downloads
+  - www-static-resources:/data/www-static-resources
+  - eea.controlpanel:/data/eea.controlpanel
+  stdin_open: true
+  volume_driver: convoy-gluster
 auth:
   image: eeacms/www:${KGS_VERSION}
   environment:

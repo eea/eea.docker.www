@@ -8,6 +8,16 @@ anon:
     strategy: recreate
     response_timeout: 3000
     healthy_threshold: 2
+download:
+  scale: ${DOWNLOAD_SCALE}
+  health_check:
+    port: 8080
+    interval: 5000
+    initializing_timeout: 300000
+    unhealthy_threshold: 3
+    strategy: recreate
+    response_timeout: 3000
+    healthy_threshold: 2
 auth:
   scale: ${AUTH_SCALE}
   health_check:

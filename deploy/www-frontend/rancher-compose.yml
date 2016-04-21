@@ -1,16 +1,6 @@
-haproxy:
-  scale: 1
-  load_balancer_config:
-    haproxy_config: {}
-  health_check:
-    port: 4242
-    interval: 2000
-    unhealthy_threshold: 3
-    healthy_threshold: 2
-    response_timeout: 2000
 varnish:
   health_check:
-    port: 80
+    port: 6081
     interval: 30000
     initializing_timeout: 60000
     unhealthy_threshold: 3
