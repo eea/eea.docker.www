@@ -33,5 +33,5 @@ echo "Done"
 
 if [ ! -d $(pwd)/src/eea.devel ]; then
   echo "Updating source code..."
-  su zope-www -c "docker-compose up source_code"
+  su zope-www -c "docker-compose -f source-code.yml up"
 fi

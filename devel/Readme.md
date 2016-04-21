@@ -59,7 +59,7 @@ Optionally add a ngnix entry on swarm-master. See `alin-devel` for an example.
 
 ### Source code
 
-    $ docker-compose up source_code
+    $ docker-compose -f source-code.yml up
 
 ### Database
 
