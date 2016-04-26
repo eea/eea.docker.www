@@ -19,4 +19,73 @@ relcached:
   image: eeacms/memcached
   stdin_open: true
 postgres:
-  image: rancher/external-service
+  image: rancher/dns-service
+  links:
+  - postgres-master:postgres-master
+postgres-master:
+  image: eeacms/postgres
+  labels:
+    io.rancher.sidekicks: postgres-master-data
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: db=yes
+    io.rancher.scheduler.affinity:container_label_ne: postgres=yes
+    postgres: 'yes'
+  tty: true
+  stdin_open: true
+  environment:
+  - POSTGRES_USER=postgres
+  - POSTGRES_PASSWORD=postgres
+  - POSTGRES_DBNAME=datafs zasync
+  - POSTGRES_DBUSER=zope
+  - POSTGRES_DBPASS=zope
+  - POSTGRES_CONFIG_wal_level=hot_standby
+  - POSTGRES_CONFIG_max_wal_senders=8
+  - POSTGRES_CONFIG_wal_keep_segments=8
+  - POSTGRES_CONFIG_hot_standby=on
+  volumes:
+  - www-postgres-dump:/postgresql.backup
+  volumes_from:
+  - postgres-master-data
+  volume_driver: convoy-gluster
+postgres-master-data:
+  image: busybox
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
+  tty: true
+  stdin_open: true
+  volumes:
+  - /var/lib/postgresql/data
+  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+postgres-replica:
+  image: eeacms/postgres
+  labels:
+    io.rancher.sidekicks: postgres-replica-data
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: db=yes
+    io.rancher.scheduler.affinity:container_label_ne: postgres=yes
+    postgres: 'yes'
+  tty: true
+  stdin_open: true
+  links:
+  - postgres-master:master
+  environment:
+  - POSTGRES_USER=postgres
+  - POSTGRES_PASSWORD=postgres
+  - POSTGRES_CONFIG_wal_level=hot_standby
+  - POSTGRES_CONFIG_max_wal_senders=8
+  - POSTGRES_CONFIG_wal_keep_segments=8
+  - POSTGRES_CONFIG_hot_standby=on
+  - POSTGRES_REPLICATE_FROM=master
+  volumes_from:
+  - postgres-replica-data
+postgres-replica-data:
+  image: busybox
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
+  tty: true
+  stdin_open: true
+  volumes:
+  - /var/lib/postgresql/data
+  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]

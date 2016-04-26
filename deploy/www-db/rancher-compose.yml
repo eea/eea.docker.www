@@ -14,6 +14,25 @@ relcached:
     strategy: recreate
     response_timeout: 2000
     healthy_threshold: 2
-postgres:
-  external_ips:
-  - ${POSTGRES_IP}
+postgres-master:
+  scale: 1
+  health_check:
+    port: 5432
+    interval: 2000
+    unhealthy_threshold: 3
+    strategy: none
+    response_timeout: 2000
+    healthy_threshold: 2
+postgres-master-data:
+  scale: 1
+postgres-replica:
+  scale: 1
+  health_check:
+    port: 5432
+    interval: 2000
+    unhealthy_threshold: 3
+    strategy: none
+    response_timeout: 2000
+    healthy_threshold: 2
+postgres-replica-data:
+  scale: 1
