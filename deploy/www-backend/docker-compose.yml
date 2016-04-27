@@ -11,11 +11,11 @@ anon:
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
   volumes:
-  - filestorage:/data/filestorage
-  - blobstorage:/data/blobstorage
-  - downloads:/data/downloads
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
-  - eea.controlpanel:/data/eea.controlpanel
+  - www-eea-controlpanel:/data/eea.controlpanel
   stdin_open: true
   volume_driver: convoy-gluster
 download:
@@ -31,11 +31,11 @@ download:
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
   volumes:
-  - filestorage:/data/filestorage
-  - blobstorage:/data/blobstorage
-  - downloads:/data/downloads
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
-  - eea.controlpanel:/data/eea.controlpanel
+  - www-eea-controlpanel:/data/eea.controlpanel
   stdin_open: true
   volume_driver: convoy-gluster
 auth:
@@ -51,11 +51,11 @@ auth:
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
   volumes:
-  - filestorage:/data/filestorage
-  - blobstorage:/data/blobstorage
-  - downloads:/data/downloads
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
-  - eea.controlpanel:/data/eea.controlpanel
+  - www-eea-controlpanel:/data/eea.controlpanel
   stdin_open: true
   volume_driver: convoy-gluster
 async:
@@ -71,10 +71,10 @@ async:
     io.rancher.scheduler.affinity:host_label: backend=yes
   tty: true
   volumes:
-  - filestorage:/data/filestorage
-  - blobstorage:/data/blobstorage
-  - downloads:/data/downloads
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
-  - eea.controlpanel:/data/eea.controlpanel
+  - www-eea-controlpanel:/data/eea.controlpanel
   stdin_open: true
   volume_driver: convoy-gluster

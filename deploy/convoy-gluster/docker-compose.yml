@@ -10,7 +10,7 @@ convoy-gluster:
     - /var/run:/host/var/run
     - /etc/docker/plugins:/etc/docker/plugins
   external_links:
-    - glusterfs/glusterfs-server:glusterfs
+    - www-glusterfs/glusterfs-server:glusterfs
   image: rancher/convoy-agent:v0.3.0
   command: volume-agent-glusterfs
 

@@ -9,8 +9,12 @@ rsync-client:
   - client
   image: eeacms/rsync
   volumes:
-  - blobstorage:/data/blobstorage
+  - www-blobstorage:/data/blobstorage
+  - www-filestorage:/data/filestorage
+  - www-downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
+  - www-eea-controlpanel:/data/eea.controlpanel
+  - www-postgres-dump:/data/postgresql.backup
   stdin_open: true
   volume_driver: convoy-gluster
 rsync-server:
@@ -28,7 +32,11 @@ rsync-server:
   log_opt: {}
   image: eeacms/rsync
   volumes:
-  - blobstorage:/data/blobstorage
+  - www-blobstorage:/data/blobstorage
+  - www-filestorage:/data/filestorage
+  - www-downloads:/data/downloads
   - www-static-resources:/data/www-static-resources
+  - www-eea-controlpanel:/data/eea.controlpanel
+  - www-postgres-dump:/data/postgresql.backup
   stdin_open: true
   volume_driver: convoy-gluster
