@@ -77,8 +77,11 @@ postgres-replica:
   - POSTGRES_CONFIG_wal_keep_segments=8
   - POSTGRES_CONFIG_hot_standby=on
   - POSTGRES_REPLICATE_FROM=master
+  volumes:
+  - www-postgres-dump:/postgresql.backup
   volumes_from:
   - postgres-replica-data
+  volume_driver: convoy-gluster
 postgres-replica-data:
   image: busybox
   labels:
