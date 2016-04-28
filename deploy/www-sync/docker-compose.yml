@@ -1,6 +1,7 @@
 rsync-client:
   environment:
-    CRON_TASK: ${CRON_TASK}
+    CRON_TASK_1: ${CRON_TASK_1}
+    CRON_TASK_2: ${CRON_TASK_2}
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: public=yes
