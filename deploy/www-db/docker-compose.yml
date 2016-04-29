@@ -42,6 +42,7 @@ postgres-master:
   - POSTGRES_CONFIG_max_wal_senders=8
   - POSTGRES_CONFIG_wal_keep_segments=8
   - POSTGRES_CONFIG_hot_standby=on
+  - POSTGRES_CRON_1=${POSTGRES_CRON_1}
   volumes:
   - www-postgres-dump:/postgresql.backup
   volumes_from:
