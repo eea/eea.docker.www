@@ -1,4 +1,6 @@
 *.pyc
 .secret
+.cloudaccess
+.installed
 *.gz
 devel/src
