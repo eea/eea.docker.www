@@ -42,6 +42,17 @@ plone:
   - ZOPE_MODE=rel_client
   command: ['fg']
 
+ide:
+  image: eeacms/cloud9
+  volumes_from:
+  - plone
+  links:
+  - plone
+  ports:
+  - "9000:8080"
+  environment:
+    - C9_WORKSPACE=/plone/instance
+
 async:
   image: eeacms/www:devel
   links:
