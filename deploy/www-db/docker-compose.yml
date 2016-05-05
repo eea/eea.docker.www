@@ -74,6 +74,7 @@ postgres-replica:
   environment:
   - POSTGRES_USER=postgres
   - POSTGRES_PASSWORD=postgres
+  - POSTGRES_CONFIG_max_connections=${POSTGRES_MAX_CONNECTIONS}
   - POSTGRES_CONFIG_wal_level=hot_standby
   - POSTGRES_CONFIG_max_wal_senders=8
   - POSTGRES_CONFIG_wal_keep_segments=8
