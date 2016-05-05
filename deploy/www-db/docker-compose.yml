@@ -23,7 +23,7 @@ postgres:
   links:
   - postgres-master:postgres-master
 postgres-master:
-  image: eeacms/postgres
+  image: eeacms/postgres:${POSTGRES_VERSION}
   labels:
     io.rancher.sidekicks: postgres-master-data
     io.rancher.container.pull_image: always
@@ -60,7 +60,7 @@ postgres-master-data:
   - /var/lib/postgresql/data
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
 postgres-replica:
-  image: eeacms/postgres
+  image: eeacms/postgres:${POSTGRES_VERSION}
   labels:
     io.rancher.sidekicks: postgres-replica-data
     io.rancher.container.pull_image: always
