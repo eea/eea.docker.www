@@ -39,9 +39,8 @@ for (( i=$SUFFIX; i<=($SUFFIX+2); i++ )); do
              --env-file=.secret \
              --env-file=.cloudaccess \
              -e INSTANCE_NAME=$PREFIX-$i \
-             -e INSTANCE_DOCKER_VOLUME_SIZE=256 \
+             -e INSTANCE_DOCKER_VOLUME_SIZE=384 \
              -e INSTANCE_DOCKER_VOLUME_TYPE=top \
-             -e INSTANCE_FLAVOR=e2standard.x4 \
           eeacms/os-docker-vm
 done
 
@@ -72,7 +71,6 @@ for (( i=$SUFFIX+5; i<=($SUFFIX+8); i++ )); do
              --env-file=.secret \
              --env-file=.cloudaccess \
              -e INSTANCE_NAME=$PREFIX-$i \
-             -e INSTANCE_FLAVOR=e2standard.x4 \
           eeacms/os-docker-vm
 done
 
@@ -87,6 +85,5 @@ for (( i=$SUFFIX+9; i<=($SUFFIX+10); i++ )); do
              --env-file=.secret \
              --env-file=.cloudaccess \
              -e INSTANCE_NAME=$PREFIX-$i \
-             -e INSTANCE_FLAVOR=e2standard.x4 \
           eeacms/os-docker-vm
 done

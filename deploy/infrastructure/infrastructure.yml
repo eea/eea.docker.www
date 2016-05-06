@@ -4,9 +4,8 @@ fileserver:
   - .cloudaccess
   - .secret
   environment:
-  - INSTANCE_DOCKER_VOLUME_SIZE=256
+  - INSTANCE_DOCKER_VOLUME_SIZE=384
   - INSTANCE_DOCKER_VOLUME_TYPE=top
-  - INSTANCE_FLAVOR=e2standard.x4
 db:
   image: eeacms/os-docker-vm
   env_file:
@@ -20,12 +19,8 @@ backend:
   env_file:
   - .cloudaccess
   - .secret
-  environment:
-  - INSTANCE_FLAVOR=e2standard.x4
 frontend:
   image: eeacms/os-docker-vm
   env_file:
   - .cloudaccess
   - .secret
-  environment:
-  - INSTANCE_FLAVOR=e2standard.x4
