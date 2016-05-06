@@ -111,6 +111,7 @@ Update `KGS_VERSION` within `deploy/staging.env`
 Upgrade:
 
     $ cd deploy/www-backend
+    $ rancher-compose -e ../staging.env pull
     $ rancher-compose -e ../staging.env up -d --upgrade --interval 60000 --batch-size 1
 
 If the upgrade went well, finish the upgrade with:
