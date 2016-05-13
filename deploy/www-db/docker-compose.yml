@@ -1,33 +1,9 @@
-memcached:
-  environment:
-    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
-  labels:
-    io.rancher.container.pull_image: always
-    io.rancher.scheduler.global: 'true'
-    io.rancher.scheduler.affinity:host_label: db=yes
-  tty: true
-  image: eeacms/memcached
-  stdin_open: true
-relcached:
-  environment:
-    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
-  labels:
-    io.rancher.container.pull_image: always
-    io.rancher.scheduler.global: 'true'
-    io.rancher.scheduler.affinity:host_label: db=yes
-  tty: true
-  image: eeacms/memcached
-  stdin_open: true
-postgres:
-  image: rancher/dns-service
-  links:
-  - postgres-master:postgres-master
 postgres-master:
   image: eeacms/postgres:${POSTGRES_VERSION}
   labels:
     io.rancher.sidekicks: postgres-master-data
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: db=yes
+    io.rancher.scheduler.affinity:host_label: www=yes,db=yes
     io.rancher.scheduler.affinity:container_label_ne: postgres=yes
     postgres: 'yes'
   tty: true
@@ -64,7 +40,7 @@ postgres-replica:
   labels:
     io.rancher.sidekicks: postgres-replica-data
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: db=yes
+    io.rancher.scheduler.affinity:host_label: www=yes,db=yes
     io.rancher.scheduler.affinity:container_label_ne: postgres=yes
     postgres: 'yes'
   tty: true

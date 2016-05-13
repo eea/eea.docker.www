@@ -1,0 +1,151 @@
+#
+# Front-end
+#
+apache:
+  labels:
+    io.rancher.scheduler.global: 'true'
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: frontend=yes
+  tty: true
+  image: eeacms/apache-eea-www
+  links:
+  - varnish:varnish
+  volumes:
+  - www-static-resources:/var/www-static-resources
+  stdin_open: true
+  volume_driver: ${VOLUME_DRIVER}
+varnish:
+  labels:
+    io.rancher.scheduler.global: 'true'
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: frontend=yes
+  tty: true
+  image: eeacms/varnish-eea-www
+  links:
+  - anon:anon
+  - auth:auth
+  - download:download
+  stdin_open: true
+  environment:
+  - BACKENDS=anon auth download
+  - BACKENDS_PORT=8080
+  - BACKENDS_PROBE_URL=${VARNISH_PROBE_URL}
+  - BACKENDS_PROBE_TIMEOUT=${VARNISH_PROBE_TIMEOUT}
+  - BACKENDS_PROBE_INTERVAL=${VARNISH_PROBE_INTERVAL}
+  - BACKENDS_PROBE_WINDOW=${VARNISH_PROBE_WINDOW}
+  - BACKENDS_PROBE_THRESHOLD=${VARNISH_PROBE_THRESHOLD}
+  - BACKENDS_SAINT_MODE=true
+  - DNS_ENABLED=true
+#
+# Plone Backends
+#
+anon:
+  image: eeacms/www:${KGS_VERSION}
+  environment:
+    ZOPE_MODE: rel_client
+  links:
+  - postgres:postgres
+  - relcached:relcached
+  - memcached:memcached
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: backend=yes
+  tty: true
+  volumes:
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
+  - www-static-resources:/data/www-static-resources
+  - www-eea-controlpanel:/data/eea.controlpanel
+  stdin_open: true
+  volume_driver: ${VOLUME_DRIVER}
+download:
+  image: eeacms/www:${KGS_VERSION}
+  environment:
+    ZOPE_MODE: rel_client
+  links:
+  - postgres:postgres
+  - relcached:relcached
+  - memcached:memcached
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: backend=yes
+  tty: true
+  volumes:
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
+  - www-static-resources:/data/www-static-resources
+  - www-eea-controlpanel:/data/eea.controlpanel
+  stdin_open: true
+  volume_driver: ${VOLUME_DRIVER}
+auth:
+  image: eeacms/www:${KGS_VERSION}
+  environment:
+    ZOPE_MODE: rel_client
+  links:
+  - postgres:postgres
+  - relcached:relcached
+  - memcached:memcached
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: backend=yes
+  tty: true
+  volumes:
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
+  - www-static-resources:/data/www-static-resources
+  - www-eea-controlpanel:/data/eea.controlpanel
+  stdin_open: true
+  volume_driver: ${VOLUME_DRIVER}
+async:
+  image: eeacms/www:${KGS_VERSION}
+  environment:
+    ZOPE_MODE: rel_async
+  links:
+  - memcached:memcached
+  - relcached:relcached
+  - postgres:postgres
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: backend=yes
+  tty: true
+  volumes:
+  - www-filestorage:/data/filestorage
+  - www-blobstorage:/data/blobstorage
+  - www-downloads:/data/downloads
+  - www-static-resources:/data/www-static-resources
+  - www-eea-controlpanel:/data/eea.controlpanel
+  stdin_open: true
+  volume_driver: ${VOLUME_DRIVER}
+#
+# Cache
+#
+memcached:
+  environment:
+    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: 'true'
+    io.rancher.scheduler.affinity:host_label: db=yes
+  tty: true
+  image: eeacms/memcached
+  stdin_open: true
+relcached:
+  environment:
+    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: 'true'
+    io.rancher.scheduler.affinity:host_label: db=yes
+  tty: true
+  image: eeacms/memcached
+  stdin_open: true
+#
+# DB
+#
+postgres:
+  image: rancher/dns-service
+  external_links:
+  - www-db/postgres-master:postgres

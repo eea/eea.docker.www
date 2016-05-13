@@ -1,19 +1,3 @@
-memcached:
-  health_check:
-    port: 11211
-    interval: 2000
-    unhealthy_threshold: 3
-    strategy: recreate
-    response_timeout: 2000
-    healthy_threshold: 2
-relcached:
-  health_check:
-    port: 11211
-    interval: 2000
-    unhealthy_threshold: 3
-    strategy: recreate
-    response_timeout: 2000
-    healthy_threshold: 2
 postgres-master:
   scale: 1
   health_check:
