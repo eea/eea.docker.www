@@ -75,19 +75,14 @@ SSH on these machines and prepare them for Rancher registration:
 Make sure that `Production` can connect to `rsync-server`.
 Make sure that `rsync-client` can connect to `Testing/Development`.
 
-### Start DB stack (postgres, memcached)
+### Start DB stack (postgres)
 
     $ cd deploy/www-db
     $ rancher-compose -e ../staging.env up -d
 
-### Start Backend stack (plone instances, async workers)
+### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
-    $ cd deploy/www-backend
-    $ rancher-compose -e ../staging.env up -d
-
-### Start Frontend stack (apache, varnish, haproxy)
-
-    $ cd deploy/www-frontend
+    $ cd deploy/www-eea
     $ rancher-compose -e ../staging.env up -d
 
 ### Add Load-Balancer (optional if not done already by other stack)
@@ -110,7 +105,7 @@ Update `KGS_VERSION` within `deploy/staging.env`
 
 Upgrade:
 
-    $ cd deploy/www-backend
+    $ cd deploy/www-eea
     $ rancher-compose -e ../staging.env pull
     $ rancher-compose -e ../staging.env up -d --upgrade --interval 60000 --batch-size 1
 
