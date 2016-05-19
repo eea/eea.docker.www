@@ -36,7 +36,8 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 ### Register above hosts within Rancher
 
 * Register dedicated `fileserver` hosts with label `fileserver=yes` (GlusterFS)
-* Register dedicated `db` hosts with labels: `db=yes` and `cache=yes` (Memcache and PostgreSQL)
+* Register dedicated `db` hosts with label: `db=yes` (PostgreSQL)
+* Register dedicated `cache` hosts with label: `cache=yes` (Memcache)
 * Register dedicated `backend` hosts with label: `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `public=yes` (Sync, Load Balancer)
