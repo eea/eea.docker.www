@@ -24,7 +24,7 @@ Add required info within `.cloudaccess` and `.secret` needed by [eeacms/os-docke
     $ vim .secret
 
 The `base-flavors.yml` contains the basic flavors specifications for the infrastructure. Make sure that you are using the correct tag for eeacms/os-docker-vm.
-   
+
 The `docker-compose.yml` extends the base-flavors.yml to create specific number of VMs. Adjust the `INSTANCE_NAME` in order to give the unique names and according to your naming conventions.
 
 To create the VMs run the following command and note the output:
@@ -36,7 +36,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 ### Register above hosts within Rancher
 
 * Register dedicated `fileserver` hosts with label `fileserver=yes` (GlusterFS)
-* Register dedicated `db` hosts with label: `db=yes` (Memcache and PostgreSQL)
+* Register dedicated `db` hosts with labels: `db=yes` and `cache=yes` (Memcache and PostgreSQL)
 * Register dedicated `backend` hosts with label: `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `public=yes` (Sync, Load Balancer)

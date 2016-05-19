@@ -128,7 +128,7 @@ memcached:
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.global: 'true'
-    io.rancher.scheduler.affinity:host_label: db=yes
+    io.rancher.scheduler.affinity:host_label: cache=yes
   tty: true
   image: eeacms/memcached
   stdin_open: true
@@ -138,7 +138,7 @@ relcached:
   labels:
     io.rancher.container.pull_image: always
     io.rancher.scheduler.global: 'true'
-    io.rancher.scheduler.affinity:host_label: db=yes
+    io.rancher.scheduler.affinity:host_label: cache=yes
   tty: true
   image: eeacms/memcached
   stdin_open: true
