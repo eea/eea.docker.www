@@ -33,14 +33,6 @@ To create the VMs run the following command and note the output:
 
 After around 5 min you should have all the VMs created on the specified cloud provider tenant and region.
 
-SSH on these machines and prepare them for Rancher registration:
-
-    $ sudo bash
-    $ hostnamectl set-hostname dev-mil-NN
-    $ mkfs.ext4 /dev/vdc
-    $ echo "/dev/vdc /var/lib/docker/volumes ext4    defaults        1 2" >> /etc/fstab
-    $ /root/run-docker-storage-setup-once.sh
-
 ### Register above hosts within Rancher
 
 * Register dedicated `fileserver` hosts with label `fileserver=yes` (GlusterFS)
