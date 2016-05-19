@@ -23,23 +23,15 @@ Add required info within `.cloudaccess` and `.secret` needed by [eeacms/os-docke
     $ vim .cloudaccess
     $ vim .secret
 
-Create VMs (adjust `PREFIX` and `SUFFIX` according to deployment tenant/region and next available host name):
+The `base-flavors.yml` contains the basic flavors specifications for the infrastructure. Make sure that you are using the correct tag for eeacms/os-docker-vm.
+   
+The `docker-compose.yml` extends the base-flavors.yml to create specific number of VMs. Adjust the `INSTANCE_NAME` in order to give the unique names and according to your naming conventions.
 
-    $ PREFIX=dev-mil SUFFIX=10 ./setup.sh
+To create the VMs run the following command and note the output:
 
-The above command will create the following VMs:
+    $ docker-compose up
 
-    dev-mil-10 (fileserver)
-    dev-mil-11 (fileserver)
-    dev-mil-12 (fileserver)
-    dev-mil-13 (db)
-    dev-mil-14 (db)
-    dev-mil-15 (backend)
-    dev-mil-16 (backend)
-    dev-mil-17 (backend)
-    dev-mil-18 (backend)
-    dev-mil-19 (frontend)
-    dev-mil-20 (frontend)
+After around 5 min you should have all the VMs created on the specified cloud provider tenant and region.
 
 SSH on these machines and prepare them for Rancher registration:
 
