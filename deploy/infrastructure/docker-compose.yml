@@ -7,21 +7,21 @@ fileserver1:
     file: base-flavors.yml
     service: fileserver
   environment:
-  - INSTANCE_NAME=dev-mil-fileserver1
+  - INSTANCE_NAME=dev-mil-fs-test1
 
 fileserver2:
   extends:
     file: base-flavors.yml
     service: fileserver
   environment:
-  - INSTANCE_NAME=dev-mil-fileserver2
+  - INSTANCE_NAME=dev-mil-fs-test2
 
 fileserver3:
   extends:
     file: base-flavors.yml
     service: fileserver
   environment:
-  - INSTANCE_NAME=dev-mil-fileserver3
+  - INSTANCE_NAME=dev-mil-fs-test3
 
 
 ####################
@@ -33,14 +33,14 @@ db1:
     file: base-flavors.yml
     service: db
   environment:
-  - INSTANCE_NAME=dev-mil-db1
+  - INSTANCE_NAME=dev-mil-db-test1
 
 db2:
   extends:
     file: base-flavors.yml
     service: db
   environment:
-  - INSTANCE_NAME=dev-mil-db2
+  - INSTANCE_NAME=dev-mil-db-test2
 
 
 ###########################
@@ -52,14 +52,14 @@ plone1:
     file: base-flavors.yml
     service: plone
   environment:
-  - INSTANCE_NAME=dev-mil-plone1
+  - INSTANCE_NAME=dev-mil-plone-test1
 
 plone2:
   extends:
     file: base-flavors.yml
     service: plone
   environment:
-  - INSTANCE_NAME=dev-mil-plone2
+  - INSTANCE_NAME=dev-mil-plone-test2
 
 
 #########################
@@ -71,4 +71,4 @@ frontend:
     file: base-flavors.yml
     service: frontend
   environment:
-  - INSTANCE_NAME=dev-mil-frontend
+  - INSTANCE_NAME=dev-mil-frontend-test
