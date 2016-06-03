@@ -43,9 +43,6 @@ anon:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
-    WARMUP_BIN: /plone/instance/bin/warmup
-    WARMUP_INI: /plone/instance/warmup.ini
-    WARMUP_HEALTH_THRESHOLD: 100000
   links:
   - postgres:postgres
   - relcached:relcached
@@ -66,9 +63,6 @@ download:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
-    WARMUP_BIN: /plone/instance/bin/warmup
-    WARMUP_INI: /plone/instance/warmup.ini
-    WARMUP_HEALTH_THRESHOLD: 100000
   links:
   - postgres:postgres
   - relcached:relcached
@@ -89,9 +83,6 @@ auth:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
-    WARMUP_BIN: /plone/instance/bin/warmup
-    WARMUP_INI: /plone/instance/warmup.ini
-    WARMUP_HEALTH_THRESHOLD: 100000
   links:
   - postgres:postgres
   - relcached:relcached
