@@ -15,8 +15,8 @@ if [ -z "$FSTAB" ]; then
   echo "Mounting /var/zodb and /var/blobstorage..."
   mkdir -p /var/zodb
   mkdir -p /var/blobstorage
-  echo "10.142.71.23:/mnt/vdb1/zodbfilestorage      /var/zodb        nfs     defaults,ro     0 0" >> /etc/fstab
-  echo "10.142.71.23:/mnt/vdb1/sharedblobstorage    /var/blobstorage      nfs     nfsvers=3,rsize=32768,wsize=32768,noatime,nodiratime        0 0" >> /etc/fstab
+  echo "10.142.71.182:/mnt/vdb1/zodbfilestorage      /var/zodb        nfs     defaults,ro     0 0" >> /etc/fstab
+  echo "10.142.71.182:/mnt/vdb1/sharedblobstorage    /var/blobstorage      nfs     nfsvers=3,rsize=32768,wsize=32768,noatime,nodiratime        0 0" >> /etc/fstab
   echo "Done"
   mount -a
 fi
