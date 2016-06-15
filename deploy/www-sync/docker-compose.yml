@@ -4,7 +4,7 @@ rsync-client:
     CRON_TASK_2: ${CRON_TASK_2}
   labels:
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: public=yes
+    io.rancher.scheduler.affinity:host_label: www=yes,public=yes
   tty: true
   command:
   - client
@@ -17,7 +17,7 @@ rsync-client:
   - www-eea-controlpanel:/data/eea.controlpanel
   - www-postgres-dump:/data/postgresql.backup
   stdin_open: true
-  volume_driver: convoy-gluster
+  volume_driver: ${VOLUME_DRIVER}
 rsync-server:
   ports:
   - 2222:22/tcp
@@ -26,7 +26,7 @@ rsync-server:
   log_driver: ''
   labels:
     io.rancher.container.pull_image: always
-    io.rancher.scheduler.affinity:host_label: public=yes
+    io.rancher.scheduler.affinity:host_label: www=yes,public=yes
   tty: true
   command:
   - server
@@ -40,4 +40,4 @@ rsync-server:
   - www-eea-controlpanel:/data/eea.controlpanel
   - www-postgres-dump:/data/postgresql.backup
   stdin_open: true
-  volume_driver: convoy-gluster
+  volume_driver: ${VOLUME_DRIVER}

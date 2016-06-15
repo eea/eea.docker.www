@@ -5,7 +5,7 @@ Docker orchestration for EEA main portal services
 ## Pre-requirements
 
 * [Rancher Compose](http://docs.rancher.com/rancher/rancher-compose/)
-* Dedicated Rancher Environment
+* Dedicated Rancher Environment (recommended)
 
 ## Installation
 
@@ -35,21 +35,25 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 ### Register above hosts within Rancher
 
-* Register dedicated `fileserver` hosts with label `fileserver=yes` (GlusterFS)
-* Register dedicated `db` hosts with label: `db=yes` (PostgreSQL)
-* Register dedicated `cache` hosts with label: `cache=yes` (Memcache)
-* Register dedicated `backend` hosts with label: `backend=yes` (Plone)
-* Register dedicated `frontend` hosts with label: `frontend=yes` (Varnish, Apache)
+* Register dedicated `fileserver` hosts with labels `www=yes`, `fileserver=yes` (NFS Server)
+* Register dedicated `db` hosts with labels: `www=yes`, `db=yes` (PostgreSQL)
+* Register dedicated `cache` hosts with labels: `www=yes`, `cache=yes` (Memcache)
+* Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
+* Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `public=yes` (Sync, Load Balancer)
 
-### Start GlusterFS server (shared blobs and static resources)
+### Setup NFS server to be used with ConvoyNFS (shared blobs and static resources)
 
-    $ cd deploy/glusterfs
-    $ rancher-compose -e ../staging.env up -d
+    $ ssh <fileserver-ip>
+    $ yum install -y rpcbind nfs-server
+    $ docker run --rm -v nfs:/data alpine touch /data/test
+    $ echo "/var/lib/docker/volumes/nfs/_data 10.128.0.0/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
+    $ systemctl restart rpcbind
+    $ systemctl restart nfs-server
 
-### Start Convoy GlusterFS driver
+### Start Convoy NFS driver
 
-    $ cd deploy/convoy-gluster
+    $ cd deploy/convoy-nfs
     $ rancher-compose -e ../staging.env up -d
 
 ### Start SYNC stack (sync blobs and static resources from production/to testing)

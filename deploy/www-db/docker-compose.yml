@@ -24,7 +24,7 @@ postgres-master:
   - www-postgres-dump:/postgresql.backup
   volumes_from:
   - postgres-master-data
-  volume_driver: convoy-gluster
+  volume_driver: ${VOLUME_DRIVER}
 postgres-master-data:
   image: busybox
   labels:
@@ -60,7 +60,7 @@ postgres-replica:
   - www-postgres-dump:/postgresql.backup
   volumes_from:
   - postgres-replica-data
-  volume_driver: convoy-gluster
+  volume_driver: ${VOLUME_DRIVER}
 postgres-replica-data:
   image: busybox
   labels:
