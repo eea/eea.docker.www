@@ -45,11 +45,10 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 ### Setup NFS server to be used with ConvoyNFS (shared blobs and static resources)
 
     $ ssh <fileserver-ip>
-    $ yum install -y rpcbind nfs-server
     $ docker run --rm -v nfs:/data alpine touch /data/test
     $ echo "/var/lib/docker/volumes/nfs/_data 10.128.0.0/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
-    $ systemctl restart rpcbind
-    $ systemctl restart nfs-server
+    $ systemctl enable rpcbind nfs-server
+    $ systemctl restart rpcbind nfs-server
 
 ### Start Convoy NFS driver
 

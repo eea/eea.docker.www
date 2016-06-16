@@ -7,7 +7,7 @@ fileserver1:
     file: base-flavors.yml
     service: fileserver
   environment:
-  - INSTANCE_NAME=dev-mil-fs-test1
+  - INSTANCE_NAME=dev-mil-www-nfs
 
 ####################
 # Add 2 hosts for DB
