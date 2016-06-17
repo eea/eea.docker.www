@@ -1,3 +1,35 @@
+#
+# PostgreSQL Live replica from production
+#
+postgres-upstream-replica:
+  image: eeacms/postgres:${POSTGRES_VERSION}
+  labels:
+    io.rancher.sidekicks: postgres-upstream-replica-data
+    io.rancher.container.pull_image: always
+    io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
+  tty: true
+  stdin_open: true
+  environment:
+  - POSTGRES_CRON_1=${POSTGRES_UPSTREM_CRON_1}
+  volumes:
+  - www-postgres-dump:/postgresql.backup
+  volumes_from:
+  - postgres-upstream-replica-data
+  volume_driver: ${VOLUME_DRIVER}
+postgres-upstream-replica-data:
+  image: busybox
+  tty: true
+  stdin_open: true
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
+  volumes:
+  - www-postgres-data:/var/lib/postgresql/data
+  - www-postgres-archive:/var/lib/postgresql/archive
+  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/"]
+#
+# PostgreSQL Master
+#
 postgres-master:
   image: eeacms/postgres:${POSTGRES_VERSION}
   labels:
@@ -33,8 +65,11 @@ postgres-master-data:
   tty: true
   stdin_open: true
   volumes:
-  - /var/lib/postgresql/data
+  - www-postgres-master-data:/var/lib/postgresql/data
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+#
+# PostgreSQL Replica
+#
 postgres-replica:
   image: eeacms/postgres:${POSTGRES_VERSION}
   labels:
@@ -69,5 +104,5 @@ postgres-replica-data:
   tty: true
   stdin_open: true
   volumes:
-  - /var/lib/postgresql/data
+  - www-postgres-replica-data:/var/lib/postgresql/data
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]

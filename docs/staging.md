@@ -40,7 +40,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 * Register dedicated `cache` hosts with labels: `www=yes`, `cache=yes` (Memcache)
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
-* Add Public IP to one `frontend` and label it within Rancher UI with `public=yes` (Sync, Load Balancer)
+* Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
 
 ### Setup NFS server to be used with ConvoyNFS (shared blobs and static resources)
 
@@ -52,6 +52,8 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 ### Start Convoy NFS driver
 
+Back to your laptop
+
     $ cd deploy/convoy-nfs
     $ rancher-compose -e ../staging.env up -d
 
@@ -61,7 +63,15 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ rancher-compose -e ../staging.env up -d
 
 Make sure that `Production` can connect to `rsync-server`.
+Make sure that `Production PostgreSQL` can connect to `rsync-server`.
 Make sure that `rsync-client` can connect to `Testing/Development`.
+
+### Sync database
+
+    $ ssh <postgresql on production>
+    $ cd /var/lib/pgsql/9.4/data
+    $ vim hot-backup.sh
+    $ ./hot-backup.sh
 
 ### Start DB stack (postgres)
 
