@@ -3,6 +3,7 @@ rsync-client:
     CRON_TASK_1: ${CRON_TASK_1}
     CRON_TASK_2: ${CRON_TASK_2}
   labels:
+    io.rancher.sidekicks: rsync-client-data
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
   tty: true
@@ -16,8 +17,22 @@ rsync-client:
   - www-static-resources:/data/www-static-resources
   - www-eea-controlpanel:/data/eea.controlpanel
   - www-postgres-dump:/data/postgresql.backup
+  volumes_from:
+  - rsync-client-data
   stdin_open: true
   volume_driver: ${VOLUME_DRIVER}
+rsync-client-data:
+  image: busybox
+  tty: true
+  stdin_open: true
+  labels:
+    io.rancher.container.pull_image: always
+    io.rancher.container.start_once: 'true'
+  volumes:
+  - www-postgres-data:/var/lib/postgresql/data
+  - www-postgres-archive:/var/lib/postgresql/archive
+  - /etc/localtime:/etc/localtime:ro
+  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
 rsync-server:
   ports:
   - 2222:22/tcp
@@ -26,7 +41,7 @@ rsync-server:
     SSH_AUTH_KEY_2: ${SSH_AUTH_KEY_2}
   log_driver: ''
   labels:
-    io.rancher.sidekicks: rsync-data
+    io.rancher.sidekicks: rsync-server-data
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
   tty: true
@@ -42,10 +57,10 @@ rsync-server:
   - www-eea-controlpanel:/data/eea.controlpanel
   - www-postgres-dump:/data/postgresql.backup
   volumes_from:
-  - rsync-data
+  - rsync-server-data
   stdin_open: true
   volume_driver: ${VOLUME_DRIVER}
-rsync-data:
+rsync-server-data:
   image: busybox
   tty: true
   stdin_open: true
@@ -55,4 +70,5 @@ rsync-data:
   volumes:
   - www-postgres-data:/var/lib/postgresql/data
   - www-postgres-archive:/var/lib/postgresql/archive
+  - /etc/localtime:/etc/localtime:ro
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]

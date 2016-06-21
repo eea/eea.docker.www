@@ -24,6 +24,7 @@ postgres-upstream-replica-data:
     io.rancher.container.pull_image: always
     io.rancher.container.start_once: 'true'
   volumes:
+  - /etc/localtime:/etc/localtime:ro
   - www-postgres-data:/var/lib/postgresql/data
   - www-postgres-archive:/var/lib/postgresql/archive
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/"]
@@ -65,6 +66,7 @@ postgres-master-data:
   tty: true
   stdin_open: true
   volumes:
+  - /etc/localtime:/etc/localtime:ro
   - www-postgres-master-data:/var/lib/postgresql/data
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
 #
@@ -104,5 +106,6 @@ postgres-replica-data:
   tty: true
   stdin_open: true
   volumes:
+  - /etc/localtime:/etc/localtime:ro
   - www-postgres-replica-data:/var/lib/postgresql/data
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]

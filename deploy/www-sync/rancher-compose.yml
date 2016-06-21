@@ -1,4 +1,8 @@
 rsync-client:
   scale: 1
+rsync-client-data:
+  scale: 1
 rsync-server:
+  scale: 1
+rsync-server-data:
   scale: 1
