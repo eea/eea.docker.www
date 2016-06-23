@@ -2,6 +2,7 @@ rsync-client:
   environment:
     CRON_TASK_1: ${CRON_TASK_1}
     CRON_TASK_2: ${CRON_TASK_2}
+    CRON_TASK_3: ${CRON_TASK_3}
   labels:
     io.rancher.sidekicks: rsync-client-data
     io.rancher.container.pull_image: always
