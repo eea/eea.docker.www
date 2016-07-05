@@ -9,15 +9,17 @@ convoy-nfs:
     - /lib/modules:/lib/modules:ro
     - /proc:/host/proc
     - /var/run:/host/var/run
+    - /run:/host/run
     - /etc/docker/plugins:/etc/docker/plugins
-  image: rancher/convoy-agent:v0.7.0
+  image: rancher/convoy-agent:v0.9.0
   command: volume-agent-nfs
 
 convoy-nfs-storagepool:
   labels:
     io.rancher.container.create_agent: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes
-  image: rancher/convoy-agent:v0.7.0
+  image: rancher/convoy-agent:v0.9.0
   volumes:
     - /var/run:/host/var/run
+    - /run:/host/run
   command: storagepool-agent
