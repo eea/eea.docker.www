@@ -43,6 +43,7 @@ anon:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
+    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
   links:
   - postgres:postgres
   - relcached:relcached
@@ -63,6 +64,7 @@ download:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
+    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
   links:
   - postgres:postgres
   - relcached:relcached
@@ -83,6 +85,7 @@ auth:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
+    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
   links:
   - postgres:postgres
   - relcached:relcached
@@ -103,6 +106,7 @@ async:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_async
+    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
   links:
   - memcached:memcached
   - relcached:relcached
