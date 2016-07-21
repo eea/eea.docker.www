@@ -42,19 +42,22 @@ postgres-master:
   tty: true
   stdin_open: true
   environment:
-  - POSTGRES_USER=postgres
-  - POSTGRES_PASSWORD=postgres
-  - POSTGRES_DBNAME=datafs zasync
-  - POSTGRES_DBUSER=zope
-  - POSTGRES_DBPASS=zope
-  - POSTGRES_CONFIG_max_connections=${POSTGRES_MAX_CONNECTIONS}
-  - POSTGRES_CONFIG_wal_level=hot_standby
-  - POSTGRES_CONFIG_max_wal_senders=8
-  - POSTGRES_CONFIG_wal_keep_segments=256
-  - POSTGRES_CONFIG_hot_standby=on
-  - POSTGRES_CRON_1=${POSTGRES_CRON_1}
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "postgres"
+    POSTGRES_DBNAME: "datafs zasync"
+    POSTGRES_DBUSER: "zope"
+    POSTGRES_DBPASS: "zope"
+    POSTGRES_CONFIG_max_connections: "150"
+    POSTGRES_CONFIG_wal_level: "hot_standby"
+    POSTGRES_CONFIG_max_wal_senders: "8"
+    POSTGRES_CONFIG_wal_keep_segments: "256"
+    POSTGRES_CONFIG_hot_standby: "on"
+    POSTGRES_CONFIG_archive_mode: "on"
+    POSTGRES_CONFIG_archive_command: " 'cp %p /var/lib/postgresql/archive/%f' "
+    POSTGRES_CRON_1: ${POSTGRES_CRON_1}
   volumes:
   - www-postgres-dump:/postgresql.backup
+  - www-postgres-replication-archive:/var/lib/postgresql/archive
   volumes_from:
   - postgres-master-data
   volume_driver: ${VOLUME_DRIVER}
@@ -85,16 +88,22 @@ postgres-replica:
   links:
   - postgres-master:master
   environment:
-  - POSTGRES_USER=postgres
-  - POSTGRES_PASSWORD=postgres
-  - POSTGRES_CONFIG_max_connections=${POSTGRES_MAX_CONNECTIONS}
-  - POSTGRES_CONFIG_wal_level=hot_standby
-  - POSTGRES_CONFIG_max_wal_senders=8
-  - POSTGRES_CONFIG_wal_keep_segments=256
-  - POSTGRES_CONFIG_hot_standby=on
-  - POSTGRES_REPLICATE_FROM=master
+    POSTGRES_USER: "postgres"
+    POSTGRES_PASSWORD: "postgres"
+    POSTGRES_CONFIG_max_connections: "150"
+    POSTGRES_CONFIG_wal_level: "hot_standby"
+    POSTGRES_CONFIG_max_wal_senders: "8"
+    POSTGRES_CONFIG_wal_keep_segments: "256"
+    POSTGRES_CONFIG_hot_standby: "on"
+    POSTGRES_REPLICATE_FROM: "master"
+    RECOVERY_CONFIG_standby_mode: "on"
+    RECOVERY_CONFIG_primary_conninfo: " 'host=master port=5432 user=postgres' "
+    RECOVERY_CONFIG_restore_command: " 'cp /var/lib/postgresql/archive/%f %p' "
+    RECOVERY_CONFIG_archive_cleanup_command: " 'pg_archivecleanup /var/lib/postgresql/archive %r' "
+    RECOVERY_CONFIG_trigger_file: " '/tmp/touch_me_to_promote_to_me_master' "
   volumes:
   - www-postgres-dump:/postgresql.backup
+  - www-postgres-replication-archive:/var/lib/postgresql/archive
   volumes_from:
   - postgres-replica-data
   volume_driver: ${VOLUME_DRIVER}
