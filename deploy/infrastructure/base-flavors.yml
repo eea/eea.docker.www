@@ -15,7 +15,7 @@ db:
   - .secret
   environment:
   - INSTANCE_FLAVOR=e2standard.x5
-  - INSTANCE_DOCKER_VOLUME_SIZE=64
+  - INSTANCE_DOCKER_VOLUME_SIZE=128
   - INSTANCE_DOCKER_VOLUME_TYPE=top
 
 plone:
