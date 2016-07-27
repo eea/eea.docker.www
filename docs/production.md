@@ -62,16 +62,16 @@ Back to your laptop
     $ cd deploy/www-sync
     $ rancher-compose -e ../production-replica.env up -d
 
-Make sure that `Production` can connect to `rsync-server`.
-Make sure that `Production PostgreSQL` can connect to `rsync-server`.
-Make sure that `rsync-client` can connect to `rsync-server on Devel tenant`.
+* Make sure that `Production` can connect to `rsync-server` (Blob and static resources sync)
+* Make sure that `Production PostgreSQL` can connect to `rsync-server`. (PostgreSQL upstream replica)
+* Make sure that `rsync-client` can connect to `rsync-server on Devel tenant`. (DB pg_dump, blobs and static-resources sync)
 
 ### Sync database
 
-    $ ssh <postgresql on production>
+    $ ssh <postgresql master on production>
     $ cd /var/lib/pgsql/9.4/data
-    $ vim hot-backup.sh
-    $ ./hot-backup.sh
+    $ vim ecs-backup.sh
+    $ ./ecs-backup.sh
 
 ### Start DB stack (postgres)
 
