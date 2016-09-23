@@ -1,7 +1,0 @@
-source_code:
-  image: eeacms/www:devel
-  entrypoint: ['buildout']
-  command: ['-c', 'source.cfg']
-  volumes:
-  - ./src/source.cfg:/plone/instance/source.cfg:ro
-  - ./src:/plone/instance/src:z

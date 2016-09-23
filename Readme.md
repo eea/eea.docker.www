@@ -13,11 +13,11 @@ Docker orchestration for EEA main portal services
 
 ## Usage
 
-1. [Devel](https://github.com/eea/eea.docker.www/blob/master/devel/Readme.md)
+1. [Production](https://github.com/eea/eea.docker.www/blob/master/docs/production.md)
 
 2. [Staging](https://github.com/eea/eea.docker.www/blob/master/docs/staging.md)
 
-3. [Production](https://github.com/eea/eea.docker.www/blob/master/docs/production.md)
+3. [Devel](https://taskman.eionet.europa.eu/projects/zope/wiki/HowToSetupWWWDevel)
 
 ## Copyright and license
 
