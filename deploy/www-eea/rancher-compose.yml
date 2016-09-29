@@ -30,6 +30,7 @@ anon:
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
+    request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
 download:
@@ -40,6 +41,7 @@ download:
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
+    request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
 auth:
@@ -50,6 +52,7 @@ auth:
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
+    request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
 async:
@@ -60,6 +63,7 @@ async:
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
+    request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
 #
