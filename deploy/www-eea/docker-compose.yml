@@ -4,7 +4,6 @@
 apache:
   labels:
     io.rancher.scheduler.global: 'true'
-    io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
   tty: true
   image: eeacms/apache-eea-www
@@ -17,7 +16,6 @@ apache:
 varnish:
   labels:
     io.rancher.scheduler.global: 'true'
-    io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
   tty: true
   image: eeacms/varnish-eea-www
@@ -49,7 +47,7 @@ anon:
   - relcached:relcached
   - memcached:memcached
   labels:
-    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
   tty: true
   volumes:
@@ -70,7 +68,7 @@ download:
   - relcached:relcached
   - memcached:memcached
   labels:
-    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
   tty: true
   volumes:
@@ -91,7 +89,7 @@ auth:
   - relcached:relcached
   - memcached:memcached
   labels:
-    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
   tty: true
   volumes:
@@ -112,7 +110,7 @@ async:
   - relcached:relcached
   - postgres:postgres
   labels:
-    io.rancher.container.pull_image: always
+    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
   tty: true
   volumes:
@@ -130,7 +128,6 @@ memcached:
   environment:
     MEMCACHED_MEMORY: '2048'
   labels:
-    io.rancher.container.pull_image: always
     io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
   tty: true
@@ -140,7 +137,6 @@ relcached:
   environment:
     MEMCACHED_MEMORY: '2048'
   labels:
-    io.rancher.container.pull_image: always
     io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
   tty: true
