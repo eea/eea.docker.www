@@ -23,6 +23,7 @@ varnish:
 # Plone backends
 #
 anon:
+  scale: ${ANON_SCALE}
   health_check:
     port: 8080
     interval: 5000
@@ -33,6 +34,7 @@ anon:
     response_timeout: 3000
     healthy_threshold: 2
 download:
+  scale: ${DOWNLOAD_SCALE}
   health_check:
     port: 8080
     interval: 5000
@@ -43,6 +45,7 @@ download:
     response_timeout: 3000
     healthy_threshold: 2
 auth:
+  scale: ${AUTH_SCALE}
   health_check:
     port: 8080
     interval: 5000
@@ -53,6 +56,7 @@ auth:
     response_timeout: 3000
     healthy_threshold: 2
 async:
+  scale: ${ASYNC_SCALE}
   health_check:
     port: 8080
     interval: 5000

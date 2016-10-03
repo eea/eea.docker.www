@@ -47,8 +47,9 @@ anon:
   - relcached:relcached
   - memcached:memcached
   labels:
-    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
+    eu.europa.eea.anon: "yes"
   tty: true
   volumes:
   - www-filestorage:/data/filestorage
@@ -68,8 +69,9 @@ download:
   - relcached:relcached
   - memcached:memcached
   labels:
-    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
+    eu.europa.eea.download: "yes"
   tty: true
   volumes:
   - www-filestorage:/data/filestorage
@@ -89,8 +91,9 @@ auth:
   - relcached:relcached
   - memcached:memcached
   labels:
-    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
+    eu.europa.eea.auth: "yes"
   tty: true
   volumes:
   - www-filestorage:/data/filestorage
@@ -110,8 +113,9 @@ async:
   - relcached:relcached
   - postgres:postgres
   labels:
-    io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
+    eu.europa.eea.async: "yes"
   tty: true
   volumes:
   - www-filestorage:/data/filestorage
