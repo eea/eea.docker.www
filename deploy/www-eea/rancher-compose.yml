@@ -2,6 +2,7 @@
 # Frontend
 #
 apache:
+  scale: ${APACHE_SCALE}
   health_check:
     port: 80
     interval: 30000
@@ -11,6 +12,7 @@ apache:
     healthy_threshold: 2
     response_timeout: 2000
 varnish:
+  scale: ${VARNISH_SCALE}
   health_check:
     port: 6081
     interval: 30000
@@ -33,6 +35,8 @@ anon:
     request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
+anon-data:
+  scale: 1
 download:
   scale: ${DOWNLOAD_SCALE}
   health_check:
@@ -44,6 +48,8 @@ download:
     request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
+download-data:
+  scale: 1
 auth:
   scale: ${AUTH_SCALE}
   health_check:
@@ -55,6 +61,8 @@ auth:
     request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
+auth-data:
+  scale: 1
 async:
   scale: ${ASYNC_SCALE}
   health_check:
@@ -66,10 +74,13 @@ async:
     request_line: GET "/health.check" "HTTP/1.0"
     response_timeout: 3000
     healthy_threshold: 2
+async-data:
+  scale: 1
 #
 # Cache
 #
 memcached:
+  scale: ${MEMCACHED_SCALE}
   health_check:
     port: 11211
     interval: 2000
@@ -78,6 +89,7 @@ memcached:
     response_timeout: 2000
     healthy_threshold: 2
 relcached:
+  scale: ${RELCACHED_SCALE}
   health_check:
     port: 11211
     interval: 2000
