@@ -104,7 +104,8 @@ Update `KGS_VERSION` within `deploy/production-replica.env`
 Upgrade:
 
     $ cd deploy/www-eea
-    $ rancher-compose -e ../production-replica.env up -d --pull --upgrade --interval 300000 --batch-size 1
+    $ rancher-compose -e ../production-replica.env pull
+    $ rancher-compose -e ../production-replica.env up -d --upgrade --interval 300000 --batch-size 1
 
 If the upgrade went well, finish the upgrade with:
 
