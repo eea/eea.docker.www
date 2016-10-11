@@ -9,7 +9,6 @@ rsync-client:
     io.rancher.sidekicks: rsync-client-data
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
-  tty: true
   command:
   - client
   image: eeacms/rsync
@@ -22,7 +21,6 @@ rsync-client:
   - www-postgres-dump:/data/postgresql.backup
   volumes_from:
   - rsync-client-data
-  stdin_open: true
   volume_driver: ${VOLUME_DRIVER}
 rsync-client-data:
   image: busybox
@@ -47,7 +45,6 @@ rsync-server:
     io.rancher.sidekicks: rsync-server-data
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
-  tty: true
   command:
   - server
   log_opt: {}
@@ -61,7 +58,6 @@ rsync-server:
   - www-postgres-dump:/data/postgresql.backup
   volumes_from:
   - rsync-server-data
-  stdin_open: true
   volume_driver: ${VOLUME_DRIVER}
 rsync-server-data:
   image: busybox

@@ -6,26 +6,22 @@ apache:
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.apache=yes
     eu.europa.eea.apache: "yes"
-  tty: true
   image: eeacms/apache-eea-www
   links:
   - varnish:varnish
   volumes:
   - www-static-resources:/var/www-static-resources
-  stdin_open: true
   volume_driver: ${VOLUME_DRIVER}
 varnish:
   labels:
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.varnish=yes
     eu.europa.eea.varnish: "yes"
-  tty: true
   image: eeacms/varnish-eea-www
   links:
   - anon:anon
   - auth:auth
   - download:download
-  stdin_open: true
   environment:
   - BACKENDS=anon auth download
   - BACKENDS_PORT=8080
@@ -53,8 +49,6 @@ anon:
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
     eu.europa.eea.anon: "yes"
-  tty: true
-  stdin_open: true
   volumes:
   - www-blobstorage:/data/blobstorage
   - www-downloads:/data/downloads
@@ -86,8 +80,6 @@ download:
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
     eu.europa.eea.download: "yes"
-  tty: true
-  stdin_open: true
   volumes:
   - www-blobstorage:/data/blobstorage
   - www-downloads:/data/downloads
@@ -119,8 +111,6 @@ auth:
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
     eu.europa.eea.auth: "yes"
-  tty: true
-  stdin_open: true
   volumes:
   - www-blobstorage:/data/blobstorage
   - www-downloads:/data/downloads
@@ -152,8 +142,6 @@ async:
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
     eu.europa.eea.async: "yes"
-  tty: true
-  stdin_open: true
   volumes:
   - www-blobstorage:/data/blobstorage
   - www-downloads:/data/downloads
@@ -181,9 +169,7 @@ memcached:
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
     eu.europa.eea.memcached: "yes"
-  tty: true
   image: eeacms/memcached
-  stdin_open: true
 relcached:
   environment:
     MEMCACHED_MEMORY: '2048'
@@ -192,9 +178,7 @@ relcached:
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
     eu.europa.eea.relcached: "yes"
-  tty: true
   image: eeacms/memcached
-  stdin_open: true
 #
 # DB
 #

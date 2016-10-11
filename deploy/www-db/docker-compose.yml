@@ -7,8 +7,6 @@ postgres-upstream-replica:
     io.rancher.sidekicks: postgres-upstream-replica-data
     io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
-  tty: true
-  stdin_open: true
   environment:
   - POSTGRES_CRON_1=${POSTGRES_UPSTREM_CRON_1}
   volumes:
@@ -39,8 +37,6 @@ postgres-master:
     io.rancher.scheduler.affinity:host_label: www=yes,db=yes
     io.rancher.scheduler.affinity:container_label_ne: postgres=yes
     postgres: 'yes'
-  tty: true
-  stdin_open: true
   environment:
     POSTGRES_USER: "postgres"
     POSTGRES_PASSWORD: "postgres"
@@ -83,8 +79,6 @@ postgres-replica:
     io.rancher.scheduler.affinity:host_label: www=yes,db=yes
     io.rancher.scheduler.affinity:container_label_ne: postgres=yes
     postgres: 'yes'
-  tty: true
-  stdin_open: true
   links:
   - postgres-master:master
   environment:
