@@ -13,9 +13,9 @@ Docker orchestration for EEA main portal services
 
 ## Usage
 
-1. [Production](https://github.com/eea/eea.docker.www/blob/master/docs/production.md)
+1. [Replica (staging)](https://github.com/eea/eea.docker.www/blob/master/docs/production-replica.md)
 
-2. [Staging](https://github.com/eea/eea.docker.www/blob/master/docs/staging.md)
+2. [Replica (devel)](https://github.com/eea/eea.docker.www/blob/master/docs/devel-replica.md)
 
 3. [Devel](https://taskman.eionet.europa.eu/projects/zope/wiki/HowToSetupWWWDevel)
 

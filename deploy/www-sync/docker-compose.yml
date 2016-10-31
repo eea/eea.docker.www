@@ -5,9 +5,9 @@ rsync-client:
     CRON_TASK_3: ${CRON_TASK_3}
     CRON_TASK_4: ${CRON_TASK_4}
     CRON_TASK_5: ${CRON_TASK_5}
+    TZ: ${TZ}
   labels:
     io.rancher.sidekicks: rsync-client-data
-    io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
   command:
   - client
@@ -27,12 +27,10 @@ rsync-client-data:
   tty: true
   stdin_open: true
   labels:
-    io.rancher.container.pull_image: always
     io.rancher.container.start_once: 'true'
   volumes:
   - www-postgres-data:/var/lib/postgresql/data
   - www-postgres-archive:/var/lib/postgresql/archive
-  - /etc/localtime:/etc/localtime:ro
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
 rsync-server:
   ports:
@@ -40,10 +38,10 @@ rsync-server:
   environment:
     SSH_AUTH_KEY_1: ${SSH_AUTH_KEY_1}
     SSH_AUTH_KEY_2: ${SSH_AUTH_KEY_2}
+    TZ: ${TZ}
   log_driver: ''
   labels:
     io.rancher.sidekicks: rsync-server-data
-    io.rancher.container.pull_image: always
     io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
   command:
   - server
@@ -64,10 +62,8 @@ rsync-server-data:
   tty: true
   stdin_open: true
   labels:
-    io.rancher.container.pull_image: always
     io.rancher.container.start_once: 'true'
   volumes:
   - www-postgres-data:/var/lib/postgresql/data
   - www-postgres-archive:/var/lib/postgresql/archive
-  - /etc/localtime:/etc/localtime:ro
   command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]

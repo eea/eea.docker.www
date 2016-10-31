@@ -1,8 +1,8 @@
 rsync-client:
-  scale: 1
+  scale: ${RSYNC_CLIENT_SCALE}
 rsync-client-data:
-  scale: 1
+  scale: ${RSYNC_CLIENT_SCALE}
 rsync-server:
-  scale: 1
+  scale: ${RSYNC_SERVER_SCALE}
 rsync-server-data:
-  scale: 1
+  scale: ${RSYNC_SERVER_SCALE}

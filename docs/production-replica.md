@@ -1,4 +1,4 @@
-# Docker orchestration for EEA main portal (Prod replica)
+# Docker orchestration for EEA main portal (www-replica-prod)
 
 Docker orchestration for EEA main portal services
 

@@ -1,11 +1,10 @@
-# Docker orchestration for EEA main portal (Devel replica)
+# Docker orchestration for EEA main portal (Devel 2: A-Team)
 
 Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
 * [Rancher Compose](http://docs.rancher.com/rancher/rancher-compose/)
-* Dedicated Rancher Environment (recommended)
 
 ## Installation
 
@@ -29,7 +28,7 @@ The `docker-compose.yml` extends the base-flavors.yml to create specific number 
 
 To create the VMs run the following command and note the output:
 
-    $ docker-compose up
+    $ docker-compose up fileserver1 db1 frontend
 
 After around 5 min you should have all the VMs created on the specified cloud provider tenant and region.
 
@@ -37,8 +36,6 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 * Register dedicated `fileserver` hosts with labels `nfs-server=yes` (NFS Server)
 * Register dedicated `db` hosts with labels: `www=yes`, `db=yes` (PostgreSQL)
-* Register dedicated `cache` hosts with labels: `www=yes`, `cache=yes` (Memcache)
-* Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
 
@@ -57,60 +54,15 @@ Back to your laptop
     $ cd deploy/www-nfs
     $ rancher-compose -e ../development-replica.env up -d
 
-### Start SYNC stack (sync blobs and static resources from production/to testing)
+### Start SYNC stack (sync blobs and static resources from staging/to testing)
 
     $ cd deploy/www-sync
     $ rancher-compose -e ../development-replica.env up -d
 
-Make sure that `Production` can connect to `rsync-server`.
-Make sure that `Production PostgreSQL` can connect to `rsync-server`.
-Make sure that `rsync-client` can connect to `Testing/Development`.
+Make sure that `rsync-client` on staging can connect to this `rsync-server`.
 
-### Sync database
 
-    $ ssh <postgresql on production>
-    $ cd /var/lib/pgsql/9.4/data
-    $ vim hot-backup.sh
-    $ ./hot-backup.sh
+### Start DB NFS stack
 
-### Start DB stack (postgres)
-
-    $ cd deploy/www-db
+    $ cd deploy/www-db-nfs
     $ rancher-compose -e ../development-replica.env up -d
-
-### Start EEA Application stack (plone backends, memcache, varnish, apache)
-
-    $ cd deploy/www-eea
-    $ rancher-compose -e ../development-replica.env up -d
-
-### Add Load-Balancer (optional if not done already by other stack)
-
-Within Rancher UI add Rancher Load Balancer for `www-frontend/apache` containers
-scheduled on hosts with label `public=yes`
-
-## Upgrade
-
-On your laptop
-
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
-
-### Upgrade Backend stack (plone instances, async workers)
-
-Update `KGS_VERSION` within `deploy/development-replica.env`
-
-    $ vim deploy/development-replica.env
-
-Upgrade:
-
-    $ cd deploy/www-eea
-    $ rancher-compose -e ../development-replica.env pull
-    $ rancher-compose -e ../development-replica.env up -d --upgrade --interval 300000 --batch-size 1
-
-If the upgrade went well, finish the upgrade with:
-
-    $ rancher-compose -e ../development-replica.env up -d --confirm-upgrade
-
-Otherwise, roll-back:
-
-    $ rancher-compose -e ../development-replica.env up -d --rollback

@@ -7,6 +7,8 @@ apache:
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.apache=yes
     eu.europa.eea.apache: "yes"
   image: eeacms/apache-eea-www
+  environment:
+    TZ: ${TZ}
   links:
   - varnish:varnish
   volumes:
@@ -32,6 +34,7 @@ varnish:
   - BACKENDS_PROBE_THRESHOLD=3
   - BACKENDS_SAINT_MODE=true
   - DNS_ENABLED=true
+  - TZ=${TZ}
 #
 # Plone Backends
 #
@@ -40,6 +43,7 @@ anon:
   environment:
     ZOPE_MODE: rel_client
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
+    TZ: ${TZ}
   links:
   - postgres:postgres
   - relcached:relcached
@@ -71,6 +75,7 @@ download:
   environment:
     ZOPE_MODE: rel_client
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
+    TZ: ${TZ}
   links:
   - postgres:postgres
   - relcached:relcached
@@ -102,6 +107,7 @@ auth:
   environment:
     ZOPE_MODE: rel_client
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
+    TZ: ${TZ}
   links:
   - postgres:postgres
   - relcached:relcached
@@ -133,6 +139,7 @@ async:
   environment:
     ZOPE_MODE: rel_async
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
+    TZ: ${TZ}
   links:
   - memcached:memcached
   - relcached:relcached
@@ -165,6 +172,7 @@ async-data:
 memcached:
   environment:
     MEMCACHED_MEMORY: '2048'
+    TZ: ${TZ}
   labels:
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
@@ -173,6 +181,7 @@ memcached:
 relcached:
   environment:
     MEMCACHED_MEMORY: '2048'
+    TZ: ${TZ}
   labels:
     io.rancher.scheduler.global: 'true'
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes

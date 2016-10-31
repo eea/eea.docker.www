@@ -36,7 +36,7 @@ anon:
     response_timeout: 3000
     healthy_threshold: 2
 anon-data:
-  scale: 1
+  scale: ${ANON_SCALE}
 download:
   scale: ${DOWNLOAD_SCALE}
   health_check:
@@ -49,7 +49,7 @@ download:
     response_timeout: 3000
     healthy_threshold: 2
 download-data:
-  scale: 1
+  scale: ${DOWNLOAD_SCALE}
 auth:
   scale: ${AUTH_SCALE}
   health_check:
@@ -62,7 +62,7 @@ auth:
     response_timeout: 3000
     healthy_threshold: 2
 auth-data:
-  scale: 1
+  scale: ${AUTH_SCALE}
 async:
   scale: ${ASYNC_SCALE}
   health_check:
@@ -75,7 +75,7 @@ async:
     response_timeout: 3000
     healthy_threshold: 2
 async-data:
-  scale: 1
+  scale: ${ASYNC_SCALE}
 #
 # Cache
 #

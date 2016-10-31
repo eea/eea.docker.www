@@ -1,5 +1,5 @@
 postgres-upstream-replica:
-  scale: 1
+  scale: ${POSTGRES_UPSTREAM_SCALE}
   health_check:
     port: 5432
     interval: 2000
@@ -8,9 +8,9 @@ postgres-upstream-replica:
     response_timeout: 2000
     healthy_threshold: 2
 postgres-upstream-replica-data:
-  scale: 1
+  scale: ${POSTGRES_UPSTREAM_SCALE}
 postgres-master:
-  scale: 1
+  scale: ${POSTGRES_MASTER_SCALE}
   health_check:
     port: 5432
     interval: 2000
@@ -19,9 +19,9 @@ postgres-master:
     response_timeout: 2000
     healthy_threshold: 2
 postgres-master-data:
-  scale: 1
+  scale: ${POSTGRES_MASTER_SCALE}
 postgres-replica:
-  scale: 1
+  scale: ${POSTGRES_REPLICA_SCALE}
   health_check:
     port: 5432
     interval: 2000
@@ -30,4 +30,4 @@ postgres-replica:
     response_timeout: 2000
     healthy_threshold: 2
 postgres-replica-data:
-  scale: 1
+  scale: ${POSTGRES_REPLICA_SCALE}
