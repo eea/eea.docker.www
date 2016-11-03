@@ -55,12 +55,14 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 Back to your laptop
 
     $ cd deploy/www-nfs
-    $ rancher-compose -e ../production-replica.env up -d
+    $ rancher-compose -e ../replica.env pull
+    $ rancher-compose -e ../replica.env up -d
 
 ### Start SYNC stack (sync blobs and static resources from production/to testing)
 
     $ cd deploy/www-sync
-    $ rancher-compose -e ../production-replica.env up -d
+    $ rancher-compose -e ../replica.env pull
+    $ rancher-compose -e ../replica.env up -d
 
 * Make sure that `Production` can connect to `rsync-server` (Blob and static resources sync)
 * Make sure that `Production PostgreSQL` can connect to `rsync-server`. (PostgreSQL upstream replica)
@@ -76,12 +78,14 @@ Back to your laptop
 ### Start DB stack (postgres)
 
     $ cd deploy/www-db
-    $ rancher-compose -e ../production-replica.env up -d
+    $ rancher-compose -e ../replica.env pull
+    $ rancher-compose -e ../replica.env up -d
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
     $ cd deploy/www-eea
-    $ rancher-compose -e ../production-replica.env up -d
+    $ rancher-compose -e ../replica.env pull
+    $ rancher-compose -e ../replica.env up -d
 
 ### Add Load-Balancer (optional if not done already by other stack)
 
@@ -97,20 +101,20 @@ On your laptop
 
 ### Upgrade Backend stack (plone instances, async workers)
 
-Update `KGS_VERSION` within `deploy/production-replica.env`
+Update `KGS_VERSION` within `deploy/replica.env`
 
-    $ vim deploy/production-replica.env
+    $ vim deploy/replica.env
 
 Upgrade:
 
     $ cd deploy/www-eea
-    $ rancher-compose -e ../production-replica.env pull
-    $ rancher-compose -e ../production-replica.env up -d --upgrade --interval 300000 --batch-size 1
+    $ rancher-compose -e ../replica.env pull
+    $ rancher-compose -e ../replica.env up -d --upgrade --interval 300000 --batch-size 1
 
 If the upgrade went well, finish the upgrade with:
 
-    $ rancher-compose -e ../production-replica.env up -d --confirm-upgrade
+    $ rancher-compose -e ../replica.env up -d --confirm-upgrade
 
 Otherwise, roll-back:
 
-    $ rancher-compose -e ../production-replica.env up -d --rollback
+    $ rancher-compose -e ../replica.env up -d --rollback

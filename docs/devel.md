@@ -52,12 +52,14 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 Back to your laptop
 
     $ cd deploy/www-nfs
-    $ rancher-compose -e ../development-replica.env up -d
+    $ rancher-compose -e ../devel.env pull
+    $ rancher-compose -e ../devel.env up -d
 
 ### Start SYNC stack (sync blobs and static resources from staging/to testing)
 
     $ cd deploy/www-sync
-    $ rancher-compose -e ../development-replica.env up -d
+    $ rancher-compose -e ../devel.env pull
+    $ rancher-compose -e ../devel.env up -d
 
 Make sure that `rsync-client` on staging can connect to this `rsync-server`.
 
@@ -65,4 +67,5 @@ Make sure that `rsync-client` on staging can connect to this `rsync-server`.
 ### Start DB NFS stack
 
     $ cd deploy/www-db-nfs
-    $ rancher-compose -e ../development-replica.env up -d
+    $ rancher-compose -e ../devel.env pull
+    $ rancher-compose -e ../devel.env up -d

@@ -9,7 +9,7 @@ fileserver:
   - INSTANCE_DOCKER_VOLUME_TYPE=top
 
 db:
-  image: eeacms/os-docker-vm:v1.0
+  image: eeacms/os-docker-vm
   env_file:
   - .cloudaccess
   - .secret
