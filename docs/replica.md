@@ -115,6 +115,8 @@ If the upgrade went well, finish the upgrade with:
 
     $ rancher-compose -e ../replica.env up -d --confirm-upgrade
 
-Otherwise, roll-back:
+### Roll-back upgrade
+
+In case something went wrong, roll-back:
 
     $ rancher-compose -e ../replica.env up -d --rollback
