@@ -5,7 +5,6 @@ postgres-master:
   image: eeacms/postgres:${POSTGRES_VERSION}
   labels:
     io.rancher.scheduler.affinity:host_label: www=yes,db=yes
-    io.rancher.scheduler.affinity:container_label_ne: postgres=yes
     postgres: 'yes'
   environment:
     POSTGRES_USER: "postgres"
@@ -13,14 +12,11 @@ postgres-master:
     POSTGRES_DBNAME: "datafs zasync"
     POSTGRES_DBUSER: "zope"
     POSTGRES_DBPASS: "zope"
-    POSTGRES_CONFIG_max_connections: "150"
-    POSTGRES_CONFIG_wal_level: "hot_standby"
-    POSTGRES_CONFIG_max_wal_senders: "8"
-    POSTGRES_CONFIG_wal_keep_segments: "256"
-    POSTGRES_CONFIG_hot_standby: "on"
     POSTGRES_CRON_1: ${POSTGRES_CRON_1}
     TZ: ${TZ}
   volumes:
   - www-postgres-dump:/postgresql.backup
   - www-postgres-master-data:/var/lib/postgresql/data
+  tty: true
+  stdin_open: true
   volume_driver: ${VOLUME_DRIVER}

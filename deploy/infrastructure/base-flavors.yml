@@ -1,5 +1,5 @@
 fileserver:
-  image: eeacms/os-docker-vm:v1.0
+  image: eeacms/os-docker-vm
   env_file:
   - .cloudaccess
   - .secret
@@ -19,7 +19,7 @@ db:
   - INSTANCE_DOCKER_VOLUME_TYPE=top
 
 plone:
-  image: eeacms/os-docker-vm:v1.0
+  image: eeacms/os-docker-vm
   env_file:
   - .cloudaccess
   - .secret
@@ -29,11 +29,11 @@ plone:
   - INSTANCE_DOCKER_VOLUME_TYPE=top
 
 frontend:
-  image: eeacms/os-docker-vm:v1.0
+  image: eeacms/os-docker-vm
   env_file:
   - .cloudaccess
   - .secret
   environment:
-  - INSTANCE_FLAVOR=e2standard.x5
+  - INSTANCE_FLAVOR=e2standard.x6
   - INSTANCE_DOCKER_VOLUME_SIZE=10
   - INSTANCE_DOCKER_VOLUME_TYPE=top
