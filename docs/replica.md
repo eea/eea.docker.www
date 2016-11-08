@@ -109,7 +109,7 @@ Upgrade:
 
     $ cd deploy/www-eea
     $ rancher-compose -e ../replica.env pull
-    $ rancher-compose -e ../replica.env up -d --upgrade --interval 300000 --batch-size 1
+    $ rancher-compose -e ../replica.env up -d --upgrade
 
 If the upgrade went well, finish the upgrade with:
 

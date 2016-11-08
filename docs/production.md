@@ -74,7 +74,7 @@ Upgrade:
 
     $ cd deploy/www-eea
     $ rancher-compose -e ../production.env pull
-    $ rancher-compose -e ../production.env up -d --upgrade --interval 300000 --batch-size 1
+    $ rancher-compose -e ../production.env up -d --upgrade
 
 If the upgrade went well, finish the upgrade with:
 
