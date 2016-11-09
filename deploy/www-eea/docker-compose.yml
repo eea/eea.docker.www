@@ -2,11 +2,11 @@
 # Front-end
 #
 apache:
+  image: eeacms/apache-eea-www
   labels:
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.apache=yes
     eu.europa.eea.apache: "yes"
-  image: eeacms/apache-eea-www
   environment:
     TZ: ${TZ}
   links:
@@ -15,26 +15,28 @@ apache:
   - www-static-resources:/var/www-static-resources
   volume_driver: ${VOLUME_DRIVER}
 varnish:
+  image: eeacms/varnish-eea-www:4.1
   labels:
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.varnish=yes
     eu.europa.eea.varnish: "yes"
-  image: eeacms/varnish-eea-www
   links:
   - anon:anon
   - auth:auth
   - download:download
   environment:
-  - BACKENDS=anon auth download
-  - BACKENDS_PORT=8080
-  - BACKENDS_PROBE_URL=/health.check
-  - BACKENDS_PROBE_TIMEOUT=3s
-  - BACKENDS_PROBE_INTERVAL=5s
-  - BACKENDS_PROBE_WINDOW=5
-  - BACKENDS_PROBE_THRESHOLD=3
-  - BACKENDS_SAINT_MODE=true
-  - DNS_ENABLED=true
-  - TZ=${TZ}
+    CACHE_SIZE: "${VARNISH_CACHE_SIZE}"
+    PARAM_VALUE: "${VARNISH_PARAMS}"
+    BACKENDS: "anon auth download"
+    BACKENDS_PORT: "8080"
+    BACKENDS_PROBE_URL: "/health.check"
+    BACKENDS_PROBE_TIMEOUT: "3s"
+    BACKENDS_PROBE_INTERVAL: "5s"
+    BACKENDS_PROBE_WINDOW: "5"
+    BACKENDS_PROBE_THRESHOLD: "3"
+    BACKENDS_SAINT_MODE: "true"
+    DNS_ENABLED: "true"
+    TZ: "${TZ}"
 #
 # Plone Backends
 #
