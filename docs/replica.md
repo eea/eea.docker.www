@@ -120,3 +120,23 @@ If the upgrade went well, finish the upgrade with:
 In case something went wrong, roll-back:
 
     $ rancher-compose -e ../replica.env up -d --rollback
+
+## Debug
+
+On your laptop:
+
+    $ git clone https://github.com/eea/eea.docker.www.git
+    $ cd eea.docker.www
+
+Start debug stack:
+
+    $ cd deploy/www-debug
+    $ rancher-compose -e ../replica.env up -d
+
+Now, via Rancher UI:
+
+* Find `www-debug_debug_1` container
+* **Execute Shell**
+* **Start** Plone inside container: `$ bin/instance start` or `$ bin/instance fg`
+* Within `www-debug` stack find `exposed` port for `8080` and **click** on it.
+* **Stop** Plone inside debugging container **when you're done**: `$ bin/instance stop`
