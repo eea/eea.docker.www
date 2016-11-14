@@ -8,6 +8,7 @@ apache:
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.apache=yes
     eu.europa.eea.apache: "yes"
   environment:
+    SERVER_NAME: "${SERVER_NAME}"
     TZ: ${TZ}
   links:
   - varnish:varnish

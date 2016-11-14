@@ -21,6 +21,9 @@ debug:
   volume_driver: ${VOLUME_DRIVER}
   volumes_from:
   - debug-data
+  tty: true
+  stdin_open: true
+  command: ["cat"]
 debug-data:
   image: busybox
   labels:
