@@ -5,6 +5,8 @@ rsync-client:
     CRON_TASK_3: ${CRON_TASK_3}
     CRON_TASK_4: ${CRON_TASK_4}
     CRON_TASK_5: ${CRON_TASK_5}
+    CRON_TASK_6: ${CRON_TASK_6}
+    CRON_TASK_7: ${CRON_TASK_7}
     TZ: ${TZ}
   labels:
     io.rancher.sidekicks: rsync-client-data
