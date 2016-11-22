@@ -23,6 +23,7 @@ apache:
 varnish:
   image: eeacms/varnish-eea-www:1.0
   labels:
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.varnish=yes
     eu.europa.eea.varnish: "yes"
@@ -50,14 +51,20 @@ anon:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
+    ZOPE_THREADS: "1"
+    ZOPE_FORCE_CONNECTION_CLOSE: 'off'
+    GRAYLOG: ${GRAYLOG}
+    GRAYLOG_FACILITY: anon
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
     TZ: ${TZ}
   links:
   - postgres:postgres
   - relcached:relcached
   - memcached:memcached
+  - rabbitmq:rabbitmq
   labels:
     io.rancher.sidekicks: anon-data
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
     eu.europa.eea.anon: "yes"
@@ -82,14 +89,20 @@ download:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
+    ZOPE_THREADS: "1"
+    ZOPE_FORCE_CONNECTION_CLOSE: 'off'
+    GRAYLOG: ${GRAYLOG}
+    GRAYLOG_FACILITY: download
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
     TZ: ${TZ}
   links:
   - postgres:postgres
   - relcached:relcached
   - memcached:memcached
+  - rabbitmq:rabbitmq
   labels:
     io.rancher.sidekicks: download-data
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
     eu.europa.eea.download: "yes"
@@ -114,14 +127,18 @@ auth:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_client
+    GRAYLOG: ${GRAYLOG}
+    GRAYLOG_FACILITY: auth
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
     TZ: ${TZ}
   links:
   - postgres:postgres
   - relcached:relcached
   - memcached:memcached
+  - rabbitmq:rabbitmq
   labels:
     io.rancher.sidekicks: auth-data
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
     eu.europa.eea.auth: "yes"
@@ -146,14 +163,20 @@ async:
   image: eeacms/www:${KGS_VERSION}
   environment:
     ZOPE_MODE: rel_async
+    ZOPE_THREADS: "1"
+    ZOPE_FAST_LISTEN: 'on'
+    GRAYLOG: ${GRAYLOG}
+    GRAYLOG_FACILITY: async
     WARMUP_HEALTH_THRESHOLD: ${WARMUP}
     TZ: ${TZ}
   links:
-  - memcached:memcached
-  - relcached:relcached
   - postgres:postgres
+  - relcached:relcached
+  - memcached:memcached
+  - rabbitmq:rabbitmq
   labels:
     io.rancher.sidekicks: async-data
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
     eu.europa.eea.async: "yes"
@@ -179,23 +202,29 @@ async-data:
 #
 memcached:
   environment:
-    MEMCACHED_MEMORY: '2048'
+    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
     TZ: ${TZ}
   labels:
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
     eu.europa.eea.memcached: "yes"
   image: eeacms/memcached
 relcached:
   environment:
-    MEMCACHED_MEMORY: '2048'
+    MEMCACHED_MEMORY: '${RELCACHED_MEMORY}'
     TZ: ${TZ}
   labels:
-    io.rancher.scheduler.global: 'true'
+    io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
     io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
     eu.europa.eea.relcached: "yes"
   image: eeacms/memcached
+#
+# RabbitMQ
+#
+rabbitmq:
+  image: rancher/external-service
 #
 # DB
 #

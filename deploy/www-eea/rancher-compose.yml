@@ -105,3 +105,8 @@ relcached:
     strategy: recreate
     response_timeout: 2000
     healthy_threshold: 2
+#
+# RabbitMQ
+#
+rabbitmq:
+  hostname: ${RABBITMQ_HOST}
