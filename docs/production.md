@@ -79,6 +79,8 @@ Make sure you've provided the right credentials for Traceview and RabbitMQ:
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
     $ cd deploy/www-eea
+    $ source ../.secret.production
+
     $ rancher-compose -e ../production.env pull
     $ rancher-compose -e ../production.env up -d
 
