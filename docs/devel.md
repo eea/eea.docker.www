@@ -59,17 +59,17 @@ Thus on your laptop:
 
 * Add Rancher specific environment variables (API URL, access and secret key):
 
-      $ cd deploy
-      $ cp .secret.example .secret.devel
-      $ vim .secret.devel
+        $ cd deploy
+        $ cp .secret.example .secret.devel
+        $ vim .secret.devel
 
 * And make them available:
 
-      $ source .secret.devel
+        $ source .secret.devel
 
 * Make sure you're deploying to the right Rancher Environment:
 
-      $ env | grep RANCHER
+        $ env | grep RANCHER
 
 ### Start Convoy NFS driver
 

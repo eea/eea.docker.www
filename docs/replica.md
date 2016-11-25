@@ -61,17 +61,17 @@ Thus on your laptop:
 
 * Add Rancher specific environment variables (API URL, access and secret key):
 
-      $ cd deploy
-      $ cp .secret.example .secret.replica
-      $ vim .secret.replica
+        $ cd deploy
+        $ cp .secret.example .secret.replica
+        $ vim .secret.replica
 
 * And make them available:
 
-      $ source .secret.replica
+        $ source .secret.replica
 
 * Make sure you're deploying to the right Rancher Environment:
 
-      $ env | grep RANCHER
+        $ env | grep RANCHER
 
 ### Start Convoy NFS driver
 
@@ -127,16 +127,16 @@ On your laptop
 Add your Rancher API Keys to `.secret.replica` file (see related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
 on how to obtain them):
 
-      $ cp .secret.example .secret.replica
-      $ vim .secret.replica
+    $ cp .secret.example .secret.replica
+    $ vim .secret.replica
 
 and make them available:
 
-      $ source .secret.replica
+    $ source .secret.replica
 
 Make sure you're upgrading within the right Rancher Environment:
 
-      $ env | grep RANCHER
+    $ env | grep RANCHER
 
 Update `KGS_VERSION` within `deploy/replica.env`
 

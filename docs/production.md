@@ -40,22 +40,22 @@ Thus on your laptop:
 
 * Add Rancher specific environment variables (API URL, access and secret key) and the other secrets (for traceview, rabbitmq, etc.):
 
-      $ cd deploy
-      $ cp .secret.example .secret.production
-      $ vim .secret.production
+        $ cd deploy
+        $ cp .secret.example .secret.production
+        $ vim .secret.production
 
 * And make them available:
 
-      $ source .secret.production
+        $ source .secret.production
 
 * Make sure you're deploying to the right Rancher Environment:
 
-      $ env | grep RANCHER
+        $ env | grep RANCHER
 
 Make sure you've provided the right credentials for Traceview and RabbitMQ:
 
-      $ env | grep TRACEVIEW
-      $ env | grep RABBITMQ
+    $ env | grep TRACEVIEW
+    $ env | grep RABBITMQ
 
 ### Start Convoy NFS driver
 
@@ -99,21 +99,21 @@ On your laptop
 Add your Rancher API Keys to `.secret.production` file (see related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
 on how to obtain them):
 
-      $ cp .secret.example .secret.production
-      $ vim .secret.production
+    $ cp .secret.example .secret.production
+    $ vim .secret.production
 
 and make them available:
 
-      $ source .secret.production
+    $ source .secret.production
 
 Make sure you're upgrading within the right Rancher Environment:
 
-      $ env | grep RANCHER
+    $ env | grep RANCHER
 
 Make sure you've provided the right credentials for Traceview and RabbitMQ:
 
-      $ env | grep TRACEVIEW
-      $ env | grep RABBITMQ
+    $ env | grep TRACEVIEW
+    $ env | grep RABBITMQ
 
 Update `KGS_VERSION` within `deploy/production.env`
 
