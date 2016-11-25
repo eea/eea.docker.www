@@ -22,6 +22,7 @@ Add required info within `.cloudaccess` and `.secret` needed by [eeacms/os-docke
     $ vim .cloudaccess
     $ vim .secret
 
+
 The `base-flavors.yml` contains the basic flavors specifications for the infrastructure. Make sure that you are using the correct tag for eeacms/os-docker-vm.
 
 The `docker-compose.yml` extends the base-flavors.yml to create specific number of VMs. Adjust the `INSTANCE_NAME` in order to give the unique names and according to your naming conventions.
@@ -47,6 +48,29 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
 
+### Access rights
+
+To enable Rancher Compose to launch services in a Rancher instance, you’ll need to set environment variables or pass
+these variables as an option in the Rancher Compose command.
+See related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
+on how to obtain your Rancher API Keys.
+
+Thus on your laptop:
+
+* Add Rancher specific environment variables (API URL, access and secret key):
+
+      $ cd deploy
+      $ cp .secret.example .secret.devel
+      $ vim .secret.devel
+
+* And make them available:
+
+      $ source .secret.devel
+
+* Make sure you're deploying to the right Rancher Environment:
+
+      $ env | grep RANCHER
+
 ### Start Convoy NFS driver
 
 Back to your laptop
@@ -64,8 +88,8 @@ Back to your laptop
 Make sure that `rsync-client` on staging can connect to this `rsync-server`.
 
 
-### Start DB NFS stack
+### Start DB stack
 
-    $ cd deploy/www-db-nfs
-    $ rancher-compose -e ../devel.env pull
-    $ rancher-compose -e ../devel.env up -d
+    $ cd deploy/www-db
+    $ rancher-compose -e ../devel.env -f devel.yml pull
+    $ rancher-compose -e ../devel.env -f devel.yml up -d

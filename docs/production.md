@@ -9,12 +9,12 @@ Docker orchestration for EEA main portal services
 
 ## Installation
 
-On your laptop
+On your laptop:
 
     $ git clone https://github.com/eea/eea.docker.www.git
     $ cd eea.docker.www
 
-### Register hosts within Rancher
+### Register hosts within Rancher via Rancher UI
 
 * Register dedicated `cache` hosts with labels: `www=yes`, `cache=yes` (Memcache)
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
@@ -29,9 +29,35 @@ On your laptop
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
 
-### Start Convoy NFS driver
+### Access rights
 
-Back to your laptop
+To enable Rancher Compose to launch services in a Rancher instance, you’ll need to set environment variables or pass
+these variables as an option in the Rancher Compose command.
+See related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
+on how to obtain your Rancher API Keys.
+
+Thus on your laptop:
+
+* Add Rancher specific environment variables (API URL, access and secret key) and the other secrets (for traceview, rabbitmq, etc.):
+
+      $ cd deploy
+      $ cp .secret.example .secret.production
+      $ vim .secret.production
+
+* And make them available:
+
+      $ source .secret.production
+
+* Make sure you're deploying to the right Rancher Environment:
+
+      $ env | grep RANCHER
+
+Make sure you've provided the right credentials for Traceview and RabbitMQ:
+
+      $ env | grep TRACEVIEW
+      $ env | grep RABBITMQ
+
+### Start Convoy NFS driver
 
     $ cd deploy/www-nfs
     $ rancher-compose -e ../production.env pull
@@ -45,6 +71,10 @@ Back to your laptop
 
 * Make sure that `rsync-client` can connect to `rsync-server on www-prod-replica tenant`. (blobs and static-resources sync)
 
+### Start DB stack (PostgreSQL Database)
+
+    $ cd deploy/www-db
+    $ rancher-compose -e ../production.env -f production.yml up -d
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
@@ -66,6 +96,25 @@ On your laptop
 
 ### Upgrade Backend stack (plone instances, async workers)
 
+Add your Rancher API Keys to `.secret.production` file (see related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
+on how to obtain them):
+
+      $ cp .secret.example .secret.production
+      $ vim .secret.production
+
+and make them available:
+
+      $ source .secret.production
+
+Make sure you're upgrading within the right Rancher Environment:
+
+      $ env | grep RANCHER
+
+Make sure you've provided the right credentials for Traceview and RabbitMQ:
+
+      $ env | grep TRACEVIEW
+      $ env | grep RABBITMQ
+
 Update `KGS_VERSION` within `deploy/production.env`
 
     $ vim deploy/production.env
@@ -74,7 +123,7 @@ Upgrade:
 
     $ cd deploy/www-eea
     $ rancher-compose -e ../production.env pull
-    $ rancher-compose -e ../production.env up -d --upgrade
+    $ rancher-compose -e ../production.env up -d --upgrade --batch-size=1
 
 If the upgrade went well, finish the upgrade with:
 

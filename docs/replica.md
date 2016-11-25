@@ -33,7 +33,7 @@ To create the VMs run the following command and note the output:
 
 After around 5 min you should have all the VMs created on the specified cloud provider tenant and region.
 
-### Register above hosts within Rancher
+### Register above hosts within Rancher via Rancher UI
 
 * Register dedicated `fileserver` hosts with labels `nfs-server=yes` (NFS Server)
 * Register dedicated `db` hosts with labels: `www=yes`, `db=yes` (PostgreSQL)
@@ -49,6 +49,29 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ echo "/var/lib/docker/volumes/nfs/_data 10.128.0.0/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
+
+### Access rights
+
+To enable Rancher Compose to launch services in a Rancher instance, you’ll need to set environment variables or pass
+these variables as an option in the Rancher Compose command.
+See related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
+on how to obtain your Rancher API Keys.
+
+Thus on your laptop:
+
+* Add Rancher specific environment variables (API URL, access and secret key):
+
+      $ cd deploy
+      $ cp .secret.example .secret.replica
+      $ vim .secret.replica
+
+* And make them available:
+
+      $ source .secret.replica
+
+* Make sure you're deploying to the right Rancher Environment:
+
+      $ env | grep RANCHER
 
 ### Start Convoy NFS driver
 
@@ -78,8 +101,8 @@ Back to your laptop
 ### Start DB stack (postgres)
 
     $ cd deploy/www-db
-    $ rancher-compose -e ../replica.env pull
-    $ rancher-compose -e ../replica.env up -d
+    $ rancher-compose -e ../replica.env -f replica.yml pull
+    $ rancher-compose -e ../replica.env -f replica.yml up -d
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
@@ -101,6 +124,20 @@ On your laptop
 
 ### Upgrade Backend stack (plone instances, async workers)
 
+Add your Rancher API Keys to `.secret.replica` file (see related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
+on how to obtain them):
+
+      $ cp .secret.example .secret.replica
+      $ vim .secret.replica
+
+and make them available:
+
+      $ source .secret.replica
+
+Make sure you're upgrading within the right Rancher Environment:
+
+      $ env | grep RANCHER
+
 Update `KGS_VERSION` within `deploy/replica.env`
 
     $ vim deploy/replica.env
@@ -109,7 +146,7 @@ Upgrade:
 
     $ cd deploy/www-eea
     $ rancher-compose -e ../replica.env pull
-    $ rancher-compose -e ../replica.env up -d --upgrade
+    $ rancher-compose -e ../replica.env up -d --upgrade --batch-size=1
 
 If the upgrade went well, finish the upgrade with:
 

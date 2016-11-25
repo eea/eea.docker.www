@@ -11,6 +11,8 @@ postgres-upstream-replica-data:
   scale: ${POSTGRES_UPSTREAM_SCALE}
 postgres-master:
   scale: ${POSTGRES_MASTER_SCALE}
+  external_ips:
+  - ${POSTGRES_MASTER_IP}
   health_check:
     port: 5432
     interval: 2000

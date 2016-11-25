@@ -14,7 +14,8 @@ apache:
     APACHE_INCLUDE: "conf/extra/httpd-languages.conf conf/extra/httpd-default.conf"
     APACHE_TIMEOUT: "120"
     APACHE_KEEPALIVE_TIMEOUT: "8"
-    TZ: ${TZ}
+    TRACEVIEW: "${TRACEVIEW}"
+    TZ: "${TZ}"
   links:
   - varnish:varnish
   volumes:
@@ -50,13 +51,16 @@ varnish:
 anon:
   image: eeacms/www:${KGS_VERSION}
   environment:
-    ZOPE_MODE: rel_client
+    ZOPE_MODE: "rel_client"
     ZOPE_THREADS: "1"
     ZOPE_FORCE_CONNECTION_CLOSE: 'off'
-    GRAYLOG: ${GRAYLOG}
-    GRAYLOG_FACILITY: anon
-    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
-    TZ: ${TZ}
+    GRAYLOG: "${GRAYLOG}"
+    GRAYLOG_FACILITY: "anon"
+    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+    TRACEVIEW: "${TRACEVIEW}"
+    RABBITMQ_USER: "${RABBITMQ_USER}"
+    RABBITMQ_PASS: "${RABBITMQ_PASS}"
+    TZ: "${TZ}"
   links:
   - postgres:postgres
   - relcached:relcached
@@ -88,13 +92,16 @@ anon-data:
 download:
   image: eeacms/www:${KGS_VERSION}
   environment:
-    ZOPE_MODE: rel_client
+    ZOPE_MODE: "rel_client"
     ZOPE_THREADS: "1"
     ZOPE_FORCE_CONNECTION_CLOSE: 'off'
-    GRAYLOG: ${GRAYLOG}
-    GRAYLOG_FACILITY: download
-    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
-    TZ: ${TZ}
+    GRAYLOG: "${GRAYLOG}"
+    GRAYLOG_FACILITY: "download"
+    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+    TRACEVIEW: "${TRACEVIEW}"
+    RABBITMQ_USER: "${RABBITMQ_USER}"
+    RABBITMQ_PASS: "${RABBITMQ_PASS}"
+    TZ: "${TZ}"
   links:
   - postgres:postgres
   - relcached:relcached
@@ -126,11 +133,14 @@ download-data:
 auth:
   image: eeacms/www:${KGS_VERSION}
   environment:
-    ZOPE_MODE: rel_client
-    GRAYLOG: ${GRAYLOG}
-    GRAYLOG_FACILITY: auth
-    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
-    TZ: ${TZ}
+    ZOPE_MODE: "rel_client"
+    GRAYLOG: "${GRAYLOG}"
+    GRAYLOG_FACILITY: "auth"
+    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+    TRACEVIEW: "${TRACEVIEW}"
+    RABBITMQ_USER: "${RABBITMQ_USER}"
+    RABBITMQ_PASS: "${RABBITMQ_PASS}"
+    TZ: "${TZ}"
   links:
   - postgres:postgres
   - relcached:relcached
@@ -162,13 +172,16 @@ auth-data:
 async:
   image: eeacms/www:${KGS_VERSION}
   environment:
-    ZOPE_MODE: rel_async
+    ZOPE_MODE: "rel_async"
     ZOPE_THREADS: "1"
     ZOPE_FAST_LISTEN: 'on'
-    GRAYLOG: ${GRAYLOG}
-    GRAYLOG_FACILITY: async
-    WARMUP_HEALTH_THRESHOLD: ${WARMUP}
-    TZ: ${TZ}
+    GRAYLOG: "${GRAYLOG}"
+    GRAYLOG_FACILITY: "async"
+    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+    TRACEVIEW: "${TRACEVIEW}"
+    RABBITMQ_USER: "${RABBITMQ_USER}"
+    RABBITMQ_PASS: "${RABBITMQ_PASS}"
+    TZ: "${TZ}"
   links:
   - postgres:postgres
   - relcached:relcached
@@ -203,7 +216,7 @@ async-data:
 memcached:
   environment:
     MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
-    TZ: ${TZ}
+    TZ: "${TZ}"
   labels:
     io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
@@ -213,7 +226,7 @@ memcached:
 relcached:
   environment:
     MEMCACHED_MEMORY: '${RELCACHED_MEMORY}'
-    TZ: ${TZ}
+    TZ: "${TZ}"
   labels:
     io.rancher.container.hostname_override: container_name
     io.rancher.scheduler.affinity:host_label: www=yes,cache=yes

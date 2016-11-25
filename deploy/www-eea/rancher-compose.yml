@@ -3,6 +3,8 @@
 #
 apache:
   scale: ${APACHE_SCALE}
+  upgrade_strategy:
+    start_first: true
   health_check:
     port: 80
     interval: 30000
@@ -10,9 +12,11 @@ apache:
     unhealthy_threshold: 3
     strategy: recreate
     healthy_threshold: 2
-    response_timeout: 2000
+    response_timeout: 3000
 varnish:
   scale: ${VARNISH_SCALE}
+  upgrade_strategy:
+    start_first: true
   health_check:
     port: 6081
     interval: 30000
@@ -20,7 +24,7 @@ varnish:
     unhealthy_threshold: 3
     strategy: recreate
     healthy_threshold: 2
-    response_timeout: 2000
+    response_timeout: 3000
 #
 # Plone backends
 #
@@ -30,7 +34,7 @@ anon:
     start_first: true
   health_check:
     port: 8080
-    interval: 5000
+    interval: 30000
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
@@ -45,7 +49,7 @@ download:
     start_first: true
   health_check:
     port: 8080
-    interval: 5000
+    interval: 30000
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
@@ -60,7 +64,7 @@ auth:
     start_first: true
   health_check:
     port: 8080
-    interval: 5000
+    interval: 30000
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
@@ -75,7 +79,7 @@ async:
     start_first: true
   health_check:
     port: 8080
-    interval: 5000
+    interval: 30000
     initializing_timeout: 300000
     unhealthy_threshold: 3
     strategy: recreate
@@ -89,21 +93,25 @@ async-data:
 #
 memcached:
   scale: ${MEMCACHED_SCALE}
+  upgrade_strategy:
+    start_first: true
   health_check:
     port: 11211
-    interval: 2000
+    interval: 5000
     unhealthy_threshold: 3
     strategy: recreate
-    response_timeout: 2000
+    response_timeout: 3000
     healthy_threshold: 2
 relcached:
   scale: ${RELCACHED_SCALE}
+  upgrade_strategy:
+    start_first: true
   health_check:
     port: 11211
-    interval: 2000
+    interval: 5000
     unhealthy_threshold: 3
     strategy: recreate
-    response_timeout: 2000
+    response_timeout: 3000
     healthy_threshold: 2
 #
 # RabbitMQ

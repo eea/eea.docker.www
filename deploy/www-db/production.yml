@@ -1,0 +1,2 @@
+postgres-master:
+  image: rancher/external-service
