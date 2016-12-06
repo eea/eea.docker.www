@@ -120,7 +120,7 @@ scheduled on hosts with label `public=yes`
 On your laptop
 
     $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
+    $ cd eea.docker.www/deploy
 
 ### Upgrade Backend stack (plone instances, async workers)
 
@@ -140,11 +140,11 @@ Make sure you're upgrading within the right Rancher Environment:
 
 Update `KGS_VERSION` within `deploy/replica.env`
 
-    $ vim deploy/replica.env
+    $ vim replica.env
 
 Upgrade:
 
-    $ cd deploy/www-eea
+    $ cd www-eea
     $ rancher-compose -e ../replica.env pull
     $ rancher-compose -e ../replica.env up -d --upgrade --batch-size=1
 
