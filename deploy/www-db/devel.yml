@@ -1,22 +1,19 @@
-#
-# PostgreSQL Master
-#
-postgres-master:
-  image: eeacms/postgres:${POSTGRES_VERSION}
-  labels:
-    io.rancher.scheduler.affinity:host_label: www=yes,db=yes
-    postgres: 'yes'
-  environment:
-    POSTGRES_USER: "postgres"
-    POSTGRES_PASSWORD: "postgres"
-    POSTGRES_DBNAME: "datafs zasync"
-    POSTGRES_DBUSER: "zope"
-    POSTGRES_DBPASS: "zope"
-    POSTGRES_CRON_1: ${POSTGRES_CRON_1}
-    TZ: ${TZ}
-  volumes:
-  - www-postgres-dump:/postgresql.backup
-  - www-postgres-master-data:/var/lib/postgresql/data
-  tty: true
-  stdin_open: true
-  volume_driver: ${VOLUME_DRIVER}
+version: '2'
+services:
+  postgres-master:
+    image: eeacms/postgres:${POSTGRES_VERSION}
+    labels:
+      io.rancher.scheduler.affinity:host_label: www=yes,db=yes
+      postgres: 'yes'
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DBNAME: "datafs zasync"
+      POSTGRES_DBUSER: "zope"
+      POSTGRES_DBPASS: "zope"
+      POSTGRES_CRON_1: ${POSTGRES_CRON_1}
+      TZ: ${TZ}
+    volumes:
+    - www-postgres-dump:/postgresql.backup
+    - www-postgres-master-data:/var/lib/postgresql/data
+    volume_driver: ${VOLUME_DRIVER}

@@ -1,35 +1,37 @@
-debug:
-  image: eeacms/www:${KGS_VERSION}
-  environment:
-    ZOPE_MODE: rel_client
-    WARMUP_HEALTH_THRESHOLD: 1
-    TZ: ${TZ}
-  links:
-  - www-eea/postgres:postgres
-  - www-eea/relcached:relcached
-  - www-eea/memcached:memcached
-  labels:
-    io.rancher.sidekicks: debug-data
-    io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.debug=yes
-    eu.europa.eea.debug: "yes"
-  volumes:
-  - www-blobstorage:/data/blobstorage
-  - www-downloads:/data/downloads
-  - www-static-resources:/data/www-static-resources
-  - www-eea-controlpanel:/data/eea.controlpanel
-  volume_driver: ${VOLUME_DRIVER}
-  volumes_from:
-  - debug-data
-  tty: true
-  stdin_open: true
-  command: ["cat"]
-debug-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  volumes:
-  - /data
-  tty: true
-  stdin_open: true
-  command: ["chown", "-R", "500:500", "/data"]
+version: '2'
+services:
+  debug:
+    image: eeacms/www:${KGS_VERSION}
+    environment:
+      ZOPE_MODE: rel_client
+      WARMUP_HEALTH_THRESHOLD: 1
+      TZ: ${TZ}
+    links:
+    - www-eea/postgres:postgres
+    - www-eea/relcached:relcached
+    - www-eea/memcached:memcached
+    labels:
+      io.rancher.sidekicks: debug-data
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.debug=yes
+      eu.europa.eea.debug: "yes"
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    volume_driver: ${VOLUME_DRIVER}
+    volumes_from:
+    - debug-data
+    tty: true
+    stdin_open: true
+    command: ["cat"]
+  debug-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - /data
+    tty: true
+    stdin_open: true
+    command: ["chown", "-R", "500:500", "/data"]

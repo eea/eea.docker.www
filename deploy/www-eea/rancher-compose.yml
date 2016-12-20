@@ -1,120 +1,110 @@
-#
-# Frontend
-#
-apache:
-  scale: ${APACHE_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 80
-    interval: 30000
-    initializing_timeout: 60000
-    unhealthy_threshold: 3
-    strategy: recreate
-    healthy_threshold: 2
-    response_timeout: 3000
-varnish:
-  scale: ${VARNISH_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 6081
-    interval: 30000
-    initializing_timeout: 60000
-    unhealthy_threshold: 3
-    strategy: recreate
-    healthy_threshold: 2
-    response_timeout: 3000
-#
-# Plone backends
-#
-anon:
-  scale: ${ANON_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 8080
-    interval: 30000
-    initializing_timeout: 300000
-    unhealthy_threshold: 3
-    strategy: recreate
-    request_line: GET "/health.check" "HTTP/1.0"
-    response_timeout: 3000
-    healthy_threshold: 2
-anon-data:
-  scale: ${ANON_SCALE}
-download:
-  scale: ${DOWNLOAD_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 8080
-    interval: 30000
-    initializing_timeout: 300000
-    unhealthy_threshold: 3
-    strategy: recreate
-    request_line: GET "/health.check" "HTTP/1.0"
-    response_timeout: 3000
-    healthy_threshold: 2
-download-data:
-  scale: ${DOWNLOAD_SCALE}
-auth:
-  scale: ${AUTH_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 8080
-    interval: 30000
-    initializing_timeout: 300000
-    unhealthy_threshold: 3
-    strategy: recreate
-    request_line: GET "/health.check" "HTTP/1.0"
-    response_timeout: 3000
-    healthy_threshold: 2
-auth-data:
-  scale: ${AUTH_SCALE}
-async:
-  scale: ${ASYNC_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 8080
-    interval: 30000
-    initializing_timeout: 300000
-    unhealthy_threshold: 3
-    strategy: recreate
-    request_line: GET "/health.check" "HTTP/1.0"
-    response_timeout: 3000
-    healthy_threshold: 2
-async-data:
-  scale: ${ASYNC_SCALE}
-#
-# Cache
-#
-memcached:
-  scale: ${MEMCACHED_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 11211
-    interval: 5000
-    unhealthy_threshold: 3
-    strategy: recreate
-    response_timeout: 3000
-    healthy_threshold: 2
-relcached:
-  scale: ${RELCACHED_SCALE}
-  upgrade_strategy:
-    start_first: true
-  health_check:
-    port: 11211
-    interval: 5000
-    unhealthy_threshold: 3
-    strategy: recreate
-    response_timeout: 3000
-    healthy_threshold: 2
-#
-# RabbitMQ
-#
-rabbitmq:
-  hostname: ${RABBITMQ_HOST}
+version: '2'
+services:
+  apache:
+    scale: ${APACHE_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 80
+      interval: 30000
+      initializing_timeout: 60000
+      unhealthy_threshold: 3
+      strategy: recreate
+      healthy_threshold: 2
+      response_timeout: 3000
+  varnish:
+    scale: ${VARNISH_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 6081
+      interval: 30000
+      initializing_timeout: 60000
+      unhealthy_threshold: 3
+      strategy: recreate
+      healthy_threshold: 2
+      response_timeout: 3000
+  anon:
+    scale: ${ANON_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 8080
+      interval: 30000
+      initializing_timeout: 300000
+      unhealthy_threshold: 3
+      strategy: recreate
+      request_line: GET "/health.check" "HTTP/1.0"
+      response_timeout: 3000
+      healthy_threshold: 2
+  anon-data:
+    scale: ${ANON_SCALE}
+  download:
+    scale: ${DOWNLOAD_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 8080
+      interval: 30000
+      initializing_timeout: 300000
+      unhealthy_threshold: 3
+      strategy: recreate
+      request_line: GET "/health.check" "HTTP/1.0"
+      response_timeout: 3000
+      healthy_threshold: 2
+  download-data:
+    scale: ${DOWNLOAD_SCALE}
+  auth:
+    scale: ${AUTH_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 8080
+      interval: 30000
+      initializing_timeout: 300000
+      unhealthy_threshold: 3
+      strategy: recreate
+      request_line: GET "/health.check" "HTTP/1.0"
+      response_timeout: 3000
+      healthy_threshold: 2
+  auth-data:
+    scale: ${AUTH_SCALE}
+  async:
+    scale: ${ASYNC_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 8080
+      interval: 30000
+      initializing_timeout: 300000
+      unhealthy_threshold: 3
+      strategy: recreate
+      request_line: GET "/health.check" "HTTP/1.0"
+      response_timeout: 3000
+      healthy_threshold: 2
+  async-data:
+    scale: ${ASYNC_SCALE}
+  memcached:
+    scale: ${MEMCACHED_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 11211
+      interval: 5000
+      unhealthy_threshold: 3
+      strategy: recreate
+      response_timeout: 3000
+      healthy_threshold: 2
+  relcached:
+    scale: ${RELCACHED_SCALE}
+    upgrade_strategy:
+      start_first: true
+    health_check:
+      port: 11211
+      interval: 5000
+      unhealthy_threshold: 3
+      strategy: recreate
+      response_timeout: 3000
+      healthy_threshold: 2
+  rabbitmq:
+    hostname: ${RABBITMQ_HOST}

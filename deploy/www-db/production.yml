@@ -1,2 +1,4 @@
-postgres-master:
-  image: rancher/external-service
+version: '2'
+services:
+  postgres-master:
+    image: rancher/external-service

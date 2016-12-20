@@ -1,247 +1,234 @@
-#
-# Front-end
-#
-apache:
-  image: eeacms/apache-eea-www:1.0
-  labels:
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.apache=yes
-    eu.europa.eea.apache: "yes"
-  environment:
-    SERVER_NAME: "${SERVER_NAME}"
-    APACHE_MODULES: "mime_magic_module unique_id_module data_module unique_id_module remoteip_module negotiation_module"
-    APACHE_INCLUDE: "conf/extra/httpd-languages.conf conf/extra/httpd-default.conf"
-    APACHE_TIMEOUT: "120"
-    APACHE_KEEPALIVE_TIMEOUT: "8"
-    TRACEVIEW: "${TRACEVIEW}"
-    TZ: "${TZ}"
-  links:
-  - varnish:varnish
-  volumes:
-  - www-static-resources:/var/www-static-resources
-  volume_driver: ${VOLUME_DRIVER}
-varnish:
-  image: eeacms/varnish-eea-www:1.0
-  labels:
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.varnish=yes
-    eu.europa.eea.varnish: "yes"
-  links:
-  - anon:anon
-  - auth:auth
-  - download:download
-  environment:
-    CACHE_SIZE: "${VARNISH_CACHE_SIZE}"
-    PARAM_VALUE: "${VARNISH_PARAMS}"
-    BACKENDS: "anon auth download"
-    BACKENDS_PORT: "8080"
-    BACKENDS_PROBE_URL: "/health.check"
-    BACKENDS_PROBE_TIMEOUT: "3s"
-    BACKENDS_PROBE_INTERVAL: "5s"
-    BACKENDS_PROBE_WINDOW: "5"
-    BACKENDS_PROBE_THRESHOLD: "3"
-    BACKENDS_SAINT_MODE: "true"
-    DNS_ENABLED: "true"
-    TZ: "${TZ}"
-#
-# Plone Backends
-#
-anon:
-  image: eeacms/www:${KGS_VERSION}
-  environment:
-    ZOPE_MODE: "rel_client"
-    ZOPE_THREADS: "1"
-    ZOPE_FORCE_CONNECTION_CLOSE: 'off'
-    GRAYLOG: "${GRAYLOG}"
-    GRAYLOG_FACILITY: "anon"
-    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
-    TRACEVIEW: "${TRACEVIEW}"
-    RABBITMQ_USER: "${RABBITMQ_USER}"
-    RABBITMQ_PASS: "${RABBITMQ_PASS}"
-    TZ: "${TZ}"
-  links:
-  - postgres:postgres
-  - relcached:relcached
-  - memcached:memcached
-  - rabbitmq:rabbitmq
-  labels:
-    io.rancher.sidekicks: anon-data
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
-    eu.europa.eea.anon: "yes"
-  volumes:
-  - www-blobstorage:/data/blobstorage
-  - www-downloads:/data/downloads
-  - www-static-resources:/data/www-static-resources
-  - www-eea-controlpanel:/data/eea.controlpanel
-  volume_driver: ${VOLUME_DRIVER}
-  volumes_from:
-  - anon-data
-anon-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  volumes:
-  - /data
-  tty: true
-  stdin_open: true
-  command: ["chown", "-R", "500:500", "/data"]
-download:
-  image: eeacms/www:${KGS_VERSION}
-  environment:
-    ZOPE_MODE: "rel_client"
-    ZOPE_THREADS: "1"
-    ZOPE_FORCE_CONNECTION_CLOSE: 'off'
-    GRAYLOG: "${GRAYLOG}"
-    GRAYLOG_FACILITY: "download"
-    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
-    TRACEVIEW: "${TRACEVIEW}"
-    RABBITMQ_USER: "${RABBITMQ_USER}"
-    RABBITMQ_PASS: "${RABBITMQ_PASS}"
-    TZ: "${TZ}"
-  links:
-  - postgres:postgres
-  - relcached:relcached
-  - memcached:memcached
-  - rabbitmq:rabbitmq
-  labels:
-    io.rancher.sidekicks: download-data
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
-    eu.europa.eea.download: "yes"
-  volumes:
-  - www-blobstorage:/data/blobstorage
-  - www-downloads:/data/downloads
-  - www-static-resources:/data/www-static-resources
-  - www-eea-controlpanel:/data/eea.controlpanel
-  volume_driver: ${VOLUME_DRIVER}
-  volumes_from:
-  - download-data
-download-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  volumes:
-  - /data
-  tty: true
-  stdin_open: true
-  command: ["chown", "-R", "500:500", "/data"]
-auth:
-  image: eeacms/www:${KGS_VERSION}
-  environment:
-    ZOPE_MODE: "rel_client"
-    GRAYLOG: "${GRAYLOG}"
-    GRAYLOG_FACILITY: "auth"
-    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
-    TRACEVIEW: "${TRACEVIEW}"
-    RABBITMQ_USER: "${RABBITMQ_USER}"
-    RABBITMQ_PASS: "${RABBITMQ_PASS}"
-    TZ: "${TZ}"
-  links:
-  - postgres:postgres
-  - relcached:relcached
-  - memcached:memcached
-  - rabbitmq:rabbitmq
-  labels:
-    io.rancher.sidekicks: auth-data
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
-    eu.europa.eea.auth: "yes"
-  volumes:
-  - www-blobstorage:/data/blobstorage
-  - www-downloads:/data/downloads
-  - www-static-resources:/data/www-static-resources
-  - www-eea-controlpanel:/data/eea.controlpanel
-  volume_driver: ${VOLUME_DRIVER}
-  volumes_from:
-  - auth-data
-auth-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  volumes:
-  - /data
-  tty: true
-  stdin_open: true
-  command: ["chown", "-R", "500:500", "/data"]
-async:
-  image: eeacms/www:${KGS_VERSION}
-  environment:
-    ZOPE_MODE: "rel_async"
-    ZOPE_THREADS: "1"
-    ZOPE_FAST_LISTEN: 'on'
-    GRAYLOG: "${GRAYLOG}"
-    GRAYLOG_FACILITY: "async"
-    WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
-    TRACEVIEW: "${TRACEVIEW}"
-    RABBITMQ_USER: "${RABBITMQ_USER}"
-    RABBITMQ_PASS: "${RABBITMQ_PASS}"
-    TZ: "${TZ}"
-  links:
-  - postgres:postgres
-  - relcached:relcached
-  - memcached:memcached
-  - rabbitmq:rabbitmq
-  labels:
-    io.rancher.sidekicks: async-data
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
-    eu.europa.eea.async: "yes"
-  volumes:
-  - www-blobstorage:/data/blobstorage
-  - www-downloads:/data/downloads
-  - www-static-resources:/data/www-static-resources
-  - www-eea-controlpanel:/data/eea.controlpanel
-  volume_driver: ${VOLUME_DRIVER}
-  volumes_from:
-  - async-data
-async-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  volumes:
-  - /data
-  tty: true
-  stdin_open: true
-  command: ["chown", "-R", "500:500", "/data"]
-#
-# Cache
-#
-memcached:
-  environment:
-    MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
-    TZ: "${TZ}"
-  labels:
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
-    eu.europa.eea.memcached: "yes"
-  image: eeacms/memcached
-relcached:
-  environment:
-    MEMCACHED_MEMORY: '${RELCACHED_MEMORY}'
-    TZ: "${TZ}"
-  labels:
-    io.rancher.container.hostname_override: container_name
-    io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
-    io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
-    eu.europa.eea.relcached: "yes"
-  image: eeacms/memcached
-#
-# RabbitMQ
-#
-rabbitmq:
-  image: rancher/external-service
-#
-# DB
-#
-postgres:
-  image: rancher/dns-service
-  external_links:
-  - www-db/postgres-master:postgres
+version: '2'
+services:
+  apache:
+    image: eeacms/apache-eea-www:1.0
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.apache=yes
+      eu.europa.eea.apache: "yes"
+    environment:
+      SERVER_NAME: "${SERVER_NAME}"
+      APACHE_MODULES: "mime_magic_module unique_id_module data_module unique_id_module remoteip_module negotiation_module"
+      APACHE_INCLUDE: "conf/extra/httpd-languages.conf conf/extra/httpd-default.conf"
+      APACHE_TIMEOUT: "120"
+      APACHE_KEEPALIVE_TIMEOUT: "8"
+      TRACEVIEW: "${TRACEVIEW}"
+      TZ: "${TZ}"
+    links:
+    - varnish:varnish
+    volumes:
+    - www-static-resources:/var/www-static-resources
+    volume_driver: ${VOLUME_DRIVER}
+  varnish:
+    image: eeacms/varnish-eea-www:1.0
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.varnish=yes
+      eu.europa.eea.varnish: "yes"
+    links:
+    - anon:anon
+    - auth:auth
+    - download:download
+    environment:
+      CACHE_SIZE: "${VARNISH_CACHE_SIZE}"
+      PARAM_VALUE: "${VARNISH_PARAMS}"
+      BACKENDS: "anon auth download"
+      BACKENDS_PORT: "8080"
+      BACKENDS_PROBE_URL: "/health.check"
+      BACKENDS_PROBE_TIMEOUT: "3s"
+      BACKENDS_PROBE_INTERVAL: "5s"
+      BACKENDS_PROBE_WINDOW: "5"
+      BACKENDS_PROBE_THRESHOLD: "3"
+      BACKENDS_SAINT_MODE: "true"
+      DNS_ENABLED: "true"
+      TZ: "${TZ}"
+  anon:
+    image: eeacms/www:${KGS_VERSION}
+    environment:
+      ZOPE_MODE: "rel_client"
+      ZOPE_THREADS: "1"
+      ZOPE_FORCE_CONNECTION_CLOSE: 'off'
+      GRAYLOG: "${GRAYLOG}"
+      GRAYLOG_FACILITY: "anon"
+      WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+      TRACEVIEW: "${TRACEVIEW}"
+      RABBITMQ_USER: "${RABBITMQ_USER}"
+      RABBITMQ_PASS: "${RABBITMQ_PASS}"
+      TZ: "${TZ}"
+    links:
+    - postgres:postgres
+    - relcached:relcached
+    - memcached:memcached
+    - rabbitmq:rabbitmq
+    labels:
+      io.rancher.sidekicks: anon-data
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
+      eu.europa.eea.anon: "yes"
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    volume_driver: ${VOLUME_DRIVER}
+    volumes_from:
+    - anon-data
+  anon-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - /data
+    tty: true
+    stdin_open: true
+    command: ["chown", "-R", "500:500", "/data"]
+  download:
+    image: eeacms/www:${KGS_VERSION}
+    environment:
+      ZOPE_MODE: "rel_client"
+      ZOPE_THREADS: "1"
+      ZOPE_FORCE_CONNECTION_CLOSE: 'off'
+      GRAYLOG: "${GRAYLOG}"
+      GRAYLOG_FACILITY: "download"
+      WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+      TRACEVIEW: "${TRACEVIEW}"
+      RABBITMQ_USER: "${RABBITMQ_USER}"
+      RABBITMQ_PASS: "${RABBITMQ_PASS}"
+      TZ: "${TZ}"
+    links:
+    - postgres:postgres
+    - relcached:relcached
+    - memcached:memcached
+    - rabbitmq:rabbitmq
+    labels:
+      io.rancher.sidekicks: download-data
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
+      eu.europa.eea.download: "yes"
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    volume_driver: ${VOLUME_DRIVER}
+    volumes_from:
+    - download-data
+  download-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - /data
+    tty: true
+    stdin_open: true
+    command: ["chown", "-R", "500:500", "/data"]
+  auth:
+    image: eeacms/www:${KGS_VERSION}
+    environment:
+      ZOPE_MODE: "rel_client"
+      GRAYLOG: "${GRAYLOG}"
+      GRAYLOG_FACILITY: "auth"
+      WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+      TRACEVIEW: "${TRACEVIEW}"
+      RABBITMQ_USER: "${RABBITMQ_USER}"
+      RABBITMQ_PASS: "${RABBITMQ_PASS}"
+      TZ: "${TZ}"
+    links:
+    - postgres:postgres
+    - relcached:relcached
+    - memcached:memcached
+    - rabbitmq:rabbitmq
+    labels:
+      io.rancher.sidekicks: auth-data
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
+      eu.europa.eea.auth: "yes"
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    volume_driver: ${VOLUME_DRIVER}
+    volumes_from:
+    - auth-data
+  auth-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - /data
+    tty: true
+    stdin_open: true
+    command: ["chown", "-R", "500:500", "/data"]
+  async:
+    image: eeacms/www:${KGS_VERSION}
+    environment:
+      ZOPE_MODE: "rel_async"
+      ZOPE_THREADS: "1"
+      ZOPE_FAST_LISTEN: 'on'
+      GRAYLOG: "${GRAYLOG}"
+      GRAYLOG_FACILITY: "async"
+      WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+      TRACEVIEW: "${TRACEVIEW}"
+      RABBITMQ_USER: "${RABBITMQ_USER}"
+      RABBITMQ_PASS: "${RABBITMQ_PASS}"
+      TZ: "${TZ}"
+    links:
+    - postgres:postgres
+    - relcached:relcached
+    - memcached:memcached
+    - rabbitmq:rabbitmq
+    labels:
+      io.rancher.sidekicks: async-data
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
+      eu.europa.eea.async: "yes"
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    volume_driver: ${VOLUME_DRIVER}
+    volumes_from:
+    - async-data
+  async-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - /data
+    tty: true
+    stdin_open: true
+    command: ["chown", "-R", "500:500", "/data"]
+  memcached:
+    environment:
+      MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
+      TZ: "${TZ}"
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
+      eu.europa.eea.memcached: "yes"
+    image: eeacms/memcached
+  relcached:
+    environment:
+      MEMCACHED_MEMORY: '${RELCACHED_MEMORY}'
+      TZ: "${TZ}"
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
+      eu.europa.eea.relcached: "yes"
+    image: eeacms/memcached
+  rabbitmq:
+    image: rancher/external-service
+  postgres:
+    image: rancher/dns-service
+    external_links:
+    - www-db/postgres-master:postgres

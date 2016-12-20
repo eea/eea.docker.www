@@ -1,6 +1,8 @@
-debug:
-  scale: 1
-  upgrade_strategy:
-    start_first: true
-debug-data:
-  scale: 1
+version: '2'
+services:
+  debug:
+    scale: 1
+    upgrade_strategy:
+      start_first: true
+  debug-data:
+    scale: 1

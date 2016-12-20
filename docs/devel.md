@@ -40,7 +40,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
 
-### Setup NFS server to be used with ConvoyNFS (shared blobs and static resources)
+### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
 
     $ ssh <fileserver-ip>
     $ docker run --rm -v nfs:/data alpine touch /data/test
@@ -71,13 +71,12 @@ Thus on your laptop:
 
         $ env | grep RANCHER
 
-### Start Convoy NFS driver
+### Setup NFS volumes support
 
-Back to your laptop
-
-    $ cd deploy/www-nfs
-    $ rancher-compose -e ../devel.env pull
-    $ rancher-compose -e ../devel.env up -d
+From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
+* NFS_SERVER: `nfs.devecs.eea.europa.eu`
+* MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
+* MOUNT_OPTS:
 
 ### Start SYNC stack (sync blobs and static resources from staging/to testing)
 

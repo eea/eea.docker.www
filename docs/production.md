@@ -21,7 +21,7 @@ On your laptop:
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
 
-### Setup NFS server to be used with ConvoyNFS (shared blobs and static resources)
+### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
 
     $ ssh <fileserver-ip>
     $ docker run --rm -v nfs:/data alpine touch /data/test
@@ -57,11 +57,14 @@ Make sure you've provided the right credentials for Traceview and RabbitMQ:
     $ env | grep TRACEVIEW
     $ env | grep RABBITMQ
 
-### Start Convoy NFS driver
 
-    $ cd deploy/www-nfs
-    $ rancher-compose -e ../production.env pull
-    $ rancher-compose -e ../production.env up -d
+### Setup NFS volumes support
+
+From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
+* NFS_SERVER: `10.1.20.90`
+* MOUNT_DIR: `/www_zodbblobstorage`
+* MOUNT_OPTS: `defaults,noatime,vers=3`
+
 
 ### Start SYNC stack (sync blobs and static resources from production/to staging)
 

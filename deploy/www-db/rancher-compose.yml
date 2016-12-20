@@ -1,35 +1,35 @@
-postgres-upstream-replica:
-  scale: ${POSTGRES_UPSTREAM_SCALE}
-  health_check:
-    port: 5432
-    interval: 2000
-    unhealthy_threshold: 3
-    strategy: none
-    response_timeout: 2000
-    healthy_threshold: 2
-postgres-upstream-replica-data:
-  scale: ${POSTGRES_UPSTREAM_SCALE}
-postgres-master:
-  scale: ${POSTGRES_MASTER_SCALE}
-  external_ips:
-  - ${POSTGRES_MASTER_IP}
-  health_check:
-    port: 5432
-    interval: 2000
-    unhealthy_threshold: 3
-    strategy: none
-    response_timeout: 2000
-    healthy_threshold: 2
-postgres-master-data:
-  scale: ${POSTGRES_MASTER_SCALE}
-postgres-replica:
-  scale: ${POSTGRES_REPLICA_SCALE}
-  health_check:
-    port: 5432
-    interval: 2000
-    unhealthy_threshold: 3
-    strategy: none
-    response_timeout: 2000
-    healthy_threshold: 2
-postgres-replica-data:
-  scale: ${POSTGRES_REPLICA_SCALE}
+version: '2'
+services:
+  postgres-upstream-replica:
+    scale: ${POSTGRES_UPSTREAM_SCALE}
+    health_check:
+      port: 5432
+      interval: 2000
+      unhealthy_threshold: 3
+      strategy: none
+      response_timeout: 2000
+      healthy_threshold: 2
+  postgres-upstream-replica-data:
+    scale: ${POSTGRES_UPSTREAM_SCALE}
+  postgres-master:
+    scale: ${POSTGRES_MASTER_SCALE}
+    health_check:
+      port: 5432
+      interval: 2000
+      unhealthy_threshold: 3
+      strategy: none
+      response_timeout: 2000
+      healthy_threshold: 2
+  postgres-master-data:
+    scale: ${POSTGRES_MASTER_SCALE}
+  postgres-replica:
+    scale: ${POSTGRES_REPLICA_SCALE}
+    health_check:
+      port: 5432
+      interval: 2000
+      unhealthy_threshold: 3
+      strategy: none
+      response_timeout: 2000
+      healthy_threshold: 2
+  postgres-replica-data:
+    scale: ${POSTGRES_REPLICA_SCALE}

@@ -1,8 +1,10 @@
-rsync-client:
-  scale: ${RSYNC_CLIENT_SCALE}
-rsync-client-data:
-  scale: ${RSYNC_CLIENT_SCALE}
-rsync-server:
-  scale: ${RSYNC_SERVER_SCALE}
-rsync-server-data:
-  scale: ${RSYNC_SERVER_SCALE}
+version: '2'
+services:
+  rsync-client:
+    scale: ${RSYNC_CLIENT_SCALE}
+  rsync-client-data:
+    scale: ${RSYNC_CLIENT_SCALE}
+  rsync-server:
+    scale: ${RSYNC_SERVER_SCALE}
+  rsync-server-data:
+    scale: ${RSYNC_SERVER_SCALE}

@@ -1,108 +1,101 @@
-#
-# PostgreSQL Live replica from production
-#
-postgres-upstream-replica:
-  image: eeacms/postgres:${POSTGRES_VERSION}
-  labels:
-    io.rancher.sidekicks: postgres-upstream-replica-data
-    io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
-  environment:
-    POSTGRES_CRON_1: ${POSTGRES_UPSTREM_CRON_1}
-    TZ: ${TZ}
-  volumes:
-  - www-postgres-dump:/postgresql.backup
-  volumes_from:
-  - postgres-upstream-replica-data
-  volume_driver: ${VOLUME_DRIVER}
-postgres-upstream-replica-data:
-  image: busybox
-  tty: true
-  stdin_open: true
-  labels:
-    io.rancher.container.start_once: 'true'
-  volumes:
-  - www-postgres-data:/var/lib/postgresql/data
-  - www-postgres-archive:/var/lib/postgresql/archive
-  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/"]
-#
-# PostgreSQL Master
-#
-postgres-master:
-  image: eeacms/postgres:${POSTGRES_VERSION}
-  labels:
-    io.rancher.sidekicks: postgres-master-data
-    io.rancher.scheduler.affinity:host_label: www=yes,db=yes
-    io.rancher.scheduler.affinity:container_label_ne: postgres=yes
-    postgres: 'yes'
-  environment:
-    POSTGRES_USER: "postgres"
-    POSTGRES_PASSWORD: "postgres"
-    POSTGRES_DBNAME: "datafs zasync"
-    POSTGRES_DBUSER: "zope"
-    POSTGRES_DBPASS: "zope"
-    POSTGRES_CONFIG_max_connections: "150"
-    POSTGRES_CONFIG_wal_level: "hot_standby"
-    POSTGRES_CONFIG_max_wal_senders: "8"
-    POSTGRES_CONFIG_wal_keep_segments: "256"
-    POSTGRES_CONFIG_hot_standby: "on"
-    POSTGRES_CONFIG_archive_mode: "on"
-    POSTGRES_CONFIG_archive_command: " 'cp %p /var/lib/postgresql/archive/%f' "
-    POSTGRES_CRON_1: ${POSTGRES_CRON_1}
-    TZ: ${TZ}
-  volumes:
-  - www-postgres-dump:/postgresql.backup
-  - www-postgres-replication-archive:/var/lib/postgresql/archive
-  volumes_from:
-  - postgres-master-data
-  volume_driver: ${VOLUME_DRIVER}
-postgres-master-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  tty: true
-  stdin_open: true
-  volumes:
-  - www-postgres-master-data:/var/lib/postgresql/data
-  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
-#
-# PostgreSQL Replica
-#
-postgres-replica:
-  image: eeacms/postgres:${POSTGRES_VERSION}
-  labels:
-    io.rancher.sidekicks: postgres-replica-data
-    io.rancher.scheduler.affinity:host_label: www=yes,db=yes
-    io.rancher.scheduler.affinity:container_label_ne: postgres=yes
-    postgres: 'yes'
-  links:
-  - postgres-master:master
-  environment:
-    POSTGRES_USER: "postgres"
-    POSTGRES_PASSWORD: "postgres"
-    POSTGRES_CONFIG_max_connections: "150"
-    POSTGRES_CONFIG_wal_level: "hot_standby"
-    POSTGRES_CONFIG_max_wal_senders: "8"
-    POSTGRES_CONFIG_wal_keep_segments: "256"
-    POSTGRES_CONFIG_hot_standby: "on"
-    POSTGRES_REPLICATE_FROM: "master"
-    RECOVERY_CONFIG_standby_mode: "on"
-    RECOVERY_CONFIG_primary_conninfo: " 'host=master port=5432 user=postgres' "
-    RECOVERY_CONFIG_restore_command: " 'cp /var/lib/postgresql/archive/%f %p' "
-    RECOVERY_CONFIG_archive_cleanup_command: " 'pg_archivecleanup /var/lib/postgresql/archive %r' "
-    RECOVERY_CONFIG_trigger_file: " '/tmp/touch_me_to_promote_to_me_master' "
-    TZ: ${TZ}
-  volumes:
-  - www-postgres-dump:/postgresql.backup
-  - www-postgres-replication-archive:/var/lib/postgresql/archive
-  volumes_from:
-  - postgres-replica-data
-  volume_driver: ${VOLUME_DRIVER}
-postgres-replica-data:
-  image: busybox
-  labels:
-    io.rancher.container.start_once: 'true'
-  tty: true
-  stdin_open: true
-  volumes:
-  - www-postgres-replica-data:/var/lib/postgresql/data
-  command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+version: '2'
+services:
+  postgres-upstream-replica:
+    image: eeacms/postgres:${POSTGRES_VERSION}
+    labels:
+      io.rancher.sidekicks: postgres-upstream-replica-data
+      io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
+    environment:
+      POSTGRES_CRON_1: ${POSTGRES_UPSTREM_CRON_1}
+      TZ: ${TZ}
+    volumes:
+    - www-postgres-dump:/postgresql.backup
+    volumes_from:
+    - postgres-upstream-replica-data
+    volume_driver: ${VOLUME_DRIVER}
+  postgres-upstream-replica-data:
+    image: busybox
+    tty: true
+    stdin_open: true
+    labels:
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - www-postgres-data:/var/lib/postgresql/data
+    - www-postgres-archive:/var/lib/postgresql/archive
+    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/"]
+  postgres-master:
+    image: eeacms/postgres:${POSTGRES_VERSION}
+    labels:
+      io.rancher.sidekicks: postgres-master-data
+      io.rancher.scheduler.affinity:host_label: www=yes,db-master=yes
+      io.rancher.scheduler.affinity:container_label_ne: postgres=yes
+      postgres: 'yes'
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DBNAME: "datafs zasync"
+      POSTGRES_DBUSER: "zope"
+      POSTGRES_DBPASS: "zope"
+      POSTGRES_CONFIG_max_connections: "150"
+      POSTGRES_CONFIG_wal_level: "hot_standby"
+      POSTGRES_CONFIG_max_wal_senders: "8"
+      POSTGRES_CONFIG_wal_keep_segments: "256"
+      POSTGRES_CONFIG_hot_standby: "on"
+      POSTGRES_CONFIG_archive_mode: "on"
+      POSTGRES_CONFIG_archive_command: " 'cp %p /var/lib/postgresql/archive/%f' "
+      POSTGRES_CRON_1: ${POSTGRES_CRON_1}
+      TZ: ${TZ}
+    volumes:
+    - www-postgres-dump:/postgresql.backup
+    - www-postgres-replication-archive:/var/lib/postgresql/archive
+    volumes_from:
+    - postgres-master-data
+    volume_driver: ${VOLUME_DRIVER}
+  postgres-master-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    tty: true
+    stdin_open: true
+    volumes:
+    - www-postgres-master-data:/var/lib/postgresql/data
+    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+  postgres-replica:
+    image: eeacms/postgres:${POSTGRES_VERSION}
+    labels:
+      io.rancher.sidekicks: postgres-replica-data
+      io.rancher.scheduler.affinity:host_label: www=yes,db-replica=yes
+      io.rancher.scheduler.affinity:container_label_ne: postgres=yes
+      postgres: 'yes'
+    links:
+    - postgres-master:master
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_CONFIG_max_connections: "150"
+      POSTGRES_CONFIG_wal_level: "hot_standby"
+      POSTGRES_CONFIG_max_wal_senders: "8"
+      POSTGRES_CONFIG_wal_keep_segments: "256"
+      POSTGRES_CONFIG_hot_standby: "on"
+      POSTGRES_REPLICATE_FROM: "master"
+      RECOVERY_CONFIG_standby_mode: "on"
+      RECOVERY_CONFIG_primary_conninfo: " 'host=master port=5432 user=postgres' "
+      RECOVERY_CONFIG_restore_command: " 'cp /var/lib/postgresql/archive/%f %p' "
+      RECOVERY_CONFIG_archive_cleanup_command: " 'pg_archivecleanup /var/lib/postgresql/archive %r' "
+      RECOVERY_CONFIG_trigger_file: " '/tmp/touch_me_to_promote_to_me_master' "
+      TZ: ${TZ}
+    volumes:
+    - www-postgres-dump:/postgresql.backup
+    - www-postgres-replication-archive:/var/lib/postgresql/archive
+    volumes_from:
+    - postgres-replica-data
+    volume_driver: ${VOLUME_DRIVER}
+  postgres-replica-data:
+    image: busybox
+    labels:
+      io.rancher.container.start_once: 'true'
+    tty: true
+    stdin_open: true
+    volumes:
+    - www-postgres-replica-data:/var/lib/postgresql/data
+    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]

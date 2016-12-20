@@ -1,25 +1,23 @@
-convoy-nfs:
-  labels:
-    io.rancher.container.create_agent: 'true'
-    io.rancher.scheduler.global: 'true'
-    io.rancher.scheduler.affinity:host_label: www=yes
-  privileged: true
-  pid: host
-  volumes:
-    - /lib/modules:/lib/modules:ro
-    - /proc:/host/proc
-    - /var/run:/host/var/run
-    - /run:/host/run
-    - /etc/docker/plugins:/etc/docker/plugins
-  image: rancher/convoy-agent:v0.9.0
-  command: volume-agent-nfs
-
-convoy-nfs-storagepool:
-  labels:
-    io.rancher.container.create_agent: 'true'
-    io.rancher.scheduler.affinity:host_label: www=yes
-  image: rancher/convoy-agent:v0.9.0
-  volumes:
-    - /var/run:/host/var/run
-    - /run:/host/run
-  command: storagepool-agent
+version: '2'
+services:
+  nfs-driver:
+    privileged: true
+    image: rancher/storage-nfs:v0.6.0
+    pid: host
+    labels:
+      io.rancher.scheduler.global: 'true'
+      io.rancher.container.create_agent: 'true'
+      io.rancher.container.agent.role: environment
+    environment:
+      NFS_SERVER: '${NFS_SERVER}'
+      MOUNT_DIR: '${MOUNT_DIR}'
+      MOUNT_OPTS: '${MOUNT_OPTS}'
+    volumes:
+    - /run:/run
+    - /dev:/host/dev
+    - /var/lib/rancher/volumes:/var/lib/rancher/volumes:shared
+    logging:
+      driver: json-file
+      options:
+        max-size: 25m
+        max-file: '2'
