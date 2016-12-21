@@ -43,13 +43,11 @@ services:
       SSH_AUTH_KEY_1: ${SSH_AUTH_KEY_1}
       SSH_AUTH_KEY_2: ${SSH_AUTH_KEY_2}
       TZ: ${TZ}
-    log_driver: ''
     labels:
       io.rancher.sidekicks: rsync-server-data
       io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
     command:
     - server
-    log_opt: {}
     image: eeacms/rsync
     volumes:
     - www-blobstorage:/data/blobstorage

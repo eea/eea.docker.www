@@ -63,7 +63,7 @@ Make sure you've provided the right credentials for Traceview and RabbitMQ:
 From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
 * NFS_SERVER: `10.1.20.90`
 * MOUNT_DIR: `/www_zodbblobstorage`
-* MOUNT_OPTS: `defaults,noatime,vers=3`
+* MOUNT_OPTS: `noatime,sec=sys,timeo=600,retrans=2`
 
 
 ### Start SYNC stack (sync blobs and static resources from production/to staging)
