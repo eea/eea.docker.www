@@ -19,7 +19,6 @@ services:
     - varnish:varnish
     volumes:
     - www-static-resources:/var/www-static-resources
-    volume_driver: ${VOLUME_DRIVER}
   varnish:
     image: eeacms/varnish-eea-www:1.0
     labels:
@@ -63,7 +62,6 @@ services:
     - memcached:memcached
     - rabbitmq:rabbitmq
     labels:
-      io.rancher.sidekicks: anon-data
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
@@ -73,18 +71,7 @@ services:
     - www-downloads:/data/downloads
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
-    volume_driver: ${VOLUME_DRIVER}
-    volumes_from:
-    - anon-data
-  anon-data:
-    image: busybox
-    labels:
-      io.rancher.container.start_once: 'true'
-    volumes:
-    - /data
-    tty: true
-    stdin_open: true
-    command: ["chown", "-R", "500:500", "/data"]
+    - www-anon-data:/data
   download:
     image: eeacms/www:${KGS_VERSION}
     environment:
@@ -104,7 +91,6 @@ services:
     - memcached:memcached
     - rabbitmq:rabbitmq
     labels:
-      io.rancher.sidekicks: download-data
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
@@ -114,18 +100,7 @@ services:
     - www-downloads:/data/downloads
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
-    volume_driver: ${VOLUME_DRIVER}
-    volumes_from:
-    - download-data
-  download-data:
-    image: busybox
-    labels:
-      io.rancher.container.start_once: 'true'
-    volumes:
-    - /data
-    tty: true
-    stdin_open: true
-    command: ["chown", "-R", "500:500", "/data"]
+    - www-download-data:/data
   auth:
     image: eeacms/www:${KGS_VERSION}
     environment:
@@ -143,7 +118,6 @@ services:
     - memcached:memcached
     - rabbitmq:rabbitmq
     labels:
-      io.rancher.sidekicks: auth-data
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
@@ -153,18 +127,7 @@ services:
     - www-downloads:/data/downloads
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
-    volume_driver: ${VOLUME_DRIVER}
-    volumes_from:
-    - auth-data
-  auth-data:
-    image: busybox
-    labels:
-      io.rancher.container.start_once: 'true'
-    volumes:
-    - /data
-    tty: true
-    stdin_open: true
-    command: ["chown", "-R", "500:500", "/data"]
+    - www-auth-data:/data
   async:
     image: eeacms/www:${KGS_VERSION}
     environment:
@@ -184,7 +147,6 @@ services:
     - memcached:memcached
     - rabbitmq:rabbitmq
     labels:
-      io.rancher.sidekicks: async-data
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
@@ -194,18 +156,7 @@ services:
     - www-downloads:/data/downloads
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
-    volume_driver: ${VOLUME_DRIVER}
-    volumes_from:
-    - async-data
-  async-data:
-    image: busybox
-    labels:
-      io.rancher.container.start_once: 'true'
-    volumes:
-    - /data
-    tty: true
-    stdin_open: true
-    command: ["chown", "-R", "500:500", "/data"]
+    - www-async-data:/data
   memcached:
     environment:
       MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
@@ -232,3 +183,27 @@ services:
     image: rancher/dns-service
     external_links:
     - www-db/postgres-master:postgres
+volumes:
+  www-anon-data:
+    per_container: true
+  www-download-data:
+    per_container: true
+  www-auth-data:
+    per_container: true
+  www-async-data:
+    per_container: true
+  www-static-resources:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-blobstorage:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-downloads:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-static-resources:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-eea-controlpanel:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}

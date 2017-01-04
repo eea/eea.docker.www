@@ -35,9 +35,9 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 ### Register above hosts within Rancher
 
-* Register dedicated `db` hosts with labels: `www=yes`, `db=yes` (PostgreSQL)
+* Register dedicated `db` hosts with labels: `www=yes`, `db=yes`, `db-master=yes` (PostgreSQL)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
-* Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
+* Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes`, `db=yes`, `db-upstream=yes` (Sync)
 
 ### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
 
@@ -88,4 +88,4 @@ Make sure that `rsync-client` on staging can connect to this `rsync-server`.
 ### Start DB stack
 
         $ cd deploy/www-db
-        $ rancher -d -e ../devel.env -f devel.yml
+        $ rancher up -d -e ../devel.env -f devel.yml

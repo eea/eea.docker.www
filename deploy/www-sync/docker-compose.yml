@@ -23,7 +23,7 @@ services:
     - www-eea-controlpanel:/data/eea.controlpanel
     - www-postgres-dump:/data/postgresql.backup
     - www-postgres-data:/var/lib/postgresql/data
-    - www-postgres-archive:/var/lib/postgresql/archive
+    - www-postgres-upstream-archive:/var/lib/postgresql/archive
   rsync-server:
     ports:
     - 2222:22/tcp
@@ -44,8 +44,13 @@ services:
     - www-eea-controlpanel:/data/eea.controlpanel
     - www-postgres-dump:/data/postgresql.backup
     - www-postgres-data:/var/lib/postgresql/data
-    - www-postgres-archive:/var/lib/postgresql/archive
+    - www-postgres-upstream-archive:/var/lib/postgresql/archive
 volumes:
+  www-postgres-data:
+    external: true
+  www-postgres-upstream-archive:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
   www-blobstorage:
     external: true
     volume_driver: ${VOLUME_DRIVER}
@@ -64,7 +69,3 @@ volumes:
   www-postgres-dump:
     external: true
     volume_driver: ${VOLUME_DRIVER}
-  www-postgres-data:
-    external: true
-  www-postgres-archive:
-    external: true

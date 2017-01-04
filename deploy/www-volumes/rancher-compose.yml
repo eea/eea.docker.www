@@ -1,4 +1,7 @@
-nfs-volumes:
-  scale: 1
-db-volumes:
-  scale: 1
+version: '2'
+services:
+  nfs-volumes:
+    scale: 1
+    start_on_create: true
+  db-volumes:
+    start_on_create: true
