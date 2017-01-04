@@ -4,15 +4,15 @@ Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
-* [Rancher Compose](http://docs.rancher.com/rancher/rancher-compose/)
+* [Rancher CLI](https://docs.rancher.com/rancher/v1.2/en/cli/)
 * Dedicated Rancher Environment (recommended)
 
 ## Installation
 
 On your laptop:
 
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
+        $ git clone https://github.com/eea/eea.docker.www.git
+        $ cd eea.docker.www
 
 ### Register hosts within Rancher via Rancher UI
 
@@ -23,137 +23,148 @@ On your laptop:
 
 ### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
 
-    $ ssh <fileserver-ip>
-    $ docker run --rm -v nfs:/data alpine touch /data/test
-    $ echo "/var/lib/docker/volumes/nfs/_data 10.128.0.0/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
-    $ systemctl enable rpcbind nfs-server
-    $ systemctl restart rpcbind nfs-server
+        $ ssh <fileserver-ip>
+        $ docker run --rm -v nfs:/data alpine touch /data/test
+        $ echo "/var/lib/docker/volumes/nfs/_data 10.128.0.0/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
+        $ systemctl enable rpcbind nfs-server
+        $ systemctl restart rpcbind nfs-server
 
 ### Access rights
+   
+To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
+See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
+on how to obtain your Rancher API Keys. Thus:
 
-To enable Rancher Compose to launch services in a Rancher instance, you’ll need to set environment variables or pass
-these variables as an option in the Rancher Compose command.
-See related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
-on how to obtain your Rancher API Keys.
+1. Via Rancher UI:
 
-Thus on your laptop:
+    * Go to **API Tab** add an **Account API Key**
 
-* Add Rancher specific environment variables (API URL, access and secret key) and the other secrets (for traceview, rabbitmq, etc.):
+2. Then on your laptop configure Rancher CLI:
+
+        $ rancher --config ~/.rancher/rancher.prod.json config
+        $ cp ~/.rancher/rancher.prod.json ~/.rancher/cli.json
+
+3. Now **make sure that you're deploying within the right environment**:
+
+        $ rancher config -p
+
+4. Application passwords and secrets keys:
 
         $ cd deploy
         $ cp .secret.example .secret.production
         $ vim .secret.production
 
-* And make them available:
+5. Make them available
 
         $ source .secret.production
 
-* Make sure you're deploying to the right Rancher Environment:
+6. Make sure you've provided the right credentials for `Traceview` and `RabbitMQ`:
 
-        $ env | grep RANCHER
-
-Make sure you've provided the right credentials for Traceview and RabbitMQ:
-
-    $ env | grep TRACEVIEW
-    $ env | grep RABBITMQ
+        $ env | grep TRACEVIEW
+        $ env | grep RABBITMQ
 
 
 ### Setup NFS volumes support
 
-From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
-* NFS_SERVER: `10.1.20.90`
-* MOUNT_DIR: `/www_zodbblobstorage`
-* MOUNT_OPTS: `noatime,sec=sys,timeo=600,retrans=2`
+* From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
+  * NFS_SERVER: `10.1.20.90`
+  * MOUNT_DIR: `/www_zodbblobstorage`
+  * MOUNT_OPTS: `noatime,sec=sys,timeo=600,retrans=2`
 
+### Create NFS/DB volumes
+
+        $ cd deploy/www-volumes
+        $ rancher up -d -e ../production.env
 
 ### Start SYNC stack (sync blobs and static resources from production/to staging)
 
-    $ cd deploy/www-sync
-    $ rancher-compose -e ../production.env pull
-    $ rancher-compose -e ../production.env up -d
+        $ cd deploy/www-sync
+        $ rancher up -d -e ../production.env
 
 * Make sure that `rsync-client` can connect to `rsync-server on www-prod-replica tenant`. (blobs and static-resources sync)
 
 ### Start DB stack (PostgreSQL Database)
 
-    $ cd deploy/www-db
-    $ rancher-compose -e ../production.env -f production.yml up -d
+        $ cd deploy/www-db
+        $ rancher up -d -e ../production.env -f production.yml
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
-    $ cd deploy/www-eea
-    $ source ../.secret.production
+        $ cd deploy/www-eea
+        $ source ../.secret.production
 
-    $ rancher-compose -e ../production.env pull
-    $ rancher-compose -e ../production.env up -d
+        $ rancher up -d -e ../production.env
 
 ### Add Load-Balancer (optional if not done already by other stack)
 
-Within Rancher UI add Rancher Load Balancer for `www-frontend/apache` containers
-scheduled on hosts with label `public=yes`
+* Within Rancher UI add Rancher Load Balancer for `www-frontend/apache` containers
+  scheduled on hosts with label `public=yes`
 
 ## Upgrade
 
-On your laptop
-
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
-
 ### Upgrade Backend stack (plone instances, async workers)
 
-Add your Rancher API Keys to `.secret.production` file (see related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
-on how to obtain them):
+1. On your laptop
 
-    $ cp .secret.example .secret.production
-    $ vim .secret.production
+        $ git clone https://github.com/eea/eea.docker.www.git
+        $ cd eea.docker.www
 
-and make them available:
+2. Configure Rancher CLI:
 
-    $ source .secret.production
+        $ rancher --config ~/.rancher/rancher.prod.json config
+        $ cp ~/.rancher/rancher.prod.json ~/.rancher/cli.json
 
-Make sure you're upgrading within the right Rancher Environment:
+3. Now **make sure that you're deploying within the right environment**:
 
-    $ env | grep RANCHER
+        $ rancher config -p
 
-Make sure you've provided the right credentials for Traceview and RabbitMQ:
+4. Make application passwords and secrets keys available:
 
-    $ env | grep TRACEVIEW
-    $ env | grep RABBITMQ
+        $ source .secret.production
 
-Update `KGS_VERSION` within `deploy/production.env`
+5. Make sure you've provided the right credentials for `Traceview` and `RabbitMQ`:
 
-    $ vim deploy/production.env
+        $ env | grep TRACEVIEW
+        $ env | grep RABBITMQ
 
-Upgrade:
+6. Update `KGS_VERSION` within `deploy/production.env`
 
-    $ cd deploy/www-eea
-    $ rancher-compose -e ../production.env pull
-    $ rancher-compose -e ../production.env up -d --upgrade --batch-size=1
+        $ vim deploy/production.env
 
-If the upgrade went well, finish the upgrade with:
+7. Upgrade:
 
-    $ rancher-compose -e ../production.env up -d --confirm-upgrade
+        $ cd deploy/www-eea
+        $ rancher up -d -e ../production.env --upgrade --batch-size=1
 
-Otherwise, roll-back:
+8. If the upgrade went well, finish the upgrade with:
 
-    $ rancher-compose -e ../production.env up -d --rollback
+        $ rancher up -d -e ../production.env --confirm-upgrade
+
+9. Otherwise, roll-back:
+
+        $ rancher up -d -e ../production.env --rollback
 
 ## Debug
 
-On your laptop:
+1. On your laptop:
 
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
+        $ git clone https://github.com/eea/eea.docker.www.git
+        $ cd eea.docker.www
 
-Start debug stack:
+2. Make sure that you're deploying within the right environment:
 
-    $ cd deploy/www-debug
-    $ rancher-compose -e ../production.env up -d
+        $ rancher config
 
-Now, via Rancher UI:
+3. Start debug stack:
 
-* Find `www-debug_debug_1` container
-* **Execute Shell**
-* **Start** Plone inside container: `$ bin/instance start` or `$ bin/instance fg`
-* Within `www-debug` stack find `exposed` port for `8080` and **click** on it.
-* **Stop** Plone inside debugging container **when you're done**: `$ bin/instance stop`
+        $ cd deploy/www-debug
+        $ rancher up -d -e ../production.env
+
+4. Start Plone instance in `debug` mode
+
+        $ rancher exec -it www-debug/debug bash
+        $ bin/instance fg
+
+5. Now, via Rancher UI:
+
+    * Within `www-debug` stack find `exposed` port for `8080` and **click** on it.

@@ -4,7 +4,7 @@ Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
-* [Rancher Compose](http://docs.rancher.com/rancher/rancher-compose/)
+* [Rancher CLI](https://docs.rancher.com/rancher/v1.2/en/cli/)
 
 ## Installation
 
@@ -35,7 +35,6 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 ### Register above hosts within Rancher
 
-* Register dedicated `fileserver` hosts with labels `nfs-server=yes` (NFS Server)
 * Register dedicated `db` hosts with labels: `www=yes`, `db=yes` (PostgreSQL)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
@@ -49,46 +48,44 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl restart rpcbind nfs-server
 
 ### Access rights
+   
+To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
+See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
+on how to obtain your Rancher API Keys. Thus:
 
-To enable Rancher Compose to launch services in a Rancher instance, you’ll need to set environment variables or pass
-these variables as an option in the Rancher Compose command.
-See related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
-on how to obtain your Rancher API Keys.
+1. Via Rancher UI:
 
-Thus on your laptop:
+    * Go to **API Tab** add an **Account API Key**
 
-* Add Rancher specific environment variables (API URL, access and secret key):
+2. On your laptop configure Rancher CLI:
 
-        $ cd deploy
-        $ cp .secret.example .secret.devel
-        $ vim .secret.devel
+        $ rancher --config ~/.rancher/rancher.dev.json config
+        $ cp ~/.rancher/rancher.dev.json ~/.rancher/cli.json
 
-* And make them available:
+3. Make sure that you're deploying within the right environment:
 
-        $ source .secret.devel
-
-* Make sure you're deploying to the right Rancher Environment:
-
-        $ env | grep RANCHER
+        $ rancher config -p
 
 ### Setup NFS volumes support
 
-From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
-* NFS_SERVER: `nfs.devecs.eea.europa.eu`
-* MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
-* MOUNT_OPTS:
+* From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
+  * NFS_SERVER: `nfs.devecs.eea.europa.eu`
+  * MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
+  * MOUNT_OPTS: `noatime`
+
+### Create NFS/DB volumes
+
+        $ cd deploy/www-volumes
+        $ rancher up -d -e ../devel.env
 
 ### Start SYNC stack (sync blobs and static resources from staging/to testing)
 
-    $ cd deploy/www-sync
-    $ rancher-compose -e ../devel.env pull
-    $ rancher-compose -e ../devel.env up -d
+        $ cd deploy/www-sync
+        $ rancher up -d -e ../devel.env
 
 Make sure that `rsync-client` on staging can connect to this `rsync-server`.
 
-
 ### Start DB stack
 
-    $ cd deploy/www-db
-    $ rancher-compose -e ../devel.env -f devel.yml pull
-    $ rancher-compose -e ../devel.env -f devel.yml up -d
+        $ cd deploy/www-db
+        $ rancher -d -e ../devel.env -f devel.yml

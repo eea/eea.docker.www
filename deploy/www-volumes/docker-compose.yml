@@ -1,0 +1,29 @@
+version: '2'
+services:
+  nfs-volumes:
+    image: busybox
+    tty: true
+    stdin_open: true
+    labels:
+      io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-filestorage:/data/filestorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    - www-postgres-dump:/data/postgresql.backup
+    volume_driver: ${VOLUME_DRIVER}
+    command: ["ls", "-alh", "/data"]
+  db-volumes:
+    image: busybox
+    tty: true
+    stdin_open: true
+    labels:
+      io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
+      io.rancher.container.start_once: 'true'
+    volumes:
+    - www-postgres-data:/var/lib/postgresql/data
+    - www-postgres-archive:/var/lib/postgresql/archive
+    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql"]

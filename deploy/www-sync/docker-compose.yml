@@ -11,7 +11,6 @@ services:
       CRON_TASK_7: ${CRON_TASK_7}
       TZ: ${TZ}
     labels:
-      io.rancher.sidekicks: rsync-client-data
       io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
     command:
     - client
@@ -23,19 +22,8 @@ services:
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
     - www-postgres-dump:/data/postgresql.backup
-    volumes_from:
-    - rsync-client-data
-    volume_driver: ${VOLUME_DRIVER}
-  rsync-client-data:
-    image: busybox
-    tty: true
-    stdin_open: true
-    labels:
-      io.rancher.container.start_once: 'true'
-    volumes:
     - www-postgres-data:/var/lib/postgresql/data
     - www-postgres-archive:/var/lib/postgresql/archive
-    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
   rsync-server:
     ports:
     - 2222:22/tcp
@@ -44,7 +32,6 @@ services:
       SSH_AUTH_KEY_2: ${SSH_AUTH_KEY_2}
       TZ: ${TZ}
     labels:
-      io.rancher.sidekicks: rsync-server-data
       io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
     command:
     - server
@@ -56,16 +43,28 @@ services:
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
     - www-postgres-dump:/data/postgresql.backup
-    volumes_from:
-    - rsync-server-data
-    volume_driver: ${VOLUME_DRIVER}
-  rsync-server-data:
-    image: busybox
-    tty: true
-    stdin_open: true
-    labels:
-      io.rancher.container.start_once: 'true'
-    volumes:
     - www-postgres-data:/var/lib/postgresql/data
     - www-postgres-archive:/var/lib/postgresql/archive
-    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+volumes:
+  www-blobstorage:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-filestorage:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-downloads:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-static-resources:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-eea-controlpanel:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-postgres-dump:
+    external: true
+    volume_driver: ${VOLUME_DRIVER}
+  www-postgres-data:
+    external: true
+  www-postgres-archive:
+    external: true

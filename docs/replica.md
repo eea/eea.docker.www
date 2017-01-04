@@ -4,7 +4,7 @@ Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
-* [Rancher Compose](http://docs.rancher.com/rancher/rancher-compose/)
+* [Rancher CLI](https://docs.rancher.com/rancher/v1.2/en/cli/)
 * Dedicated Rancher Environment (recommended)
 
 ## Installation
@@ -35,7 +35,6 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 ### Register above hosts within Rancher via Rancher UI
 
-* Register dedicated `fileserver` hosts with labels `nfs-server=yes` (NFS Server)
 * Register dedicated `db` hosts with labels: `www=yes`, `db=yes` and `db-master=yes`/ `db-replica=yes` (PostgreSQL)
 * Register dedicated `cache` hosts with labels: `www=yes`, `cache=yes` (Memcache)
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
@@ -51,41 +50,40 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl restart rpcbind nfs-server
 
 ### Access rights
+   
+To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
+See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
+on how to obtain your Rancher API Keys. Thus:
 
-To enable Rancher Compose to launch services in a Rancher instance, you’ll need to set environment variables or pass
-these variables as an option in the Rancher Compose command.
-See related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
-on how to obtain your Rancher API Keys.
+1. Via Rancher UI:
 
-Thus on your laptop:
+    * Go to **API Tab** add an **Account API Key**
 
-* Add Rancher specific environment variables (API URL, access and secret key):
+2. On your laptop configure Rancher CLI:
 
-        $ cd deploy
-        $ cp .secret.example .secret.replica
-        $ vim .secret.replica
+        $ rancher --config ~/.rancher/rancher.replica.json config
+        $ cp ~/.rancher/rancher.replica.json ~/.rancher/cli.json
 
-* And make them available:
+3. Make sure that you're deploying within the right environment:
 
-        $ source .secret.replica
-
-* Make sure you're deploying to the right Rancher Environment:
-
-        $ env | grep RANCHER
+        $ rancher config -p
 
 ### Setup NFS volumes support
 
-From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
-* NFS_SERVER: `10.128.1.27`
-* MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
-* MOUNT_OPTS:
+* From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
+  * NFS_SERVER: `10.128.1.27`
+  * MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
+  * MOUNT_OPTS: `noatime`
 
+### Create NFS/DB volumes
+
+        $ cd deploy/www-volumes
+        $ rancher up -d -e ../replica.env
 
 ### Start SYNC stack (sync blobs and static resources from production/to testing)
 
-    $ cd deploy/www-sync
-    $ rancher-compose -e ../replica.env pull
-    $ rancher-compose -e ../replica.env up -d
+        $ cd deploy/www-sync
+        $ rancher up -d -e ../replica.env
 
 * Make sure that `Production` can connect to `rsync-server` (Blob and static resources sync)
 * Make sure that `Production PostgreSQL` can connect to `rsync-server`. (PostgreSQL upstream replica)
@@ -93,22 +91,20 @@ From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
 
 ### Sync database
 
-    $ ssh <postgresql master on production>
-    $ cd /var/lib/pgsql/9.4/data
-    $ vim ecs-backup.sh
-    $ ./ecs-backup.sh
+        $ ssh <postgresql master on production>
+        $ cd /var/lib/pgsql/9.4/data
+        $ vim ecs-backup.sh
+        $ ./ecs-backup.sh
 
 ### Start DB stack (postgres)
 
-    $ cd deploy/www-db
-    $ rancher-compose -e ../replica.env -f replica.yml pull
-    $ rancher-compose -e ../replica.env -f replica.yml up -d
+        $ cd deploy/www-db
+        $ rancher up -d -e ../replica.env -f replica.yml
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
-    $ cd deploy/www-eea
-    $ rancher-compose -e ../replica.env pull
-    $ rancher-compose -e ../replica.env up -d
+        $ cd deploy/www-eea
+        $ rancher up -d -e ../replica.env
 
 ### Add Load-Balancer (optional if not done already by other stack)
 
@@ -117,63 +113,61 @@ scheduled on hosts with label `public=yes`
 
 ## Upgrade
 
-On your laptop
-
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www/deploy
-
 ### Upgrade Backend stack (plone instances, async workers)
 
-Add your Rancher API Keys to `.secret.replica` file (see related [Rancher documentation](https://docs.rancher.com/rancher/v1.0/en/configuration/api-keys/#adding-environment-api-keys)
-on how to obtain them):
+1. On your laptop
 
-    $ cp .secret.example .secret.replica
-    $ vim .secret.replica
+        $ git clone https://github.com/eea/eea.docker.www.git
+        $ cd eea.docker.www/deploy
 
-and make them available:
+2. Configure Rancher CLI:
 
-    $ source .secret.replica
+        $ rancher --config ~/.rancher/rancher.replica.json config
+        $ cp ~/.rancher/rancher.replica.json ~/.rancher/cli.json
 
-Make sure you're upgrading within the right Rancher Environment:
+3. Now **make sure that you're deploying within the right environment**:
 
-    $ env | grep RANCHER
+        $ rancher config -p
+        
+4. Update `KGS_VERSION` within `deploy/replica.env`
 
-Update `KGS_VERSION` within `deploy/replica.env`
+        $ vim replica.env
 
-    $ vim replica.env
+5. Upgrade:
 
-Upgrade:
+        $ cd www-eea
+        $ rancher up -d -e ../replica.env --upgrade --batch-size=1
 
-    $ cd www-eea
-    $ rancher-compose -e ../replica.env pull
-    $ rancher-compose -e ../replica.env up -d --upgrade --batch-size=1
+6. If the upgrade went well, finish the upgrade with:
 
-If the upgrade went well, finish the upgrade with:
-
-    $ rancher-compose -e ../replica.env up -d --confirm-upgrade
+        $ rancher up -d -e ../replica.env --confirm-upgrade
 
 ### Roll-back upgrade
 
-In case something went wrong, roll-back:
+* In case something went wrong, roll-back:
 
-    $ rancher-compose -e ../replica.env up -d --rollback
+        $ rancher up -d -e ../replica.env --rollback
 
 ## Debug
 
-On your laptop:
+1. On your laptop:
 
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
+        $ git clone https://github.com/eea/eea.docker.www.git
+        $ cd eea.docker.www
 
-Start debug stack:
+2. Make sure that you're deploying within the right environment:
 
-    $ cd deploy/www-debug
-    $ rancher-compose -e ../replica.env up -d
+        $ rancher config
 
-Now, via Rancher UI:
+3. Start debug stack:
 
-* Find `www-debug_debug_1` container
-* **Execute Shell**
-* **Start** Plone inside container: `$ bin/instance start` or `$ bin/instance fg`
-* Within `www-debug` stack find `exposed` port for `8080` and **click** on it.
-* **Stop** Plone inside debugging container **when you're done**: `$ bin/instance stop`
+        $ cd deploy/www-debug
+        $ rancher up -d -e ../replica.env
+
+4. Start Plone instance in `debug` mode
+
+        $ rancher exec -it www-debug/debug bash
+        $ bin/instance fg
+
+5. Now, via Rancher UI:
+    * Within `www-debug` stack find `exposed` port for `8080` and **click** on it.

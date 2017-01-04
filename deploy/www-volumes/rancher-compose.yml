@@ -1,0 +1,4 @@
+nfs-volumes:
+  scale: 1
+db-volumes:
+  scale: 1
