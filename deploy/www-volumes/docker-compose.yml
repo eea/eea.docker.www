@@ -18,7 +18,7 @@ services:
     - www-postgres-upstream-archive:/var/lib/postgresql/upstream/archive
     - www-postgres-replication-archive:/var/lib/postgresql/replication/archive
     volume_driver: ${VOLUME_DRIVER}
-    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql"]
+    command: ["ls", "-l", "/var/lib/postgresql"]
   db-volumes:
     image: busybox
     tty: true
@@ -29,4 +29,4 @@ services:
       io.rancher.container.start_once: 'true'
     volumes:
     - www-postgres-data:/var/lib/postgresql/data
-    command: ["chown", "-v", "-R", "999:999", "/var/lib/postgresql/data"]
+    command: ["ls", "-l", "/var/lib/postgresql/data"]

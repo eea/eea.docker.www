@@ -1,6 +1,8 @@
 version: '2'
 services:
   rsync-client:
+    start_on_create: true
     scale: ${RSYNC_CLIENT_SCALE}
   rsync-server:
+    start_on_create: true
     scale: ${RSYNC_SERVER_SCALE}
