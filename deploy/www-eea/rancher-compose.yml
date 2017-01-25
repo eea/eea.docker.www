@@ -30,12 +30,12 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 30000
+      interval: 40000
       initializing_timeout: 300000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
-      response_timeout: 3000
+      response_timeout: 15000
       healthy_threshold: 2
   download:
     scale: ${DOWNLOAD_SCALE}
@@ -43,12 +43,12 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 30000
+      interval: 40000
       initializing_timeout: 300000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
-      response_timeout: 3000
+      response_timeout: 15000
       healthy_threshold: 2
   auth:
     scale: ${AUTH_SCALE}
@@ -56,12 +56,12 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 30000
+      interval: 40000
       initializing_timeout: 300000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
-      response_timeout: 3000
+      response_timeout: 15000
       healthy_threshold: 2
   async:
     scale: ${ASYNC_SCALE}
@@ -69,12 +69,12 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 30000
+      interval: 40000
       initializing_timeout: 300000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
-      response_timeout: 3000
+      response_timeout: 15000
       healthy_threshold: 2
   memcached:
     scale: ${MEMCACHED_SCALE}
