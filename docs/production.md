@@ -20,6 +20,7 @@ On your laptop:
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
+* **Make sure NFSv4 support is properly configured on these hosts. See** [ticket #80428](https://taskman.eionet.europa.eu/issues/80428#note-5)
 
 ### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
 
