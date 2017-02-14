@@ -20,7 +20,7 @@ services:
     volumes:
     - www-static-resources:/var/www-static-resources
   varnish:
-    image: eeacms/varnish-eea-www:1.1
+    image: eeacms/varnish-eea-www:1.0
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
