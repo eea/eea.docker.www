@@ -31,7 +31,7 @@ services:
     health_check:
       port: 8080
       interval: 40000
-      initializing_timeout: 300000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
@@ -44,7 +44,7 @@ services:
     health_check:
       port: 8080
       interval: 40000
-      initializing_timeout: 300000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
@@ -57,7 +57,7 @@ services:
     health_check:
       port: 8080
       interval: 40000
-      initializing_timeout: 300000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
@@ -70,7 +70,7 @@ services:
     health_check:
       port: 8080
       interval: 40000
-      initializing_timeout: 300000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"

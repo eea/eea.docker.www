@@ -15,8 +15,8 @@ services:
       APACHE_KEEPALIVE_TIMEOUT: "8"
       TRACEVIEW: "${TRACEVIEW}"
       TZ: "${TZ}"
-    links:
-    - varnish:varnish
+    depends_on:
+    - varnish
     volumes:
     - www-static-resources:/var/www-static-resources
   varnish:
@@ -26,10 +26,10 @@ services:
       io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.varnish=yes
       eu.europa.eea.varnish: "yes"
-    links:
-    - anon:anon
-    - auth:auth
-    - download:download
+    depends_on:
+    - anon
+    - auth
+    - download
     environment:
       CACHE_SIZE: "${VARNISH_CACHE_SIZE}"
       PARAM_VALUE: "${VARNISH_PARAMS}"
@@ -56,11 +56,11 @@ services:
       RABBITMQ_USER: "${RABBITMQ_USER}"
       RABBITMQ_PASS: "${RABBITMQ_PASS}"
       TZ: "${TZ}"
-    links:
-    - postgres:postgres
-    - relcached:relcached
-    - memcached:memcached
-    - rabbitmq:rabbitmq
+    depends_on:
+    - postgres
+    - relcached
+    - memcached
+    - rabbitmq
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
@@ -85,11 +85,11 @@ services:
       RABBITMQ_USER: "${RABBITMQ_USER}"
       RABBITMQ_PASS: "${RABBITMQ_PASS}"
       TZ: "${TZ}"
-    links:
-    - postgres:postgres
-    - relcached:relcached
-    - memcached:memcached
-    - rabbitmq:rabbitmq
+    depends_on:
+    - postgres
+    - relcached
+    - memcached
+    - rabbitmq
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
@@ -113,11 +113,11 @@ services:
       RABBITMQ_USER: "${RABBITMQ_USER}"
       RABBITMQ_PASS: "${RABBITMQ_PASS}"
       TZ: "${TZ}"
-    links:
-    - postgres:postgres
-    - relcached:relcached
-    - memcached:memcached
-    - rabbitmq:rabbitmq
+    depends_on:
+    - postgres
+    - relcached
+    - memcached
+    - rabbitmq
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
@@ -142,11 +142,11 @@ services:
       RABBITMQ_USER: "${RABBITMQ_USER}"
       RABBITMQ_PASS: "${RABBITMQ_PASS}"
       TZ: "${TZ}"
-    links:
-    - postgres:postgres
-    - relcached:relcached
-    - memcached:memcached
-    - rabbitmq:rabbitmq
+    depends_on:
+    - postgres
+    - relcached
+    - memcached
+    - rabbitmq
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
@@ -160,24 +160,30 @@ services:
     - www-async-data:/data
   memcached:
     environment:
-      MEMCACHED_MEMORY: '${MEMCACHED_MEMORY}'
       TZ: "${TZ}"
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
       eu.europa.eea.memcached: "yes"
-    image: eeacms/memcached
+    image: memcached:1.4-alpine
+    command:
+    - memcached
+    - -m
+    - ${MEMCACHED_MEMORY}
   relcached:
     environment:
-      MEMCACHED_MEMORY: '${RELCACHED_MEMORY}'
       TZ: "${TZ}"
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
       eu.europa.eea.relcached: "yes"
-    image: eeacms/memcached
+    image: memcached:1.4-alpine
+    command:
+    - memcached
+    - -m
+    - ${MEMCACHED_MEMORY}
   rabbitmq:
     image: rancher/external-service
   postgres:
