@@ -168,9 +168,8 @@ services:
       eu.europa.eea.memcached: "yes"
     image: memcached:1.4-alpine
     command:
-    - memcached
-    - -m
-    - ${MEMCACHED_MEMORY}
+    - "-m"
+    - "${MEMCACHED_MEMORY}"
   relcached:
     environment:
       TZ: "${TZ}"
@@ -181,9 +180,8 @@ services:
       eu.europa.eea.relcached: "yes"
     image: memcached:1.4-alpine
     command:
-    - memcached
-    - -m
-    - ${MEMCACHED_MEMORY}
+    - "-m"
+    - "${MEMCACHED_MEMORY}"
   rabbitmq:
     image: rancher/external-service
   postgres:

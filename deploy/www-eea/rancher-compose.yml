@@ -6,8 +6,8 @@ services:
       start_first: true
     health_check:
       port: 80
-      interval: 30000
-      initializing_timeout: 60000
+      interval: 40000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
@@ -18,8 +18,8 @@ services:
       start_first: true
     health_check:
       port: 6081
-      interval: 30000
-      initializing_timeout: 60000
+      interval: 40000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
@@ -82,7 +82,8 @@ services:
       start_first: true
     health_check:
       port: 11211
-      interval: 5000
+      interval: 40000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       response_timeout: 3000
@@ -93,7 +94,8 @@ services:
       start_first: true
     health_check:
       port: 11211
-      interval: 5000
+      interval: 40000
+      initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
       response_timeout: 3000
