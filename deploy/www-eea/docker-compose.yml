@@ -166,7 +166,7 @@ services:
       io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
       eu.europa.eea.memcached: "yes"
-    image: memcached:1.4-alpine
+    image: memcached:1.4.35
     command:
     - "-m"
     - "${MEMCACHED_MEMORY}"
@@ -178,7 +178,7 @@ services:
       io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
       eu.europa.eea.relcached: "yes"
-    image: memcached:1.4-alpine
+    image: memcached:1.4.35
     command:
     - "-m"
     - "${MEMCACHED_MEMORY}"
