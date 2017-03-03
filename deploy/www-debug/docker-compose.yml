@@ -2,6 +2,8 @@ version: '2'
 services:
   debug:
     image: eeacms/www:${KGS_VERSION}
+    ports:
+    - "8080"
     environment:
       ZOPE_MODE: rel_client
       WARMUP_HEALTH_THRESHOLD: 1
