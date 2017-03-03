@@ -8,10 +8,10 @@ services:
       ZOPE_MODE: rel_client
       WARMUP_HEALTH_THRESHOLD: 1
       TZ: ${TZ}
-    links:
-    - www-eea/postgres:postgres
-    - www-eea/relcached:relcached
-    - www-eea/memcached:memcached
+    depends_on:
+    - postgres
+    - relcached
+    - memcached
     labels:
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.debug=yes
@@ -25,6 +25,18 @@ services:
     tty: true
     stdin_open: true
     command: ["cat"]
+  postgres:
+    image: rancher/dns-service
+    external_links:
+    - www-db/postgres-master:postgres
+  memcached:
+    image: rancher/dns-service
+    external_links:
+    - www-eea/memcached:memcached
+  relcached:
+    image: rancher/dns-service
+    external_links:
+    - www-eea/relcached:relcached
 
 volumes:
   www-debug-data:
