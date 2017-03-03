@@ -197,9 +197,6 @@ volumes:
     per_container: true
   www-async-data:
     per_container: true
-  www-static-resources:
-    external: true
-    volume_driver: ${VOLUME_DRIVER}
   www-blobstorage:
     external: true
     volume_driver: ${VOLUME_DRIVER}
