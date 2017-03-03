@@ -108,7 +108,7 @@ on how to obtain your Rancher API Keys. Thus:
 1. On your laptop
 
         $ git clone https://github.com/eea/eea.docker.www.git
-        $ cd eea.docker.www
+        $ cd eea.docker.www/deploy
 
 2. Configure Rancher CLI:
 
@@ -130,16 +130,20 @@ on how to obtain your Rancher API Keys. Thus:
 
 6. Update `KGS_VERSION` within `deploy/production.env`
 
-        $ vim deploy/production.env
+        $ git pull
+        $ vim production.env
 
 7. Upgrade:
 
-        $ cd deploy/www-eea
+        $ cd www-eea
         $ rancher up -d -e ../production.env --upgrade --batch-size=1
 
 8. If the upgrade went well, finish the upgrade with:
 
         $ rancher up -d -e ../production.env --confirm-upgrade
+        $ git add production.env
+        $ git commit
+        $ git push
 
 9. Otherwise, roll-back:
 

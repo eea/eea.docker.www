@@ -131,6 +131,7 @@ scheduled on hosts with label `public=yes`
         
 4. Update `KGS_VERSION` within `deploy/replica.env`
 
+        $ git pull
         $ vim replica.env
 
 5. Upgrade:
@@ -141,6 +142,9 @@ scheduled on hosts with label `public=yes`
 6. If the upgrade went well, finish the upgrade with:
 
         $ rancher up -d -e ../replica.env --confirm-upgrade
+        $ git add replica.env
+        $ git commit
+        $ git push
 
 ### Roll-back upgrade
 
