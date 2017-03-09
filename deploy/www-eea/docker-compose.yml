@@ -1,7 +1,7 @@
 version: '2'
 services:
   apache:
-    image: eeacms/apache-eea-www:1.9
+    image: eeacms/apache-eea-www:${APACHE_VERSION}
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
@@ -20,7 +20,7 @@ services:
     volumes:
     - www-static-resources:/var/www-static-resources
   varnish:
-    image: eeacms/varnish-eea-www:1.2
+    image: eeacms/varnish-eea-www:${VARNISH_VERSION}
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
@@ -33,18 +33,85 @@ services:
     environment:
       CACHE_SIZE: "${VARNISH_CACHE_SIZE}"
       PARAM_VALUE: "${VARNISH_PARAMS}"
-      BACKENDS: "anon auth download"
-      BACKENDS_PORT: "8080"
-      BACKENDS_PROBE_URL: "/health.check"
-      BACKENDS_PROBE_TIMEOUT: "3s"
-      BACKENDS_PROBE_INTERVAL: "5s"
-      BACKENDS_PROBE_WINDOW: "5"
-      BACKENDS_PROBE_THRESHOLD: "3"
-      BACKENDS_SAINT_MODE: "true"
-      DNS_ENABLED: "true"
       TZ: "${TZ}"
+  auth:
+    image: eeacms/haproxy:${HAPROXY_VERSION}
+    ports:
+    - "7990:5000"
+    - "1936"
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
+      eu.europa.eea.auth: "yes"
+    depends_on:
+    - auth-instance
+    environment:
+      FRONTEND_PORT: "8080"
+      BACKENDS: "auth-instance"
+      BACKENDS_PORT: "8080"
+      DNS_ENABLED: "True"
+      TZ: "Europe/Copenhagen"
+      HTTPCHK: "GET /health.check"
+      INTER: "20s"
+      DOWN_INTER: "5s"
+      FAST_INTER: "15s"
+      TIMEOUT_CLIENT: "5s"
+      TIMEOUT_SERVER: "120s"
+      TIMEOUT_CLIENT: "120s"
   anon:
+    image: eeacms/haproxy:${HAPROXY_VERSION}
+    ports:
+    - "7994:5000"
+    - "1936"
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
+      eu.europa.eea.anon: "yes"
+    depends_on:
+    - anon-instance
+    environment:
+      FRONTEND_PORT: "8080"
+      BACKENDS: "anon-instance"
+      BACKENDS_PORT: "8080"
+      DNS_ENABLED: "True"
+      TZ: "Europe/Copenhagen"
+      HTTPCHK: "GET /health.check"
+      INTER: "5s"
+      TIMEOUT_CLIENT: "5s"
+      TIMEOUT_SERVER: "120s"
+      TIMEOUT_CLIENT: "120s"
+  download:
+    image: eeacms/haproxy:${HAPROXY_VERSION}
+    ports:
+    - "7998:5000"
+    - "1936"
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
+      eu.europa.eea.download: "yes"
+    depends_on:
+    - download-instance
+    environment:
+      FRONTEND_PORT: "8080"
+      BACKENDS: "download-instance"
+      BACKENDS_PORT: "8080"
+      DNS_ENABLED: "True"
+      TZ: "Europe/Copenhagen"
+      HTTPCHK: "GET /health.check"
+      INTER: "5s"
+      TIMEOUT_CLIENT: "5s"
+      TIMEOUT_SERVER: "120s"
+      TIMEOUT_CLIENT: "120s"
+  anon-instance:
     image: eeacms/www:${KGS_VERSION}
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon-instance=yes
+      eu.europa.eea.anon-instance: "yes"
     environment:
       ZOPE_MODE: "rel_client"
       ZOPE_THREADS: "2"
@@ -61,19 +128,47 @@ services:
     - relcached
     - memcached
     - rabbitmq
-    labels:
-      io.rancher.container.hostname_override: container_name
-      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.anon=yes
-      eu.europa.eea.anon: "yes"
     volumes:
     - www-blobstorage:/data/blobstorage
     - www-downloads:/data/downloads
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
     - www-anon-data:/data
-  download:
+  auth-instance:
     image: eeacms/www:${KGS_VERSION}
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth-instance=yes
+      eu.europa.eea.auth-instance: "yes"
+    environment:
+      ZOPE_MODE: "rel_client"
+      ZOPE_THREADS: "2"
+      GRAYLOG: "${GRAYLOG}"
+      GRAYLOG_FACILITY: "${GRAYLOG_FACILITY}"
+      WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
+      TRACEVIEW: "${TRACEVIEW}"
+      RABBITMQ_USER: "${RABBITMQ_USER}"
+      RABBITMQ_PASS: "${RABBITMQ_PASS}"
+      TZ: "${TZ}"
+    depends_on:
+    - postgres
+    - relcached
+    - memcached
+    - rabbitmq
+    volumes:
+    - www-blobstorage:/data/blobstorage
+    - www-downloads:/data/downloads
+    - www-static-resources:/data/www-static-resources
+    - www-eea-controlpanel:/data/eea.controlpanel
+    - www-auth-data:/data
+  download-instance:
+    image: eeacms/www:${KGS_VERSION}
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download-instance=yes
+      eu.europa.eea.download-instance: "yes"
     environment:
       ZOPE_MODE: "rel_client"
       ZOPE_THREADS: "2"
@@ -90,47 +185,19 @@ services:
     - relcached
     - memcached
     - rabbitmq
-    labels:
-      io.rancher.container.hostname_override: container_name
-      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.download=yes
-      eu.europa.eea.download: "yes"
     volumes:
     - www-blobstorage:/data/blobstorage
     - www-downloads:/data/downloads
     - www-static-resources:/data/www-static-resources
     - www-eea-controlpanel:/data/eea.controlpanel
     - www-download-data:/data
-  auth:
+  async-instance:
     image: eeacms/www:${KGS_VERSION}
-    environment:
-      ZOPE_MODE: "rel_client"
-      ZOPE_THREADS: "2"
-      GRAYLOG: "${GRAYLOG}"
-      GRAYLOG_FACILITY: "${GRAYLOG_FACILITY}"
-      WARMUP_HEALTH_THRESHOLD: "${WARMUP}"
-      TRACEVIEW: "${TRACEVIEW}"
-      RABBITMQ_USER: "${RABBITMQ_USER}"
-      RABBITMQ_PASS: "${RABBITMQ_PASS}"
-      TZ: "${TZ}"
-    depends_on:
-    - postgres
-    - relcached
-    - memcached
-    - rabbitmq
     labels:
       io.rancher.container.hostname_override: container_name
       io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.auth=yes
-      eu.europa.eea.auth: "yes"
-    volumes:
-    - www-blobstorage:/data/blobstorage
-    - www-downloads:/data/downloads
-    - www-static-resources:/data/www-static-resources
-    - www-eea-controlpanel:/data/eea.controlpanel
-    - www-auth-data:/data
-  async:
-    image: eeacms/www:${KGS_VERSION}
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async-instance=yes
+      eu.europa.eea.async-instance: "yes"
     environment:
       ZOPE_MODE: "rel_async"
       ZOPE_THREADS: "2"
@@ -147,11 +214,6 @@ services:
     - relcached
     - memcached
     - rabbitmq
-    labels:
-      io.rancher.container.hostname_override: container_name
-      io.rancher.scheduler.affinity:host_label: www=yes,backend=yes
-      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.async=yes
-      eu.europa.eea.async: "yes"
     volumes:
     - www-blobstorage:/data/blobstorage
     - www-downloads:/data/downloads
@@ -166,7 +228,7 @@ services:
       io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.memcached=yes
       eu.europa.eea.memcached: "yes"
-    image: memcached:1.4.35
+    image: memcached:${MEMCACHED_VERSION}
     command:
     - "-m"
     - "${MEMCACHED_MEMORY}"
@@ -178,7 +240,7 @@ services:
       io.rancher.scheduler.affinity:host_label: www=yes,cache=yes
       io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.relcached=yes
       eu.europa.eea.relcached: "yes"
-    image: memcached:1.4.35
+    image: memcached:${MEMCACHED_VERSION}
     command:
     - "-m"
     - "${MEMCACHED_MEMORY}"
