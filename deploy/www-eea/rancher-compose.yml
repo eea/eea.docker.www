@@ -2,8 +2,6 @@ version: '2'
 services:
   apache:
     scale: ${APACHE_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 80
       interval: 40000
@@ -14,8 +12,6 @@ services:
       response_timeout: 3000
   varnish:
     scale: ${VARNISH_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 6081
       interval: 40000
