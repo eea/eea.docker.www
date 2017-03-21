@@ -50,7 +50,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl restart rpcbind nfs-server
 
 ### Access rights
-   
+
 To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
 See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
 on how to obtain your Rancher API Keys. Thus:
@@ -128,7 +128,7 @@ scheduled on hosts with label `public=yes`
 3. Now **make sure that you're deploying within the right environment**:
 
         $ rancher config -p
-        
+
 4. Update `KGS_VERSION` within `deploy/replica.env`
 
         $ git pull
@@ -137,7 +137,7 @@ scheduled on hosts with label `public=yes`
 5. Upgrade:
 
         $ cd www-eea
-        $ rancher up -d -e ../replica.env --upgrade --batch-size=1
+        $ rancher up -d -e ../replica.env --upgrade
 
 6. If the upgrade went well, finish the upgrade with:
 

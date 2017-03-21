@@ -31,7 +31,7 @@ On your laptop:
         $ systemctl restart rpcbind nfs-server
 
 ### Access rights
-   
+
 To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
 See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
 on how to obtain your Rancher API Keys. Thus:
@@ -136,7 +136,7 @@ on how to obtain your Rancher API Keys. Thus:
 7. Upgrade:
 
         $ cd www-eea
-        $ rancher up -d -e ../production.env --upgrade --batch-size=1
+        $ rancher up -d -e ../production.env --upgrade
 
 8. If the upgrade went well, finish the upgrade with:
 
