@@ -56,7 +56,7 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 40000
+      interval: 180000
       initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
@@ -69,7 +69,7 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 40000
+      interval: 180000
       initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
@@ -82,7 +82,7 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 40000
+      interval: 180000
       initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
@@ -95,7 +95,7 @@ services:
       start_first: true
     health_check:
       port: 8080
-      interval: 40000
+      interval: 180000
       initializing_timeout: 600000
       unhealthy_threshold: 3
       strategy: recreate
