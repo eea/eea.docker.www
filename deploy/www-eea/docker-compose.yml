@@ -37,7 +37,7 @@ services:
   auth:
     image: eeacms/haproxy:${HAPROXY_VERSION}
     ports:
-    - "7990:5000"
+    - "7990:8080"
     - "1936"
     labels:
       io.rancher.container.hostname_override: container_name
@@ -62,7 +62,7 @@ services:
   anon:
     image: eeacms/haproxy:${HAPROXY_VERSION}
     ports:
-    - "7994:5000"
+    - "7994:8080"
     - "1936"
     labels:
       io.rancher.container.hostname_override: container_name
@@ -85,7 +85,7 @@ services:
   download:
     image: eeacms/haproxy:${HAPROXY_VERSION}
     ports:
-    - "7998:5000"
+    - "7998:8080"
     - "1936"
     labels:
       io.rancher.container.hostname_override: container_name
