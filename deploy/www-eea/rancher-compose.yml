@@ -4,8 +4,8 @@ services:
     scale: ${APACHE_SCALE}
     health_check:
       port: 80
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
@@ -14,8 +14,8 @@ services:
     scale: ${VARNISH_SCALE}
     health_check:
       port: 6081
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
@@ -24,8 +24,8 @@ services:
     scale: ${ANON_SCALE}
     health_check:
       port: 4242
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
@@ -34,8 +34,8 @@ services:
     scale: ${AUTH_SCALE}
     health_check:
       port: 4242
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
@@ -44,84 +44,72 @@ services:
     scale: ${DOWNLOAD_SCALE}
     health_check:
       port: 4242
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       healthy_threshold: 2
       response_timeout: 3000
   anon-instance:
     scale: ${ANON_INSTANCE_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 8080
-      interval: 180000
+      interval: 60000
       initializing_timeout: 600000
-      unhealthy_threshold: 3
+      unhealthy_threshold: 5
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
       response_timeout: 15000
-      healthy_threshold: 2
+      healthy_threshold: 1
   download-instance:
     scale: ${DOWNLOAD_INSTANCE_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 8080
-      interval: 180000
+      interval: 60000
       initializing_timeout: 600000
-      unhealthy_threshold: 3
+      unhealthy_threshold: 5
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
       response_timeout: 15000
-      healthy_threshold: 2
+      healthy_threshold: 1
   auth-instance:
     scale: ${AUTH_INSTANCE_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 8080
-      interval: 180000
+      interval: 60000
       initializing_timeout: 600000
-      unhealthy_threshold: 3
+      unhealthy_threshold: 5
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
       response_timeout: 15000
-      healthy_threshold: 2
+      healthy_threshold: 1
   async-instance:
     scale: ${ASYNC_INSTANCE_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 8080
-      interval: 180000
+      interval: 60000
       initializing_timeout: 600000
-      unhealthy_threshold: 3
+      unhealthy_threshold: 5
       strategy: recreate
       request_line: GET "/health.check" "HTTP/1.0"
       response_timeout: 15000
-      healthy_threshold: 2
+      healthy_threshold: 1
   memcached:
     scale: ${MEMCACHED_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 11211
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       response_timeout: 3000
       healthy_threshold: 2
   relcached:
     scale: ${RELCACHED_SCALE}
-    upgrade_strategy:
-      start_first: true
     health_check:
       port: 11211
-      interval: 40000
-      initializing_timeout: 600000
+      interval: 20000
+      initializing_timeout: 60000
       unhealthy_threshold: 3
       strategy: recreate
       response_timeout: 3000

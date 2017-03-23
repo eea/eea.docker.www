@@ -137,7 +137,7 @@ scheduled on hosts with label `public=yes`
 5. Upgrade:
 
         $ cd www-eea
-        $ rancher up -d -e ../replica.env --upgrade
+        $ rancher up -d -e ../replica.env --upgrade --batch-size 1
 
 6. If the upgrade went well, finish the upgrade with:
 

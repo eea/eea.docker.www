@@ -136,7 +136,7 @@ on how to obtain your Rancher API Keys. Thus:
 7. Upgrade:
 
         $ cd www-eea
-        $ rancher up -d -e ../production.env --upgrade
+        $ rancher up -d -e ../production.env --upgrade --batch-size 1
 
 8. If the upgrade went well, finish the upgrade with:
 
