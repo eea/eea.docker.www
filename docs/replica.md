@@ -108,7 +108,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Add Load-Balancer (optional if not done already by other stack)
 
-Within Rancher UI add Rancher Load Balancer for `www-frontend/apache` containers
+Within Rancher UI add Rancher Load Balancer for `www-eea/apache` containers
 scheduled on hosts with label `public=yes`
 
 ## Upgrade

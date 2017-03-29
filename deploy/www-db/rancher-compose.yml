@@ -13,6 +13,8 @@ services:
   postgres-master:
     scale: ${POSTGRES_MASTER_SCALE}
     start_on_create: true
+    external_ips:
+    - ${POSTGRES_MASTER_IP}
     health_check:
       port: 5432
       interval: 2000
