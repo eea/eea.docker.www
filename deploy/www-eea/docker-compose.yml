@@ -131,6 +131,7 @@ services:
       TZ: "${TZ}"
     depends_on:
     - postgres
+    - postfix
     - relcached
     - memcached
     - rabbitmq
@@ -159,6 +160,7 @@ services:
       TZ: "${TZ}"
     depends_on:
     - postgres
+    - postfix
     - relcached
     - memcached
     - rabbitmq
@@ -188,6 +190,7 @@ services:
       TZ: "${TZ}"
     depends_on:
     - postgres
+    - postfix
     - relcached
     - memcached
     - rabbitmq
@@ -217,6 +220,7 @@ services:
       TZ: "${TZ}"
     depends_on:
     - postgres
+    - postfix
     - relcached
     - memcached
     - rabbitmq
@@ -250,6 +254,20 @@ services:
     command:
     - "-m"
     - "${MEMCACHED_MEMORY}"
+  postfix:
+    image: eeacms/postfix:${POSTFIX_VERSION}
+    labels:
+      io.rancher.container.hostname_override: container_name
+      io.rancher.scheduler.affinity:host_label: www=yes,frontend=yes
+      io.rancher.scheduler.affinity:container_label_soft_ne: eu.europa.eea.postfix=yes
+      eu.europa.eea.postfix: "yes"
+    environment:
+      TZ: "${TZ}"
+      MTP_HOST: "${POSTFIX_HOST}"
+      MTP_RELAY: "${POSTFIX_RELAY}"
+      MTP_PORT: "${POSTFIX_PORT}"
+      MTP_USER: "${POSTFIX_USER}"
+      MTP_PASS: "${POSTFIX_PASS}"
   rabbitmq:
     image: rancher/external-service
   postgres:
