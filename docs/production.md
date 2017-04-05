@@ -96,10 +96,13 @@ on how to obtain your Rancher API Keys. Thus:
 
         $ rancher up -d -e ../production.env
 
-### Add Load-Balancer (optional if not done already by other stack)
+### Add Load-Balancer
 
-* Within Rancher UI add Rancher Load Balancer for `www-eea/apache` containers
-  scheduled on hosts with label `public=yes`
+Within `Rancher UI > Infrastrucutre > Certificates` add SSL Certificate named `EEA`, then on your laptop:
+
+        $ cd deploy/www-lb
+        $ rancher up -d -e ../production.env
+
 
 ## Upgrade
 
