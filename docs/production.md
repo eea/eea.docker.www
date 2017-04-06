@@ -52,12 +52,12 @@ on how to obtain your Rancher API Keys. Thus:
 4. Application passwords and secrets keys:
 
         $ cd deploy
-        $ cp .secret.example .secret.production
-        $ vim .secret.production
+        $ cp .secret.example .secret
+        $ vim .secret
 
 5. Make them available
 
-        $ source .secret.production
+        $ source .secret
 
 6. Make sure you've provided the right credentials for `Traceview` and `RabbitMQ`:
 
@@ -92,7 +92,7 @@ on how to obtain your Rancher API Keys. Thus:
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
         $ cd deploy/www-eea
-        $ source ../.secret.production
+        $ source ../.secret
 
         $ rancher up -d -e ../production.env
 
@@ -124,7 +124,7 @@ Within `Rancher UI > Infrastrucutre > Certificates` add SSL Certificate named `E
 
 4. Make application passwords and secrets keys available:
 
-        $ source .secret.production
+        $ source .secret
 
 5. Make sure you've provided the right credentials for `Traceview` and `RabbitMQ`:
 
