@@ -62,7 +62,6 @@ services:
       INTER: "20s"
       DOWN_INTER: "5s"
       FAST_INTER: "15s"
-      TIMEOUT_CLIENT: "5s"
       TIMEOUT_SERVER: "120s"
       TIMEOUT_CLIENT: "120s"
   anon:
@@ -85,7 +84,6 @@ services:
       TZ: "Europe/Copenhagen"
       HTTPCHK: "GET /health.check"
       INTER: "5s"
-      TIMEOUT_CLIENT: "5s"
       TIMEOUT_SERVER: "120s"
       TIMEOUT_CLIENT: "120s"
   download:
@@ -108,7 +106,6 @@ services:
       TZ: "Europe/Copenhagen"
       HTTPCHK: "GET /health.check"
       INTER: "5s"
-      TIMEOUT_CLIENT: "5s"
       TIMEOUT_SERVER: "120s"
       TIMEOUT_CLIENT: "120s"
   anon-instance:
