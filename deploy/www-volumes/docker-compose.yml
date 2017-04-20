@@ -5,7 +5,7 @@ services:
     tty: true
     stdin_open: true
     labels:
-      io.rancher.scheduler.affinity:host_label: www=yes
+      io.rancher.scheduler.affinity:host_label: ${NFS_VOLUME_HOST}
       io.rancher.container.start_once: 'true'
     volumes:
     - www-blobstorage:/data/blobstorage
@@ -17,16 +17,17 @@ services:
     - www-postgres-restore:/var/lib/postgresql/data
     - www-postgres-upstream-archive:/var/lib/postgresql/upstream/archive
     - www-postgres-replication-archive:/var/lib/postgresql/replication/archive
-    volume_driver: ${VOLUME_DRIVER}
+    volume_driver: ${NFS_VOLUME_DRIVER}
     command: ["ls", "-l", "/var/lib/postgresql"]
   db-volumes:
     image: busybox
     tty: true
     stdin_open: true
     labels:
-      io.rancher.scheduler.affinity:host_label: www=yes,db=yes
+      io.rancher.scheduler.affinity:host_label: ${DB_VOLUME_HOST}
       io.rancher.scheduler.global: 'true'
       io.rancher.container.start_once: 'true'
     volumes:
     - www-postgres-data:/var/lib/postgresql/data
+    volume_driver: ${DB_VOLUME_DRIVER}
     command: ["ls", "-l", "/var/lib/postgresql/data"]
