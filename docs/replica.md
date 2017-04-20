@@ -1,4 +1,4 @@
-# Docker orchestration for EEA main portal (www-replica-prod)
+# Docker orchestration for EEA main portal (www-prod-replica)
 
 Docker orchestration for EEA main portal services
 
@@ -68,17 +68,13 @@ on how to obtain your Rancher API Keys. Thus:
 
         $ rancher config -p
 
-### Setup NFS volumes support
+### Setup NFS/DB volumes
 
-* From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
-  * NFS_SERVER: `10.128.1.27`
-  * MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
-  * MOUNT_OPTS: `noatime`
-
-### Create NFS/DB volumes
-
-        $ cd deploy/www-volumes
-        $ rancher up -d -e ../replica.env
+* From **Rancher Catalog > Library** deploy **Rancher NFS** stack:
+  * **NFS_SERVER**: `10.128.1.27`
+  * **MOUNT_DIR**:  `/var/lib/docker/volumes/nfs/_data`
+  * **MOUNT_OPTS**: `noatime`
+* From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
 
 ### Start SYNC stack (sync blobs and static resources from production/to testing)
 

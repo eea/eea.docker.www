@@ -65,17 +65,14 @@ on how to obtain your Rancher API Keys. Thus:
         $ env | grep RABBITMQ
 
 
-### Setup NFS volumes support
+### Setup NFS/DB volumes
 
-* From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
-  * NFS_SERVER: `10.1.20.90`
-  * MOUNT_DIR: `/www_zodbblobstorage`
-  * MOUNT_OPTS: `noatime,sec=sys,timeo=600,retrans=2`
+* From **Rancher Catalog > Library** deploy **Rancher NFS** stack:
+  * **NFS_SERVER**: `10.1.20.90`
+  * **MOUNT_DIR**: `/www_zodbblobstorage`
+  * **MOUNT_OPTS**: `noatime,sec=sys,timeo=600,retrans=2`
+* From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
 
-### Create NFS/DB volumes
-
-        $ cd deploy/www-volumes
-        $ rancher up -d -e ../production.env
 
 ### Start SYNC stack (sync blobs and static resources from production/to staging)
 

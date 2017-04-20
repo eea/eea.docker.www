@@ -66,17 +66,13 @@ on how to obtain your Rancher API Keys. Thus:
 
         $ rancher config -p
 
-### Setup NFS volumes support
+### Setup NFS/DB volumes
 
-* From `Rancher Catalog > Library` deploy `Rancher NFS` stack:
-  * NFS_SERVER: `nfs.devecs.eea.europa.eu`
-  * MOUNT_DIR: `/var/lib/docker/volumes/nfs/_data`
-  * MOUNT_OPTS: `noatime`
-
-### Create NFS/DB volumes
-
-        $ cd deploy/www-volumes
-        $ rancher up -d -e ../devel.env
+* From **Rancher Catalog > Library** deploy **Rancher NFS** stack:
+  * **NFS_SERVER**: `nfs.devecs.eea.europa.eu`
+  * **MOUNT_DIR**: `/var/lib/docker/volumes/nfs/_data`
+  * **MOUNT_OPTS**: `noatime`
+* From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
 
 ### Start SYNC stack (sync blobs and static resources from staging/to testing)
 
