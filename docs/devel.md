@@ -73,13 +73,11 @@ on how to obtain your Rancher API Keys. Thus:
   * **MOUNT_DIR**: `/var/lib/docker/volumes/nfs/_data`
   * **MOUNT_OPTS**: `noatime`
 * From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
-
-### Start SYNC stack (sync blobs and static resources from staging/to testing)
-
-        $ cd deploy/www-sync
-        $ rancher up -d -e ../devel.env
-
-Make sure that `rsync-client` on staging can connect to this `rsync-server`.
+* Fron **Rancher Catalog > EEA** deploy **EEA WWW - Sync** stack
+  * Get `SSH Public Key (rsync-client)` from `www-prod-replica > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
+  * Leave empty `SSH Public Key (PostgreSQL)`
+  * See `CRON_TASKS` env within [devel.env](https://github.com/eea/eea.docker.www/blob/master/deploy/devel.env) for `Syncing cron jobs`
+  * Make sure that `rsync-client` on **www-prod-replica** can connect to this `rsync-server`.
 
 ### Start DB stack
 

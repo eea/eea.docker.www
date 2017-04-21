@@ -72,14 +72,11 @@ on how to obtain your Rancher API Keys. Thus:
   * **MOUNT_DIR**: `/www_zodbblobstorage`
   * **MOUNT_OPTS**: `noatime,sec=sys,timeo=600,retrans=2`
 * From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
-
-
-### Start SYNC stack (sync blobs and static resources from production/to staging)
-
-        $ cd deploy/www-sync
-        $ rancher up -d -e ../production.env
-
-* Make sure that `rsync-client` can connect to `rsync-server on www-prod-replica tenant`. (blobs and static-resources sync)
+* Fron **Rancher Catalog > EEA** deploy **EEA WWW - Sync** stack
+  * Leave empty `SSH Public Key (PostgreSQL)`
+  * Set `SSH Public Key (rsync-client)` to `DISABLED`
+  * See `CRON_TASKS` env within [producton.env](https://github.com/eea/eea.docker.www/blob/master/deploy/production.env) for `Syncing cron jobs`
+  * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
 
 ### Start DB stack (PostgreSQL Database)
 
