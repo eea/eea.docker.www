@@ -95,6 +95,12 @@ on how to obtain your Rancher API Keys. Thus:
         $ cd deploy/www-db
         $ rancher up -d -e ../replica.env -f replica.yml
 
+* From **Rancher Catalog > EEA** deploy **EEA - PostgreSQL** stack
+  * **Name**: `www-postgres-upstream-replica`
+  * **Host labels**: `db-upstream=yes`
+  * **PostgreSQL config**: Leave empty
+  * **Maintenance cron jobs**: See `POSTGRES_UPSTREM_CRON_1` env within [replica.env](https://github.com/eea/eea.docker.www/blob/master/deploy/replica.env)
+
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
         $ cd deploy/www-eea

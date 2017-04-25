@@ -1,16 +1,5 @@
 version: '2'
 services:
-  postgres-upstream-replica:
-    image: eeacms/postgres:${POSTGRES_VERSION}
-    labels:
-      io.rancher.scheduler.affinity:host_label: www=yes,sync=yes
-    environment:
-      POSTGRES_CRON_1: ${POSTGRES_UPSTREM_CRON_1}
-      TZ: ${TZ}
-    volumes:
-    - www-postgres-dump:/postgresql.backup
-    - www-postgres-data:/var/lib/postgresql/data
-    - www-postgres-upstream-archive:/var/lib/postgresql/archive
   postgres-master:
     image: eeacms/postgres:${POSTGRES_VERSION}
     labels:
@@ -67,9 +56,6 @@ volumes:
   www-postgres-data:
     external: true
   www-postgres-dump:
-    external: true
-    volume_driver: ${VOLUME_DRIVER}
-  www-postgres-upstream-archive:
     external: true
     volume_driver: ${VOLUME_DRIVER}
   www-postgres-replication-archive:
