@@ -48,7 +48,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl restart rpcbind nfs-server
 
 ### Access rights
-   
+
 To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
 See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
 on how to obtain your Rancher API Keys. Thus:
@@ -66,20 +66,23 @@ on how to obtain your Rancher API Keys. Thus:
 
         $ rancher config -p
 
-### Setup NFS/DB volumes
+### Setup infrastructure
 
-* From **Rancher Catalog > Library** deploy **Rancher NFS** stack:
-  * **NFS_SERVER**: `nfs.devecs.eea.europa.eu`
-  * **MOUNT_DIR**: `/var/lib/docker/volumes/nfs/_data`
-  * **MOUNT_OPTS**: `noatime`
-* From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
-* Fron **Rancher Catalog > EEA** deploy **EEA WWW - Sync** stack
-  * Get `SSH Public Key (rsync-client)` from `www-prod-replica > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
-  * Leave empty `SSH Public Key (PostgreSQL)`
-  * See `CRON_TASKS` env within [devel.env](https://github.com/eea/eea.docker.www/blob/master/deploy/devel.env) for `Syncing cron jobs`
-  * Make sure that `rsync-client` on **www-prod-replica** can connect to this `rsync-server`.
+**Note:** See **EEA SVN** for `answers.txt` files
 
-### Start DB stack
+* From **Rancher Catalog > Library** deploy:
+  * Rancher NFS
+* From **Rancher Catalog > EEA** deploy:
+  * EEA WWW - Volumes
+  * EEA WWW - Sync
+    * Get `SSH Public Key (rsync-client)` from `www-prod-replica > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
+    * Leave empty `SSH Public Key (PostgreSQL)`
+    * Make sure that `rsync-client` on **www-prod-replica** can connect to this `rsync-server`.
 
-        $ cd deploy/www-db
-        $ rancher up -d -e ../devel.env -f devel.yml
+### Setup database
+
+**Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - PostgreSQL
+    * Name: `www-postgres`

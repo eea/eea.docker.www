@@ -35,7 +35,7 @@ services:
   postgres:
     image: rancher/dns-service
     external_links:
-    - www-db/postgres-master:postgres
+    - www-postgres/master:postgres
   memcached:
     image: rancher/dns-service
     external_links:

@@ -65,23 +65,26 @@ on how to obtain your Rancher API Keys. Thus:
         $ env | grep RABBITMQ
 
 
-### Setup NFS/DB volumes
+### Setup infrastrucutre
 
-* From **Rancher Catalog > Library** deploy **Rancher NFS** stack:
-  * **NFS_SERVER**: `10.1.20.90`
-  * **MOUNT_DIR**: `/www_zodbblobstorage`
-  * **MOUNT_OPTS**: `noatime,sec=sys,timeo=600,retrans=2`
-* From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
-* Fron **Rancher Catalog > EEA** deploy **EEA WWW - Sync** stack
-  * Leave empty `SSH Public Key (PostgreSQL)`
-  * Set `SSH Public Key (rsync-client)` to `DISABLED`
-  * See `CRON_TASKS` env within [producton.env](https://github.com/eea/eea.docker.www/blob/master/deploy/production.env) for `Syncing cron jobs`
-  * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
+**Note:** See **EEA SVN** for `answers.txt` files
 
-### Start DB stack (PostgreSQL Database)
+* From **Rancher Catalog > Library** deploy:
+  * Rancher NFS
+* From **Rancher Catalog > EEA** deploy:
+  * EEA WWW - Volumes
+  * EEA WWW - Sync
+    * Leave empty `SSH Public Key (PostgreSQL)`
+    * Set `SSH Public Key (rsync-client)` to `DISABLED`
+    * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
 
-        $ cd deploy/www-db
-        $ rancher up -d -e ../production.env -f production.yml
+### Setup database
+
+**Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - External
+    * Name: `www-postgres`
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 

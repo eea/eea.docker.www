@@ -68,38 +68,43 @@ on how to obtain your Rancher API Keys. Thus:
 
         $ rancher config -p
 
-### Setup NFS/DB volumes
+### Setup infrastrucutre
 
-* From **Rancher Catalog > Library** deploy **Rancher NFS** stack:
-  * **NFS_SERVER**: `10.128.1.27`
-  * **MOUNT_DIR**:  `/var/lib/docker/volumes/nfs/_data`
-  * **MOUNT_OPTS**: `noatime`
-* From **Rancher Catalog > EEA** deploy **EEA WWW - Volumes** stack
-* Fron **Rancher Catalog > EEA** deploy **EEA WWW - Sync** stack
-  * Get `SSH Public Key (rsync-client)` from `www-prod > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
-  * Get `SSH Public Key (PostgreSQL)` from `db-pg-b > postgres`
-  * See `CRON_TASKS` env within [replica.env](https://github.com/eea/eea.docker.www/blob/master/deploy/replica.env) for `Syncing cron jobs`
-  * Make sure that `rsync-client` on **www-prod** can connect to this `rsync-server`.
-  * Make sure that **Production PostgreSQL** can connect to `rsync-server`. (PostgreSQL upstream replica)
-  * Make sure that this `rsync-client` can connect to `rsync-server` on **Devel tenant**. (DB pg_dump, blobs and static-resources sync)
+**Note:** See **EEA SVN** for `answers.txt` files
 
-### Sync database
+* From **Rancher Catalog > Library** deploy:
+  * Rancher NFS
+* From **Rancher Catalog > EEA** deploy:
+  * EEA WWW - Volumes
+  * EEA WWW - Sync
+    * Get `SSH Public Key (rsync-client)` from `www-prod > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
+    * Get `SSH Public Key (PostgreSQL)` from `db-pg-b > postgres`
+    * Make sure that `rsync-client` on **www-prod** can connect to this `rsync-server`.
+    * Make sure that **Production PostgreSQL** can connect to this `rsync-server`. (PostgreSQL upstream replica)
+    * Make sure that this `rsync-client` can connect to `rsync-server` on **Devel tenant**. (DB pg_dump, blobs and static-resources sync)
+
+### Setup database (upstream replica)
+
+**Note:** See **EEA SVN** for `answers.txt` files
+
+* Sync database
 
         $ ssh <postgresql master on production>
         $ cd /var/lib/pgsql/9.4/data
         $ vim ecs-backup.sh
         $ ./ecs-backup.sh
 
-### Start DB stack (postgres)
-
-        $ cd deploy/www-db
-        $ rancher up -d -e ../replica.env -f replica.yml
-
 * From **Rancher Catalog > EEA** deploy **EEA - PostgreSQL** stack
-  * **Name**: `www-postgres-upstream-replica`
-  * **Host labels**: `db-upstream=yes`
-  * **PostgreSQL config**: Leave empty
-  * **Maintenance cron jobs**: See `POSTGRES_UPSTREM_CRON_1` env within [replica.env](https://github.com/eea/eea.docker.www/blob/master/deploy/replica.env)
+  * Name: `www-postgres-upstream-replica`
+
+### Setup database
+
+**Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - PostgreSQL (Cluster)
+    * Name: `www-postgres`
+
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
