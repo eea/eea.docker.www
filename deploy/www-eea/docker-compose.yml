@@ -270,7 +270,7 @@ services:
   postgres:
     image: rancher/dns-service
     external_links:
-    - www-db/postgres-master:postgres
+    - www-postgres/master:postgres
 volumes:
   www-anon-data:
     per_container: true
