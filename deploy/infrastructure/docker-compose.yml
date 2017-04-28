@@ -7,7 +7,7 @@ fileserver1:
     file: base-flavors.yml
     service: fileserver
   environment:
-  - INSTANCE_NAME=dev-mil-www-nfs
+    INSTANCE_NAME: "dev-mil-www-nfs"
 
 ####################
 # Add 2 hosts for DB
@@ -18,18 +18,18 @@ db1:
     file: base-flavors.yml
     service: db
   environment:
-  - INSTANCE_NAME=dev-mil-db-test1
+    INSTANCE_NAME: "dev-mil-db-1"
 
 db2:
   extends:
     file: base-flavors.yml
     service: db
   environment:
-  - INSTANCE_NAME=dev-mil-db-test2
+    INSTANCE_NAME: "dev-mil-db-2"
 
 
 ###########################
-# Add 2 hosts for Plone app
+# Add 3 hosts for Plone app
 ###########################
 
 plone1:
@@ -37,15 +37,21 @@ plone1:
     file: base-flavors.yml
     service: plone
   environment:
-  - INSTANCE_NAME=dev-mil-plone-test1
+    INSTANCE_NAME: "dev-mil-plone-1"
 
 plone2:
   extends:
     file: base-flavors.yml
     service: plone
   environment:
-  - INSTANCE_NAME=dev-mil-plone-test2
+    INSTANCE_NAME: "dev-mil-plone-2"
 
+plone3:
+  extends:
+    file: base-flavors.yml
+    service: plone
+  environment:
+    INSTANCE_NAME: "dev-mil-plone-3"
 
 #########################
 # Add 1 host for frontend
@@ -56,4 +62,4 @@ frontend:
     file: base-flavors.yml
     service: frontend
   environment:
-  - INSTANCE_NAME=dev-mil-frontend-test
+    INSTANCE_NAME: "dev-mil-frontend-1"
