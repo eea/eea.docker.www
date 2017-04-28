@@ -114,10 +114,10 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Add Load-Balancer
 
-Within `Rancher UI > Infrastrucutre > Certificates` add SSL Certificate named `EEA`, then on your console:
+**Note:** See **EEA SVN** for `answers.txt` files
 
-        $ cd deploy/www-lb
-        $ rancher up -d
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - Load Balancer
 
 
 ## Upgrade
