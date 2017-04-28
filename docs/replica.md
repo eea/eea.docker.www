@@ -35,8 +35,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 
 ### Register above hosts within Rancher via Rancher UI
 
-* Register dedicated `db` hosts with labels: `www=yes`, `db=yes` and `db-master=yes`/ `db-replica=yes` (PostgreSQL)
-* Register dedicated `cache` hosts with labels: `www=yes`, `cache=yes` (Memcache)
+* Register dedicated `db` hosts with labels: `www=yes`, `db=yes` and `db-upstream=yes` / `db-master=yes`/ `db-replica=yes` (PostgreSQL)
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
 * Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
@@ -49,7 +48,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
 
-### Access rights
+### CLI access rights
 
 To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
 See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
@@ -108,78 +107,33 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Start EEA Application stack (plone backends, memcache, varnish, apache)
 
-        $ cd deploy/www-eea
-        $ rancher up -d -e ../replica.env
+**Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - WWW
 
 ### Add Load-Balancer
 
 Within `Rancher UI > Infrastrucutre > Certificates` add SSL Certificate named `EEA`, then on your console:
 
         $ cd deploy/www-lb
-        $ rancher up -d -e ../replica.env
+        $ rancher up -d
 
 
 ## Upgrade
 
 ### Upgrade Backend stack (plone instances, async workers)
 
-1. On your laptop
-
-        $ git clone https://github.com/eea/eea.docker.www.git
-        $ cd eea.docker.www/deploy
-
-2. Configure Rancher CLI:
-
-        $ rancher --config ~/.rancher/rancher.replica.json config
-        $ cp ~/.rancher/rancher.replica.json ~/.rancher/cli.json
-
-3. Now **make sure that you're deploying within the right environment**:
-
-        $ rancher config -p
-
-4. Update `KGS_VERSION` within `deploy/replica.env`
-
-        $ git pull
-        $ vim replica.env
-
-5. Upgrade:
-
-        $ cd www-eea
-        $ rancher up -d -e ../replica.env --upgrade --batch-size 1
-
-6. If the upgrade went well, finish the upgrade with:
-
-        $ rancher up -d -e ../replica.env --confirm-upgrade
-        $ git add replica.env
-        $ git commit
-        $ git push
-
-### Roll-back upgrade
-
-* In case something went wrong, roll-back:
-
-        $ rancher up -d -e ../replica.env --rollback
+1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
+2. Within Rancher UI press the available upgrade buttons
 
 ## Debug
 
-1. On your laptop:
+1. Start Plone instance in `debug` mode
 
-        $ git clone https://github.com/eea/eea.docker.www.git
-        $ cd eea.docker.www
-
-2. Make sure that you're deploying within the right environment:
-
-        $ rancher config
-
-3. Start debug stack:
-
-        $ cd deploy/www-debug
-        $ rancher up -d -e ../replica.env
-
-4. Start Plone instance in `debug` mode
-
-        $ rancher exec -it www-debug/debug bash
+        $ rancher exec -it www-eea/debug-instance bash
         $ bin/instance fg
 
-5. Now, via Rancher UI:
-    * Within `www-debug` stack find `exposed` port for `8080` and **click** on it.
+2. Now, via Rancher UI:
+
+    * Within `www-eea/debug-instance` stack find `exposed` port for `8080` and **click** on it.
