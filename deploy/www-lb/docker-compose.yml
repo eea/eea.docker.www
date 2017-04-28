@@ -1,7 +1,7 @@
 version: '2'
 services:
   proxy:
-    image: rancher/lb-service-haproxy:v0.5.9
+    image: rancher/lb-service-haproxy:v0.6.4
     ports:
     - 80:80/tcp
     - 443:443/tcp
