@@ -90,7 +90,8 @@ on how to obtain your Rancher API Keys. Thus:
 ### Upgrade Backend stack (plone instances, async workers)
 
 1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
-2. Within Rancher UI press the available upgrade buttons
+   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates)
+2. Within Rancher UI press the available upgrade button
 
 
 ## Debug
