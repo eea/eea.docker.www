@@ -9,7 +9,7 @@ Docker orchestration for EEA main portal services
 
 2. Install [Docker Compose](https://docs.docker.com/compose/).
 
-3. Install [Rancher Compose](http://www.rancher.com)
+3. Install [Rancher CLI](https://docs.rancher.com/rancher/v1.4/en/cli/)
 
 ## Usage
 
