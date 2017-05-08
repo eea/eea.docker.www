@@ -122,7 +122,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 ## Upgrade
 
-### Upgrade Backend stack (plone instances, async workers)
+### Upgrade `www-eea` stack
 
 1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
 
