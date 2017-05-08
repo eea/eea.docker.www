@@ -125,8 +125,44 @@ on how to obtain your Rancher API Keys. Thus:
 ### Upgrade Backend stack (plone instances, async workers)
 
 1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
-   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates)
-2. Within Rancher UI press the available upgrade buttons
+
+   * Prepare next release, e.g.: `17.9`:
+   
+        ```
+        $ git clone git@github.com:eea/eea.rancher.catalog.git
+        $ cd eea.rancher.catalog/templates/www-eea
+        
+        $ cp -r 33 34
+        $ git add 34
+        $ git commit -m "Prepare release 17.9"
+        ```
+    
+   * Release new version, e.g:. `17.9`:
+   
+        ```
+        $ vim config.yml
+        version: "17.9-rancher1"
+        
+        $ vim 34/rancher-compose.yml
+        ...
+        version: "17.9-rancher1"
+        ...
+        uuid: www-eea-34
+        ...
+        - variable: "KGS_VERSION"
+          ...
+          options:
+          - "17.9"
+          - "devel"
+        
+        $ git add .
+        $ git commit -m "Release 13.4"
+        $ git push
+        ```
+   
+   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
+   
+2. Within Rancher UI press the available upgrade button
 
 ## Debug
 
