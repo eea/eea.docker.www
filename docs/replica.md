@@ -77,7 +77,7 @@ on how to obtain your Rancher API Keys. Thus:
   * EEA WWW - Volumes
   * EEA WWW - Sync
     * Get `SSH Public Key (rsync-client)` from `www-prod > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
-    * Get `SSH Public Key (PostgreSQL)` from `db-pg-b > postgres`
+    * Get `SSH Public Key (PostgreSQL)` from `db-pg-c > postgres`
     * Make sure that `rsync-client` on **www-prod** can connect to this `rsync-server`.
     * Make sure that **Production PostgreSQL** can connect to this `rsync-server`. (PostgreSQL upstream replica)
     * Make sure that this `rsync-client` can connect to `rsync-server` on **Devel tenant**. (DB pg_dump, blobs and static-resources sync)
@@ -127,22 +127,22 @@ on how to obtain your Rancher API Keys. Thus:
 1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
 
    * Prepare next release, e.g.: `17.9`:
-   
+
         ```
         $ git clone git@github.com:eea/eea.rancher.catalog.git
         $ cd eea.rancher.catalog/templates/www-eea
-        
+
         $ cp -r 33 34
         $ git add 34
         $ git commit -m "Prepare release 17.9"
         ```
-    
+
    * Release new version, e.g:. `17.9`:
-   
+
         ```
         $ vim config.yml
         version: "17.9-rancher1"
-        
+
         $ vim 34/rancher-compose.yml
         ...
         version: "17.9-rancher1"
@@ -154,14 +154,14 @@ on how to obtain your Rancher API Keys. Thus:
           options:
           - "17.9"
           - "devel"
-        
+
         $ git add .
         $ git commit -m "Release 13.4"
         $ git push
         ```
-   
+
    * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
-   
+
 2. Within Rancher UI press the available upgrade button
 
 ## Debug
