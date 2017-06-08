@@ -16,7 +16,7 @@ On your laptop
 
 ### Add deployment infrastructure within your cloud provider
 
-    $ cd deploy/infrastructure
+    $ cd templates/infrastructure
 
 Add required info within `.cloudaccess` and `.secret` needed by [eeacms/os-docker-vm](https://github.com/eea/eea.docker.openstack.host#usage)
 
