@@ -147,13 +147,16 @@ on how to obtain your Rancher API Keys. Thus:
 
 4. The number before container name indicates the current running version, in our case `0`, stop it and start the new one:
 
-        $ docker-compose -f 0/docker-compose.yml stop
         $ docker-compose -f 1/docker-compose.yml pull
+
+        $ docker-compose -f 0/docker-compose.yml stop
+
         $ docker-compose -f 1/docker-compose.yml up -d
 
 5. If something went wrong, roll-back:
 
         $ docker-compose -f 1/docker-compose.yml down
+
         $ docker-compose -f 0/docker-compose.yml up -d
 
 6. If everything is ok, confirm upgrade:
