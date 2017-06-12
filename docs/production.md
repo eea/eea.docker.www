@@ -155,12 +155,12 @@ on how to obtain your Rancher API Keys. Thus:
 
 5. If something went wrong, roll-back:
 
-        $ docker-compose -f 1/docker-compose.yml down
+        $ docker-compose -f 1/docker-compose.yml stop
 
-        $ docker-compose -f 0/docker-compose.yml up -d
+        $ docker-compose -f 0/docker-compose.yml start
 
 6. If everything is ok, confirm upgrade:
 
-        $ docker-compose -f 0/docker-compose.yml down
+        $ docker-compose -f 0/docker-compose.yml rm
 
 7. Move to the next front-end and repeat steps `2-6`
