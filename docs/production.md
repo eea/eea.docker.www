@@ -49,7 +49,7 @@ on how to obtain your Rancher API Keys. Thus:
         $ rancher config -p
 
 
-### Setup infrastrucutre
+### Setup infrastructure
 
 **Note:** See **EEA SVN** for `answers.txt` files
 
@@ -61,14 +61,6 @@ on how to obtain your Rancher API Keys. Thus:
     * Leave empty `SSH Public Key (PostgreSQL)`
     * Set `SSH Public Key (rsync-client)` to `DISABLED`
     * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
-
-### Setup database
-
-**Note:** See **EEA SVN** for `answers.txt` files
-
-* From **Rancher Catalog > EEA** deploy:
-  * EEA - External
-    * Name: `www-postgres`
 
 ### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
 
