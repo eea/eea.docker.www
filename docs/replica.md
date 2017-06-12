@@ -104,33 +104,32 @@ on how to obtain your Rancher API Keys. Thus:
   * EEA - PostgreSQL (Cluster)
     * Name: `www-postgres`
 
-
-### Start EEA Application stack (plone backends, memcache, varnish, apache)
-
-**Note:** See **EEA SVN** for `answers.txt` files
-
-* From **Rancher Catalog > EEA** deploy:
-  * EEA - WWW
-
-### Add Load-Balancer
+### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
 
 **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
-  * EEA - Load Balancer
+  * EEA - Frontend
+
+### Start EEA Application Plone stack
+
+**Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - WWW (Plone)
 
 
 ## Upgrade
 
-### Upgrade `www-eea` stack
+### Upgrade `www-plone` stack
 
-1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
+1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-plone)
 
    * Prepare next release, e.g.: `17.9`:
 
         ```
         $ git clone git@github.com:eea/eea.rancher.catalog.git
-        $ cd eea.rancher.catalog/templates/www-eea
+        $ cd eea.rancher.catalog/templates/www-plone
 
         $ cp -r 33 34
         $ git add 34
@@ -141,19 +140,19 @@ on how to obtain your Rancher API Keys. Thus:
 
         ```
         $ vim config.yml
-        version: "17.9-rancher1"
+        version: "17.9"
 
         $ vim 34/rancher-compose.yml
         ...
-        version: "17.9-rancher1"
+        version: "17.9"
         ...
-        uuid: www-eea-34
+        uuid: www-plone-34
         ...
-        - variable: "KGS_VERSION"
-          ...
-          options:
-          - "17.9"
-          - "devel"
+
+        $ vim 34/docker-compose.yml
+        ...
+        - image: eeacms/www:17.9
+        ...
 
         $ git add .
         $ git commit -m "Release 13.4"
@@ -168,9 +167,9 @@ on how to obtain your Rancher API Keys. Thus:
 
 1. Start Plone instance in `debug` mode
 
-        $ rancher exec -it www-eea/debug-instance bash
+        $ rancher exec -it www-plone/debug-instance bash
         $ bin/instance fg
 
 2. Now, via Rancher UI:
 
-    * Within `www-eea/debug-instance` stack find `exposed` port for `8080` and **click** on it.
+    * Within `www-plone/debug-instance` stack find `exposed` port for `8080` and **click** on it.

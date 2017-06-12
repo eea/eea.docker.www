@@ -70,71 +70,94 @@ on how to obtain your Rancher API Keys. Thus:
   * EEA - External
     * Name: `www-postgres`
 
-### Start EEA Application stack (plone backends, memcache, varnish, apache)
+### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
 
 **Note:** See **EEA SVN** for `answers.txt` files
 
-* From **Rancher Catalog > EEA** deploy:
-  * EEA - WWW
+* Manually deploy Rancher Catalog entry with docker-compose
 
-### Add Load-Balancer
+    $ ssh user@frontend-1
+    $ cd /var/local/deploy/
+    $ git clone https://github.com/eea/eea.rancher.catalog.git
+    $ ln -s eea.rancher.catalog/templates/www-frontend www-frontend
+    $ cd www-frontend
 
-**Note:** See **EEA SVN** for `answers.txt` files
+* Setup environment
 
-* From **Rancher Catalog > EEA** deploy:
-  * EEA - Load Balancer
+    $ cp answers.txt .env
+    $ vim .env
+
+* Create required volumes
+
+    $ docker volume create --name=www-static-resources
+
+* Start
+
+    $ docker-compose -f 0/docker-compose.yml up -d
+
 
 ## Upgrade
 
-### Upgrade `www-eea` stack
+### Upgrade `www-frontend` stack
 
-1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-eea)
+1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-frontend)
 
    * Prepare next release, e.g.: `17.9`:
-   
+
         ```
         $ git clone git@github.com:eea/eea.rancher.catalog.git
-        $ cd eea.rancher.catalog/templates/www-eea
-        
-        $ cp -r 33 34
-        $ git add 34
-        $ git commit -m "Prepare release 17.9"
+        $ cd eea.rancher.catalog/templates/www-frontend
+
+        $ cp -r 0 1
+        $ git add 1
+        $ git commit -m "Prepare release 1.1"
         ```
-    
-   * Release new version, e.g:. `17.9`:
-   
+
+   * Release new version, e.g:. `1.1`:
+
         ```
         $ vim config.yml
-        version: "17.9-rancher1"
-        
-        $ vim 34/rancher-compose.yml
+        version: "1.1"
+
+        $ vim 1/rancher-compose.yml
         ...
-        version: "17.9-rancher1"
+        version: "1.1"
         ...
-        uuid: www-eea-34
+        uuid: www-frontend-1
         ...
-        - variable: "KGS_VERSION"
-          ...
-          options:
-          - "17.9"
-          - "devel"
-        
+
         $ git add .
-        $ git commit -m "Release 13.4"
+        $ git commit -m "Release 1.1"
         $ git push
         ```
-   
+
    * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
-   
-2. Within Rancher UI press the available upgrade button
 
-## Debug
+2. SSH on one frontend and upgrade git repository
 
-1. Start Plone instance in `debug` mode
+        $ ssh user@fronend-1
+        $ cd /var/local/deploy/www-frontend
+        $ git pull
 
-        $ rancher exec -it www-eea/debug-instance bash
-        $ bin/instance fg
+3. Find running version:
 
-2. Now, via Rancher UI:
+        $ docker ps
+        0_apache_1 ...
+        ...
 
-    * Within `www-eea/debug-instance` stack find `exposed` port for `8080` and **click** on it.
+4. The number before container name indicates the current running version, in our case `0`, stop it and start the new one:
+
+        $ docker-compose -f 0/docker-compose.yml stop
+        $ docker-compose -f 1/docker-compose.yml pull
+        $ docker-compose -f 1/docker-compose.yml up -d
+
+5. If something went wrong, roll-back:
+
+        $ docker-compose -f 1/docker-compose.yml down
+        $ docker-compose -f 0/docker-compose.yml up -d
+
+6. If everything is ok, confirm upgrade:
+
+        $ docker-compose -f 0/docker-compose.yml down
+
+7. Move to the next front-end and repeat steps `2-6`
