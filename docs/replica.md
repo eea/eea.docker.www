@@ -4,15 +4,10 @@ Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
-* [Rancher CLI](https://docs.rancher.com/rancher/v1.2/en/cli/)
+* [Rancher CLI](https://docs.rancher.com/rancher/v1.5/en/cli/)
 * Dedicated Rancher Environment (recommended)
 
 ## Installation
-
-On your laptop
-
-    $ git clone https://github.com/eea/eea.docker.www.git
-    $ cd eea.docker.www
 
 ### Add deployment infrastructure within your cloud provider
 
@@ -51,7 +46,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 ### CLI access rights
 
 To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
-See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
+See related [Rancher documentation](http://docs.rancher.com/rancher/v1.5/en/api/v2-beta/access-control/)
 on how to obtain your Rancher API Keys. Thus:
 
 1. Via Rancher UI:
@@ -60,14 +55,9 @@ on how to obtain your Rancher API Keys. Thus:
 
 2. On your laptop configure Rancher CLI:
 
-        $ rancher --config ~/.rancher/rancher.replica.json config
-        $ cp ~/.rancher/rancher.replica.json ~/.rancher/cli.json
+        $ rancher --config
 
-3. Make sure that you're deploying within the right environment:
-
-        $ rancher config -p
-
-### Setup infrastrucutre
+### Setup infrastructure
 
 **Note:** See **EEA SVN** for `answers.txt` files
 
@@ -161,6 +151,40 @@ on how to obtain your Rancher API Keys. Thus:
 
    * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
 
+2. Within Rancher UI press the available upgrade button
+
+### Upgrade `www-frontend` stack
+
+1. Add new catalog version within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-frontend)
+
+   * Prepare next release, e.g.: `1.1`:
+
+        ```
+        $ git clone git@github.com:eea/eea.rancher.catalog.git
+        $ cd eea.rancher.catalog/templates/www-frontend
+
+        $ cp -r 0 1
+        $ git add 1
+        $ git commit -m "Prepare release 1.1"
+        ```
+
+   * Release new version, e.g:. `1.1`:
+
+        ```
+        $ vim config.yml
+        version: "1.1"
+
+        $ vim 1/rancher-compose.yml
+        ...
+        version: "1.1"
+        ...
+        uuid: www-frontend-1
+        ...
+
+        $ git add .
+        $ git commit -m "Release 1.1"
+        $ git push
+        ```
 2. Within Rancher UI press the available upgrade button
 
 ## Debug

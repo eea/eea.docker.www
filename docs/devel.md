@@ -47,10 +47,10 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
 
-### Access rights
+### CLI access rights
 
 To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
-See related [Rancher documentation](http://docs.rancher.com/rancher/v1.3/en/api/v2-beta/access-control/)
+See related [Rancher documentation](http://docs.rancher.com/rancher/v1.5/en/api/v2-beta/access-control/)
 on how to obtain your Rancher API Keys. Thus:
 
 1. Via Rancher UI:
@@ -59,12 +59,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 2. On your laptop configure Rancher CLI:
 
-        $ rancher --config ~/.rancher/rancher.dev.json config
-        $ cp ~/.rancher/rancher.dev.json ~/.rancher/cli.json
-
-3. Make sure that you're deploying within the right environment:
-
-        $ rancher config -p
+        $ rancher --config
 
 ### Setup infrastructure
 
