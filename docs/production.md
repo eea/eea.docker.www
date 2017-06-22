@@ -32,7 +32,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Setup infrastructure
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > Library** deploy:
   * Rancher NFS
@@ -45,15 +45,15 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Setup database
 
-**Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
+> **Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
 
 ### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
 
-**Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
+> **Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
 
 ### Start EEA Application Plone stack
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - WWW (Plone)

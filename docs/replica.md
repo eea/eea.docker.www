@@ -59,7 +59,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Setup infrastructure
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > Library** deploy:
   * Rancher NFS
@@ -74,7 +74,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Setup database (upstream replica)
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * Sync database
 
@@ -88,7 +88,7 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Setup database
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - PostgreSQL (Cluster)
@@ -96,14 +96,14 @@ on how to obtain your Rancher API Keys. Thus:
 
 ### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - Frontend
 
 ### Start EEA Application Plone stack
 
-**Note:** See **EEA SVN** for `answers.txt` files
+> **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - WWW (Plone)
