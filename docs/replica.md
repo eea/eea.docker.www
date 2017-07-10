@@ -145,7 +145,7 @@ on how to obtain your Rancher API Keys. Thus:
         ...
 
         $ git add .
-        $ git commit -m "Release 13.4"
+        $ git commit -m "Release 17.9"
         $ git push
         ```
 
