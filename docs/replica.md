@@ -185,6 +185,8 @@ on how to obtain your Rancher API Keys. Thus:
         $ git commit -m "Release 1.1"
         $ git push
         ```
+   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
+
 2. Within Rancher UI press the available upgrade button
 
 ## Debug
