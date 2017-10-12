@@ -42,7 +42,7 @@ After around 5 min you should have all the VMs created on the specified cloud pr
 ### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
 
     $ ssh <fileserver-ip>
-    $ docker run --rm -v nfs:/data alpine touch /data/test
+    $ docker run -d -it --name=nfs -v nfs:/data alpine cat
     $ echo "/var/lib/docker/volumes/nfs/_data 10.201.1.1/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
