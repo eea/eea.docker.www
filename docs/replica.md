@@ -2,33 +2,8 @@
 
 Docker orchestration for EEA main portal services
 
-## Pre-requirements
 
-* [Rancher CLI](https://docs.rancher.com/rancher/v1.5/en/cli/)
-* Dedicated Rancher Environment (recommended)
-
-## Installation
-
-### Add deployment infrastructure within your cloud provider
-
-    $ cd templates/infrastructure
-
-Add required info within `.cloudaccess` and `.secret` needed by [eeacms/os-docker-vm](https://github.com/eea/eea.docker.openstack.host#usage)
-
-    $ vim .cloudaccess
-    $ vim .secret
-
-The `base-flavors.yml` contains the basic flavors specifications for the infrastructure. Make sure that you are using the correct tag for eeacms/os-docker-vm.
-
-The `docker-compose.yml` extends the base-flavors.yml to create specific number of VMs. Adjust the `INSTANCE_NAME` in order to give the unique names and according to your naming conventions.
-
-To create the VMs run the following command and note the output:
-
-    $ docker-compose up
-
-After around 5 min you should have all the VMs created on the specified cloud provider tenant and region.
-
-### Register above hosts within Rancher via Rancher UI
+### Register hosts within Rancher via Rancher UI
 
 * Register dedicated `db` hosts with labels: `www=yes`, `db=yes` and `db-upstream=yes` / `db-master=yes`/ `db-replica=yes` (PostgreSQL)
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
@@ -43,20 +18,6 @@ After around 5 min you should have all the VMs created on the specified cloud pr
     $ systemctl enable rpcbind nfs-server
     $ systemctl restart rpcbind nfs-server
 
-### CLI access rights
-
-To enable Rancher CLI to launch services in a Rancher instance, you’ll need to configure it
-See related [Rancher documentation](http://docs.rancher.com/rancher/v1.5/en/api/v2-beta/access-control/)
-on how to obtain your Rancher API Keys. Thus:
-
-1. Via Rancher UI:
-
-    * Go to **API Tab** add an **Account API Key**
-
-2. On your laptop configure Rancher CLI:
-
-        $ rancher --config
-
 ### Setup infrastructure
 
 > **Note:** See **EEA SVN** for `answers.txt` files
@@ -70,7 +31,6 @@ on how to obtain your Rancher API Keys. Thus:
     * Get `SSH Public Key (PostgreSQL)` from `db-pg-c > postgres`
     * Make sure that `rsync-client` on **www-prod** can connect to this `rsync-server`.
     * Make sure that **Production PostgreSQL** can connect to this `rsync-server`. (PostgreSQL upstream replica)
-    * Make sure that this `rsync-client` can connect to `rsync-server` on **Devel tenant**. (DB pg_dump, blobs and static-resources sync)
 
 ### Setup database (upstream replica)
 
@@ -149,7 +109,7 @@ on how to obtain your Rancher API Keys. Thus:
         $ git push
         ```
 
-   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
+   * See [Rancher docs](http://rancher.com/docs/rancher/latest/en/catalog/private-catalog/) for more details.
 
 2. Within Rancher UI press the available upgrade button
 
@@ -190,7 +150,7 @@ on how to obtain your Rancher API Keys. Thus:
         $ git commit -m "Release 1.1"
         $ git push
         ```
-   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
+   * See [Rancher docs](http://rancher.com/docs/rancher/latest/en/catalog/private-catalog/) for more details.
 
 2. Within Rancher UI press the available upgrade button
 
