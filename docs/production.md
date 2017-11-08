@@ -165,6 +165,11 @@ Docker orchestration for EEA main portal services
 
             $ docker-compose -f 60/docker-compose.yml down -v
             $ docker-compose -f 59/docker-compose.yml up -d
+   
+   * Cleanup
+   
+            $ docker rmi $(docker images -q)
+            $ docker volume rm $(docker volume ls -q)
 
    * Repeat steps on the next host
 
