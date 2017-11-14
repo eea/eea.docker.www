@@ -136,7 +136,7 @@ Docker orchestration for EEA main portal services
 
    * SSH on Docker host and upgrade the code
 
-            $  ssh host-15
+            $ ssh host-15
             $ cd /var/local/deploy/www-plone
             $ git pull
 
