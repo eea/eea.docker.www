@@ -32,5 +32,5 @@ Docker orchestration for EEA main portal services
         $ ./cph-backup.sh
 
 * From **Rancher Catalog > EEA** deploy **EEA - PostgreSQL** stack
-  * Name: `www-postgres-upstream-replica`
+  * Name: `www-postgres-cph-replica`
 

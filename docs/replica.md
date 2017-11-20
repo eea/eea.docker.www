@@ -44,7 +44,7 @@ Docker orchestration for EEA main portal services
         $ ./ecs-backup.sh
 
 * From **Rancher Catalog > EEA** deploy **EEA - PostgreSQL** stack
-  * Name: `www-postgres-upstream-replica`
+  * Name: `www-postgres-ecs-replica`
 
 ### Setup database
 
