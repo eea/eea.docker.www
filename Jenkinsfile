@@ -18,6 +18,26 @@ pipeline {
       }
     }
 
+    stage('KGS - Release') {
+      steps {
+        node(label: 'docker-1.13') {
+          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-kgs-devel', variable: 'TRIGGER_URL')]) {
+           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-kgs" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.kgs" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL" eeacms/gitflow'''
+         }
+       }
+     }
+   }
+
+    stage('WWW - Release') {
+      steps {
+        node(label: 'docker-1.13') {
+          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-www-devel', variable: 'TRIGGER_URL')]) {
+           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-www" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.plone-eea-www" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL" eeacms/gitflow'''
+         }
+       }
+     }
+   }
+
   }
 
   post {
