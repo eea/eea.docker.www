@@ -6,13 +6,13 @@ pipeline {
 
   stages {
 
-    stage('KGS') {
+    stage('KGS - Build & Tests') {
       steps {
         build job: '../eea.docker.kgs/master', parameters: [[$class: 'StringParameterValue', name: 'TARGET_BRANCH', value: 'master']]
       }
     }
 
-    stage('WWW') {
+    stage('WWW - Build & Tests') {
       steps {
         build job: '../eea.docker.plone-eea-www/master', parameters: [[$class: 'StringParameterValue', name: 'TARGET_BRANCH', value: 'master']]
       }
