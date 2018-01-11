@@ -6,19 +6,19 @@ pipeline {
 
   stages {
 
-    stage('KGS - Build & Tests') {
+    stage('Build & Tests - KGS') {
       steps {
         build job: '../eea.docker.kgs/master', parameters: [[$class: 'StringParameterValue', name: 'TARGET_BRANCH', value: 'master']]
       }
     }
 
-    stage('WWW - Build & Tests') {
+    stage('Build & Tests - WWW') {
       steps {
         build job: '../eea.docker.plone-eea-www/master', parameters: [[$class: 'StringParameterValue', name: 'TARGET_BRANCH', value: 'master']]
       }
     }
 
-    stage('KGS - Release') {
+    stage('Release - KGS') {
       steps {
         node(label: 'docker-1.13') {
           withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-kgs-devel', variable: 'TRIGGER_URL')]) {
@@ -28,7 +28,7 @@ pipeline {
      }
    }
 
-    stage('WWW - Release') {
+    stage('Release - WWW') {
       steps {
         node(label: 'docker-1.13') {
           withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-www-devel', variable: 'TRIGGER_URL')]) {
