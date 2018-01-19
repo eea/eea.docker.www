@@ -8,15 +8,6 @@ Docker orchestration for EEA main portal services
 * Register dedicated `db` hosts with labels: `www=yes`, `db=yes` and `db-upstream=yes` / `db-master=yes`/ `db-replica=yes` (PostgreSQL)
 * Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
 * Register dedicated `frontend` hosts with label: `www=yes`, `frontend=yes` (Varnish, Apache)
-* Add Public IP to one `frontend` and label it within Rancher UI with `sync=yes` and `public=yes` (Sync, Load Balancer)
-
-### Setup NFS server to be used with Rancher-NFS (shared blobs and static resources)
-
-    $ ssh <fileserver-ip>
-    $ docker run -d -it --name=nfs -v nfs:/data alpine cat
-    $ echo "/var/lib/docker/volumes/nfs/_data 10.128.0.0/24(rw,insecure,no_root_squash) 10.42.0.0/16(rw,insecure,no_root_squash)" >> /etc/exports
-    $ systemctl enable rpcbind nfs-server
-    $ systemctl restart rpcbind nfs-server
 
 ### Setup infrastructure
 
@@ -26,6 +17,7 @@ Docker orchestration for EEA main portal services
   * Rancher NFS
 * From **Rancher Catalog > EEA** deploy:
   * EEA WWW - Volumes
+    * DB Volume Driver: `rancher-ebs`
   * EEA WWW - Sync
     * Get `SSH Public Key (rsync-client)` from `www-prod > www-sync > rsync-client > www-sync-rsync-client-1 > Console`
     * Get `SSH Public Key (PostgreSQL)` from `db-pg-c > postgres`
@@ -36,15 +28,20 @@ Docker orchestration for EEA main portal services
 
 > **Note:** See **EEA SVN** for `answers.txt` files
 
-* Sync database
+* Update db-pg-archive.sh script `REPLICA_SERVER`
 
         $ ssh <postgresql master on production>
-        $ cd /var/lib/pgsql/9.4/data
-        $ vim ecs-backup.sh
-        $ ./ecs-backup.sh
+        $ cd /var/lib/pgsql/9.6/
+        $ vim data/db-pg-archive.sh
+
+* Sync database
+
+        $ vim data/amazon-backup.sh
+        $ ./data/amazon-backup.sh > amazon-sync.log 2>&1 &
+        $ tail -f amazon-sync.log
 
 * From **Rancher Catalog > EEA** deploy **EEA - PostgreSQL** stack
-  * Name: `www-postgres-ecs-replica`
+  * Name: `www-postgres-amazon-replica`
 
 ### Setup database
 
@@ -52,14 +49,7 @@ Docker orchestration for EEA main portal services
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - PostgreSQL (Cluster)
-    * Name: `www-postgres`
-
-### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
-
-> **Note:** See **EEA SVN** for `answers.txt` files
-
-* From **Rancher Catalog > EEA** deploy:
-  * EEA - Frontend
+    * Name: `www-postgres-cluster`
 
 ### Start EEA Application Plone stack
 
@@ -68,6 +58,12 @@ Docker orchestration for EEA main portal services
 * From **Rancher Catalog > EEA** deploy:
   * EEA - WWW (Plone)
 
+### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
+
+> **Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - Frontend
 
 ## Upgrade
 
