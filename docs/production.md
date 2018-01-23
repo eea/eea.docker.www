@@ -82,9 +82,9 @@ Docker orchestration for EEA main portal services
 6. Repeat steps `1-5` on the next host
 
 
-## Upgrade
+## Release and upgrade `www-plone`
 
-### Upgrade `www-plone` stack
+### Release `www-plone` stack
 
 1. **Add new catalog version** within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-plone)
 
@@ -124,7 +124,9 @@ Docker orchestration for EEA main portal services
 
    * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
 
-2. **Upgrade Rancher** deployment
+### Upgrade `www-plone` stack
+
+1. **Upgrade Rancher** deployment
 
    * Click the available upgrade button
 
@@ -132,7 +134,7 @@ Docker orchestration for EEA main portal services
 
    * Or roll-back if something goes wrong and abort the upgrade procedure
 
-3. **Upgrade Docker-Compose** deployment
+2. **Upgrade Docker-Compose** deployment
 
    * SSH on Docker host and upgrade the code
 
@@ -174,7 +176,9 @@ Docker orchestration for EEA main portal services
    * Repeat steps on the next host
 
 
-### Upgrade `www-frontend` stack
+### Release and upgrade `www-frontend` stack
+
+### Release `www-frontend` stack
 
 1. **Add new catalog version** within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-frontend)
 
@@ -211,9 +215,9 @@ Docker orchestration for EEA main portal services
         $ git commit -m "Release 1.1"
         $ git push
         ```
+### Upgrade `www-frontend` stack
 
 2. **Note:** Not managed via Rancher or Docker-Compose. See **EEA wiki: How to update the EEA website on HA cluster**
-
 
 ## Debug
 
