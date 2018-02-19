@@ -31,8 +31,8 @@ pipeline {
     stage('Release - WWW') {
       steps {
         node(label: 'docker-1.13') {
-          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-www-devel', variable: 'TRIGGER_URL')]) {
-           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-www" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.plone-eea-www" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL" eeacms/gitflow'''
+          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-www-devel', variable: 'TRIGGER_URL'), string(credentialsId: 'trigger-www', variable: 'TRIGGER_MAIN_URL')]) {
+           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-www" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.plone-eea-www" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL"  -e TRIGGER_MAIN_URL="$TRIGGER_MAIN_URL"  eeacms/gitflow'''
          }
        }
      }
