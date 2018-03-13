@@ -4,10 +4,10 @@ jMeter Performance tests for EEA WWW/KGS Plone sites
 
 ## Pre-requirements
 
-* A *running Plone site* or
-* Start Plone
+* A running `Plone site` or
+* Start Plone:
 
-        $ docker run -d --name=kgs -p 8080:8080 eeacms/kgs-devel
+        $ docker run -d --name=kgs -p 8080:8080 eeacms/kgs
 
   * Add Plone Site
   * Create `sandbox` folder
@@ -19,7 +19,7 @@ jMeter Performance tests for EEA WWW/KGS Plone sites
 
 ## Rename
 
-        $ jmeter -n -t Rename.jmx \
+        $ jmeter -n -t rename.jmx \
                     -Jserver=$IP \
                     -Jport=8080 \
                     -Juser=admin \
@@ -28,12 +28,12 @@ jMeter Performance tests for EEA WWW/KGS Plone sites
                     -Jsandbox=sandbox \
                     -Jsource=folder1 \
                     -Jrepeat=1 \
-                 -l /tmp/Rename.csv
-        $ tail -f /tmp/Rename.csv
+                 -l /tmp/rename.csv
+        $ tail -f /tmp/rename.csv
 
 ## Move
 
-        $ jmeter -n -t Move.jmx \
+        $ jmeter -n -t move.jmx \
                     -Jserver=$IP \
                     -Jport=8080 \
                     -Juser=admin \
@@ -43,8 +43,8 @@ jMeter Performance tests for EEA WWW/KGS Plone sites
                     -Jsource=folder1 \
                     -Jdestination=folder2 \
                     -Jrepeat=1 \
-                 -l /tmp/Move.csv
-        $ tail -f /tmp/Move.csv
+                 -l /tmp/move.csv
+        $ tail -f /tmp/move.csv
 
 ## Copy
 
@@ -58,8 +58,8 @@ jMeter Performance tests for EEA WWW/KGS Plone sites
                     -Jsource=folder1 \
                     -Jdestination=folder2 \
                     -Jrepeat=1 \
-                 -l /tmp/Copy.csv
-        $ tail -f /tmp/Copy.csv
+                 -l /tmp/copy.csv
+        $ tail -f /tmp/copy.csv
 
 ## Record tests
 
