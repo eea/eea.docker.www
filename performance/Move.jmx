@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Move" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Move Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -9,42 +9,47 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="server" elementType="Argument">
             <stringProp name="Argument.name">server</stringProp>
-            <stringProp name="Argument.value">10.50.6.136</stringProp>
+            <stringProp name="Argument.value">${__P(server,10.50.6.136)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="port" elementType="Argument">
             <stringProp name="Argument.name">port</stringProp>
-            <stringProp name="Argument.value">54455</stringProp>
+            <stringProp name="Argument.value">${__P(port,54455)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="user" elementType="Argument">
             <stringProp name="Argument.name">user</stringProp>
-            <stringProp name="Argument.value">eeaDevelManager</stringProp>
+            <stringProp name="Argument.value">${__P(user,eeaDevelManager)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="password" elementType="Argument">
             <stringProp name="Argument.name">password</stringProp>
-            <stringProp name="Argument.value">GAMDlCLbX3oaxlAn</stringProp>
+            <stringProp name="Argument.value">${__P(password,secret)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="site" elementType="Argument">
             <stringProp name="Argument.name">site</stringProp>
-            <stringProp name="Argument.value">www</stringProp>
+            <stringProp name="Argument.value">${__P(site,www)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="sandbox" elementType="Argument">
             <stringProp name="Argument.name">sandbox</stringProp>
-            <stringProp name="Argument.value">SITE/about-us</stringProp>
+            <stringProp name="Argument.value">${__P(sandbox,SITE/sandbox)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="source" elementType="Argument">
             <stringProp name="Argument.name">source</stringProp>
-            <stringProp name="Argument.value">images</stringProp>
+            <stringProp name="Argument.value">${__P(source,laura)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="destination" elementType="Argument">
             <stringProp name="Argument.name">destination</stringProp>
-            <stringProp name="Argument.value">who</stringProp>
+            <stringProp name="Argument.value">${__P(destination,alin-tests)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="repeat" elementType="Argument">
+            <stringProp name="Argument.name">repeat</stringProp>
+            <stringProp name="Argument.value">${__P(repeat,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -350,9 +355,9 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop" enabled="true">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Repeat" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">10</stringProp>
+          <stringProp name="LoopController.loops">${repeat}</stringProp>
         </LoopController>
         <hashTree>
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Move" enabled="true">

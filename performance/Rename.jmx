@@ -9,37 +9,42 @@
         <collectionProp name="Arguments.arguments">
           <elementProp name="server" elementType="Argument">
             <stringProp name="Argument.name">server</stringProp>
-            <stringProp name="Argument.value">10.50.6.136</stringProp>
+            <stringProp name="Argument.value">${__P(server,10.50.6.136)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="port" elementType="Argument">
             <stringProp name="Argument.name">port</stringProp>
-            <stringProp name="Argument.value">54455</stringProp>
+            <stringProp name="Argument.value">${__P(port,54455)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="user" elementType="Argument">
             <stringProp name="Argument.name">user</stringProp>
-            <stringProp name="Argument.value">eeaDevelManager</stringProp>
+            <stringProp name="Argument.value">${__P(user,eeaDevelManager)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="password" elementType="Argument">
             <stringProp name="Argument.name">password</stringProp>
-            <stringProp name="Argument.value">secret</stringProp>
+            <stringProp name="Argument.value">${__P(password,secret)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="site" elementType="Argument">
             <stringProp name="Argument.name">site</stringProp>
-            <stringProp name="Argument.value">www</stringProp>
+            <stringProp name="Argument.value">${__P(site,www)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="sandbox" elementType="Argument">
             <stringProp name="Argument.name">sandbox</stringProp>
-            <stringProp name="Argument.value">SITE/sandbox</stringProp>
+            <stringProp name="Argument.value">${__P(sandbox,SITE/sandbox)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="source" elementType="Argument">
             <stringProp name="Argument.name">source</stringProp>
-            <stringProp name="Argument.value">laura</stringProp>
+            <stringProp name="Argument.value">${__P(source,laura)}</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="repeat" elementType="Argument">
+            <stringProp name="Argument.name">repeat</stringProp>
+            <stringProp name="Argument.value">${__P(repeat,1)}</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
         </collectionProp>
@@ -345,9 +350,9 @@
             <hashTree/>
           </hashTree>
         </hashTree>
-        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop" enabled="true">
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Repeat" enabled="true">
           <boolProp name="LoopController.continue_forever">true</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">${repeat}</stringProp>
         </LoopController>
         <hashTree>
           <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Rename" enabled="true">
@@ -475,7 +480,7 @@
               </HeaderManager>
               <hashTree/>
             </hashTree>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Rename submit" enabled="true">
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Rename form" enabled="true">
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" enabled="true">
                 <collectionProp name="Arguments.arguments">
                   <elementProp name="form.submitted" elementType="HTTPArgument">
