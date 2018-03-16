@@ -30,7 +30,6 @@ Docker orchestration for EEA main portal services
     * Leave empty `SSH Public Key (PostgreSQL)`
     * Set `SSH Public Key (rsync-client)` to `DISABLED`
     * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
-    * Make sure that this `rsync-client` can connect to `rsync-server` on **Devel 2 (A-Team)** tenant. (blobs and static-resources sync)
 
 ### Setup database
 
@@ -167,9 +166,9 @@ Docker orchestration for EEA main portal services
 
             $ docker-compose -f 60/docker-compose.yml down -v
             $ docker-compose -f 59/docker-compose.yml up -d
-   
+
    * Cleanup
-   
+
             $ docker rmi $(docker images -q)
             $ docker volume rm $(docker volume ls -q)
 

@@ -23,6 +23,7 @@ Docker orchestration for EEA main portal services
     * Get `SSH Public Key (PostgreSQL)` from `db-pg-c > postgres`
     * Make sure that `rsync-client` on **www-prod** can connect to this `rsync-server`.
     * Make sure that **Production PostgreSQL** can connect to this `rsync-server`. (PostgreSQL upstream replica)
+    * Make sure that `rsync-client` can connect to `rsync-server` from devel environment
 
 ### Setup database (upstream replica)
 
