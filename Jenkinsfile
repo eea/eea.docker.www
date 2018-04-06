@@ -6,6 +6,17 @@ pipeline {
 
   stages {
 
+    stage('Scan used images with clair') {
+      steps {
+        node(label: 'clair') {
+         script {
+           sh '''/scan_catalog_entry.sh templates/www-eea eeacms/www-devel'''
+           sh '''/scan_catalog_entry.sh  templates/www-plone eeacms/www'''
+         }
+       }
+     }
+   }
+    
     stage('Build & Tests - KGS') {
       steps {
         build job: '../eea.docker.kgs/master', parameters: [[$class: 'StringParameterValue', name: 'TARGET_BRANCH', value: 'master']]
