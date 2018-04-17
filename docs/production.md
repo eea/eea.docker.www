@@ -141,8 +141,6 @@ Docker orchestration for EEA main portal services
 
 ### Upgrade `www-frontend` stack
 
-2. **Note:** Not managed via Rancher, yet. See **EEA wiki: How to update the EEA website on HA cluster**
-
 * Click the available upgrade button
 
 * Confirm the upgrade
