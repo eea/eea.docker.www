@@ -1,89 +1,56 @@
-# Docker orchestration for EEA main portal (www-prod)
+# Docker orchestration for EEA main portal (WWW AWS)
 
 Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
 * Dedicated Rancher Environment (recommended)
-* SSH access on Docker hosts
 
 ### Register hosts within Rancher via Rancher UI
 
-* Register dedicated `backend` hosts with label: `www=yes`, `backend=yes, rancher-catalog=yes` (Plone)
-* To distinguish  hosts were we use `docker-compose` for backend deployment, add label `docker-compose=yes`
-* Make sure NFS resources are properly mounted on hosts
-
-        $ cat /etc/fstab
-        $ ls /var/sharedblobstorage
-
-* Make sure NFSv4 support is properly configured on these hosts. See [ticket #80428](https://taskman.eionet.europa.eu/issues/80428#note-5)
+* Register dedicated `backend` hosts with label: `backend=yes` (Plone)
+* Register dedicated `frontend` hosts with label: `frontend=yes` (Apache, Varnish, HAProxy)
 
 ### Setup infrastructure
 
 > **Note:** See **EEA SVN** for `answers.txt` files
 
+* From **Rancher Catalog > Library** deploy:
+  * Rancher NFS
 * From **Rancher Catalog > EEA** deploy:
   * EEA WWW - Volumes
-    * As on production we don't use `rancher-nfs` driver, make sure you mount NFS resources from host by setting `NFS_VOLUMES_ROOT=/var/sharedblobstorage/`
   * EEA WWW - Sync
-    * As on production we don't use `rancher-nfs` driver, make sure you mount NFS resources from host by setting `NFS_VOLUMES_ROOT=/var/sharedblobstorage/`
     * Leave empty `SSH Public Key (PostgreSQL)`
     * Set `SSH Public Key (rsync-client)` to `DISABLED`
     * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
 
 ### Setup database
 
-> **Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
+> **Note:** See **EEA SVN** for `answers.txt` files
 
-### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - PostgreSQL (External)
 
-> **Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
-
-## Install
-
-### Rancher
+### Setup Plone
 
 > **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - WWW (Plone)
 
-### Docker-Compose
+### Setup Frontend
 
-> **Note:** See **EEA SVN** for `answers.txt` file
+> **Note:** See **EEA SVN** for `answers.txt` files
 
-1. SSH on host and clone Rancher-Catalog Github repository:
-
-        $ ssh host-15
-        $ cd /var/local/deploy
-        $ clone https://github.com/eea/eea.rancher.catalog.git
-        $ ln -s eea.rancher.catalog/templates/www-plone www-plone
-        $ cd www-plone
-
-2. Add deployment environment variables:
-
-        $ vim .env
-        $ echo "HOSTNAME=$(hostname)" >> .env
-
-3. Prepare the environment for deploying the latest version (e.g.: `59`):
-
-        $ docker-compose -f 59/docker-compose.yml pull
-
-4. Test that everything works as expected via `debug-instance`:
-
-        $ docker-compose -f 59/docker-compose.yml up -d debug-instance
-        $ docker exec -it 59_debug-instance_1 bin/instance fg
-
-5. Deploy
-
-        $ docker-compose -f 59/docker-compose.yml up -d
-
-6. Repeat steps `1-5` on the next host
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - Frontend
 
 
 ## Release and upgrade `www-plone`
 
 ### Release `www-plone` stack
+
+> *Note: Nightly released by Jekins*
 
 1. **Add new catalog version** within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-plone)
 
@@ -121,11 +88,9 @@ Docker orchestration for EEA main portal services
         $ git push
         ```
 
-   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
-
 ### Upgrade `www-plone` stack
 
-1. **Upgrade Rancher** deployment
+* **Upgrade Rancher** deployment
 
    * Click the available upgrade button
 
@@ -133,51 +98,12 @@ Docker orchestration for EEA main portal services
 
    * Or roll-back if something goes wrong and abort the upgrade procedure
 
-2. **Upgrade Docker-Compose** deployment
 
-   * SSH on Docker host and upgrade the code
-
-            $ ssh host-15
-            $ cd /var/local/deploy/www-plone
-            $ git pull
-
-   * Prepare the environment for deploying the latest version (e.g.: `60`):
-
-            $ docker-compose -f 60/docker-compose.yml pull
-
-   * Test that everything works as expected via `debug-instance`:
-
-            $ docker-compose -f 60/docker-compose.yml up -d debug-instance
-            $ docker exec -it 60_debug-instance_1 bin/instance fg
-
-   * Stop the old running version
-
-            $ docker-compose -f 59/docker-compose.yml stop
-
-   * Start the new version
-
-            $ docker-compose -f 60/docker-compose.yml up -d
-
-   * Confirm the upgrade by removing the old version
-
-            $ docker-compose -f 59/docker-compose.yml down -v
-
-   * Or roll-back if something goes wrong and abort the upgrade procedure
-
-            $ docker-compose -f 60/docker-compose.yml down -v
-            $ docker-compose -f 59/docker-compose.yml up -d
-
-   * Cleanup
-
-            $ docker rmi $(docker images -q)
-            $ docker volume rm $(docker volume ls -q)
-
-   * Repeat steps on the next host
-
-
-### Release and upgrade `www-frontend` stack
+### Release and upgrade `www-frontend`
 
 ### Release `www-frontend` stack
+
+> *Note: Nightly released by Jekins*
 
 1. **Add new catalog version** within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-frontend)
 
@@ -214,13 +140,17 @@ Docker orchestration for EEA main portal services
         $ git commit -m "Release 1.1"
         $ git push
         ```
+
 ### Upgrade `www-frontend` stack
 
-2. **Note:** Not managed via Rancher or Docker-Compose. See **EEA wiki: How to update the EEA website on HA cluster**
+* Click the available upgrade button
+
+* Confirm the upgrade
+
+* Or roll-back if something goes wrong and abort the upgrade procedure
+
 
 ## Debug
-
-### Rancher
 
 1. Start Plone instance in `debug` mode
 
@@ -230,22 +160,3 @@ Docker orchestration for EEA main portal services
 2. Now, via Rancher UI:
 
     * Within `www-plone/debug-instance` stack find `exposed` port for `8080` and **click** on it.
-
-### Docker-Compose
-
-1. SSH on production host
-
-        $ ssh host-15
-
-2. Find the running debug instance and the `exposed` port
-
-        $ docker ps | grep debug-instance
-
-3. Start Plone
-
-        $ docker exec -it 59_debug-instance_1 bash
-        $ bin/instance fg
-
-4. Access Plone within your browser:
-
-        http://host-15:<PORT>
