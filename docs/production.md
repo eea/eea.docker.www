@@ -1,55 +1,55 @@
-# Docker orchestration for EEA main portal (www-prod)
+# Docker orchestration for EEA main portal (WWW AWS)
 
 Docker orchestration for EEA main portal services
 
 ## Pre-requirements
 
 * Dedicated Rancher Environment (recommended)
-* SSH access on Docker hosts
 
 ### Register hosts within Rancher via Rancher UI
 
-* Register dedicated `backend` hosts with label: `www=yes`, `backend=yes` (Plone)
-* Make sure NFS resources are properly mounted on hosts
-
-        $ cat /etc/fstab
-        $ ls /var/sharedblobstorage
-
-* Make sure NFSv4 support is properly configured on these hosts. See [ticket #80428](https://taskman.eionet.europa.eu/issues/80428#note-5)
+* Register dedicated `backend` hosts with label: `backend=yes` (Plone)
+* Register dedicated `frontend` hosts with label: `frontend=yes` (Apache, Varnish, HAProxy)
 
 ### Setup infrastructure
 
 > **Note:** See **EEA SVN** for `answers.txt` files
 
+* From **Rancher Catalog > Library** deploy:
+  * Rancher NFS
 * From **Rancher Catalog > EEA** deploy:
   * EEA WWW - Volumes
-    * As on production we don't use `rancher-nfs` driver, make sure you mount NFS resources from host by setting `NFS_VOLUMES_ROOT=/var/sharedblobstorage/`
   * EEA WWW - Sync
-    * As on production we don't use `rancher-nfs` driver, make sure you mount NFS resources from host by setting `NFS_VOLUMES_ROOT=/var/sharedblobstorage/`
     * Leave empty `SSH Public Key (PostgreSQL)`
     * Set `SSH Public Key (rsync-client)` to `DISABLED`
     * Make sure that this `rsync-client` can connect to `rsync-server` on **www-prod-replica** tenant. (blobs and static-resources sync)
 
 ### Setup database
 
-> **Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
+> **Note:** See **EEA SVN** for `answers.txt` files
 
-### Start EEA Application front-end stack (Apache, Varnish, HAProxy, Memcached)
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - PostgreSQL (External)
 
-> **Note:** Not managed via Rancher. See **EEA wiki: How to update the EEA website on HA cluster**
-
-## Install
-
-### Rancher
+### Setup Plone
 
 > **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - WWW (Plone)
 
+### Setup Frontend
+
+> **Note:** See **EEA SVN** for `answers.txt` files
+
+* From **Rancher Catalog > EEA** deploy:
+  * EEA - Frontend
+
 ## Release and upgrade `www-plone`
 
 ### Release `www-plone` stack
+
+> *Note: Nightly released by Jekins*
 
 1. **Add new catalog version** within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-plone)
 
@@ -87,11 +87,9 @@ Docker orchestration for EEA main portal services
         $ git push
         ```
 
-   * See [Rancher docs](https://docs.rancher.com/rancher/v1.2/en/catalog/private-catalog/#rancher-catalog-templates) for more details.
-
 ### Upgrade `www-plone` stack
 
-1. **Upgrade Rancher** deployment
+* **Upgrade Rancher** deployment
 
    * Click the available upgrade button
 
@@ -99,9 +97,11 @@ Docker orchestration for EEA main portal services
 
    * Or roll-back if something goes wrong and abort the upgrade procedure
 
-### Release and upgrade `www-frontend` stack
+### Release and upgrade `www-frontend`
 
 ### Release `www-frontend` stack
+
+> *Note: Nightly released by Jekins*
 
 1. **Add new catalog version** within [eea.rancher.catalog](https://github.com/eea/eea.rancher.catalog/tree/master/templates/www-frontend)
 
@@ -138,13 +138,19 @@ Docker orchestration for EEA main portal services
         $ git commit -m "Release 1.1"
         $ git push
         ```
+
 ### Upgrade `www-frontend` stack
 
 2. **Note:** Not managed via Rancher, yet. See **EEA wiki: How to update the EEA website on HA cluster**
 
-## Debug
+* Click the available upgrade button
 
-### Rancher
+* Confirm the upgrade
+
+* Or roll-back if something goes wrong and abort the upgrade procedure
+
+
+## Debug
 
 1. Start Plone instance in `debug` mode
 
