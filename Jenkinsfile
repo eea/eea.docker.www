@@ -1,7 +1,7 @@
 pipeline {
   agent any
   triggers {
-    cron('H 0 * * *')
+    cron('H 2 * * *')
   }
 
   stages {
@@ -16,7 +16,7 @@ pipeline {
        }
      }
    }
-    
+
     stage('Build & Tests - KGS') {
       steps {
         build job: '../eea.docker.kgs/master', parameters: [[$class: 'StringParameterValue', name: 'TARGET_BRANCH', value: 'master']]
