@@ -44,6 +44,7 @@ Docker orchestration for EEA main portal services
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - Frontend
+  * EEA - Load Balancer
 
 ## Release and upgrade `www-plone`
 

@@ -42,12 +42,13 @@ Docker orchestration for EEA main portal services
 * From **Rancher Catalog > EEA** deploy:
   * EEA - WWW (Plone)
 
-### Setup Apache, Varnish, HAProxy frontend
+### Setup Frontend
 
 > **Note:** See **EEA SVN** for `answers.txt` files
 
 * From **Rancher Catalog > EEA** deploy:
   * EEA - Frontend
+  * EEA - Load Balancer
 
 ## Upgrade
 
