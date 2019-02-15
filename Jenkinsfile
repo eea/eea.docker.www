@@ -32,8 +32,8 @@ pipeline {
     stage('Release - KGS') {
       steps {
         node(label: 'docker-1.13') {
-          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-kgs-devel', variable: 'TRIGGER_URL')]) {
-           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-kgs" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.kgs" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL" eeacms/gitflow'''
+          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'kgs-devel-new-trigger', variable: 'TRIGGER_URL'),usernamePassword(credentialsId: 'jekinsdockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-kgs" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.kgs" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL" -e DOCKERHUB_USER="$DOCKERHUB_USER" -e DOCKERHUB_PASS="$DOCKERHUB_PASS" eeacms/gitflow'''
          }
        }
      }
@@ -42,8 +42,8 @@ pipeline {
     stage('Release - WWW') {
       steps {
         node(label: 'docker-1.13') {
-          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'trigger-www-devel', variable: 'TRIGGER_URL'), string(credentialsId: 'trigger-www', variable: 'TRIGGER_MAIN_URL')]) {
-           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-www" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.plone-eea-www" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL"  -e TRIGGER_MAIN_URL="$TRIGGER_MAIN_URL"  eeacms/gitflow'''
+          withCredentials([string(credentialsId: 'eea-jenkins-token', variable: 'GITHUB_TOKEN'), string(credentialsId: 'www-devel-new-trigger', variable: 'TRIGGER_URL'), string(credentialsId: 'www-new-trigger', variable: 'TRIGGER_MAIN_URL'),usernamePassword(credentialsId: 'jekinsdockerhub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
+           sh '''docker run -i --rm --name="$BUILD_TAG-nightly-www" -e GIT_BRANCH="master" -e GIT_NAME="eea.docker.plone-eea-www" -e GIT_TOKEN="$GITHUB_TOKEN" -e TRIGGER_URL="$TRIGGER_URL"  -e TRIGGER_MAIN_URL="$TRIGGER_MAIN_URL" -e DOCKERHUB_USER="$DOCKERHUB_USER" -e DOCKERHUB_PASS="$DOCKERHUB_PASS" eeacms/gitflow'''
          }
        }
      }
