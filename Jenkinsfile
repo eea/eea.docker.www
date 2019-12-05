@@ -10,8 +10,12 @@ pipeline {
       steps {
         node(label: 'clair') {
          script {
-           sh '''/scan_catalog_entry.sh templates/www-eea eeacms/www-devel'''
-           sh '''/scan_catalog_entry.sh  templates/www-plone eeacms/www'''
+           try {
+             sh '''/scan_catalog_entry.sh templates/www-eea eeacms/www-devel'''
+             sh '''/scan_catalog_entry.sh  templates/www-plone eeacms/www'''
+           } catch (err) {
+              echo "Unstable: ${err}"
+           }
          }
        }
      }
