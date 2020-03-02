@@ -1,5 +1,8 @@
 # Docker orchestration for EEA main portal
 
+[![Pipeline Status](https://ci.eionet.europa.eu/buildStatus/icon?job=eea/eea.docker.www/master&subject=pipeline)](https://ci.eionet.europa.eu/job/eea/job/eea.docker.www/job/master/display/redirect)
+[![Release](https://img.shields.io/github/release/eea/eea.docker.kgs)](https://github.com/eea/eea.docker.kgs/releases)
+
 Docker orchestration for EEA main portal services
 
 
